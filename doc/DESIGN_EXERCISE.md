@@ -36,9 +36,9 @@ that contains instances of rock, paper and scissors, and monitors all attacks.
 
 **How does a Cell know what rules to apply for its simulation?**
 
-Each simulation (game of life, segregation, predator-prey, ...) has its own class that holds
+Each simulation (game of life, segregation, predator-prey, ...) has its own config file that holds
 the rules for that specific simulation. Then, our primary class can get 
-the rules from the each simulation class.
+the rules from the each config file..
 
 **How does a Cell know about its neighbors? How can it update itself without effecting its neighbors update?**
 The _Simulation_ superclass contains a grid of all the cells, which are represented by objects of 
@@ -50,5 +50,8 @@ neighbor's update, each cell object would store its un-updated state, allowing o
 **What is the grid? Does it have any behaviors? Who needs to know about it?**
 
 **What information about a simulation needs to be the configuration file?**
+
+We'll have all the rules for each different simulations in different config files.
+Then, depending on the simulation we want, we can just read a different config file.
 
 **How is the GUI updated after all the cells have been updated?**

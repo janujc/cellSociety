@@ -65,6 +65,7 @@ about the simulation. It only contains things that the user will see and has a v
 the current state of the simulation.
 
 **Basic Map of Project**
+
 Classes: Simulation, Visualization, Cell
 
 Cell

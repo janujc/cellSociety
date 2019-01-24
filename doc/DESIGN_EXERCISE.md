@@ -28,3 +28,6 @@ and return true or false based on the following rules:
 - Scissors attacks paper: true
 - Scissors attacks rock: false
 - Scissors attacks scissors: true 
+
+To decide winners, losers, and settle tiebreakers, there will be the main _Supervisor_ class
+that contains instances of rock, paper and scissors, and monitors all attacks.

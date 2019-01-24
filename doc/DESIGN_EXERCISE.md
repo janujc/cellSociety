@@ -31,3 +31,15 @@ and return true or false based on the following rules:
 
 To decide winners, losers, and settle tiebreakers, there will be the main _Supervisor_ class
 that contains instances of rock, paper and scissors, and monitors all attacks.
+
+### Exercise 3: Cell Society
+
+How does a Cell know what rules to apply for its simulation?
+
+How does a Cell know about its neighbors? How can it update itself without effecting its neighbors update?
+
+What is the grid? Does it have any behaviors? Who needs to know about it?
+
+What information about a simulation needs to be the configuration file?
+
+How is the GUI updated after all the cells have been updated?

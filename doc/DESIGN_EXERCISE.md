@@ -1,5 +1,14 @@
-# Design Exercise 
+Design Exercise
+===
 ## 24th January, 2019
+
+Team members: 
+
+Januario Carreiro (jjc70@duke.edu)
+
+Anshu Dwibhashi (ad353@duke.edu)
+
+Jonathan Yu (jy178@duke.edu)
 
 ### Exercise 1: RPS
 We can have one superclass called _Destroyer_ that has generic functions that are common to all destroyers.

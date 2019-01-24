@@ -10,6 +10,17 @@ Anshu Dwibhashi (ad353@duke.edu)
 
 Jonathan Yu (jy178@duke.edu)
 
+Classes: Simulation, Visualization, Cell
+
+Cell- one class for each game, stores rules
+
+Simulation- handles grid, acts as "main" class (runs configuration and visualization)
+* Handles grid
+* "main class" (calls configuration and visualization)
+* iterates through grid twice (once to calculate future states, then to update states)
+* calls each cell's update function and passes in its neighbors
+* gives the most information needed among games (better abstraction)
+
 ### Introduction
 This section describes the problem your team is trying to solve by writing this program, the primary design goals of the project (i.e., where is it most flexible), and the primary architecture of the design (i.e., what is closed and what is open). This section should discuss the program at a high-level (i.e., without referencing specific classes, data structures, or code).
 ### Overview

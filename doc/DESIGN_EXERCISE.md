@@ -43,7 +43,8 @@ the rules from the each simulation class.
 **How does a Cell know about its neighbors? How can it update itself without effecting its neighbors update?**
 The _Simulation_ superclass contains a grid of all the cells, which are represented by objects of 
 the _Cell_ class. Each cell class can call the _getCellInfo()_ method that will be provided by
-the _Simulation_ class, as a method that returns info on cells at the requested index.
+the _Simulation_ class, as a method that returns info on cells at the requested index. To avoid affecting its
+neighbor's update, each cell object would store its un-updated state, allowing other cells to access it.
 
 
 **What is the grid? Does it have any behaviors? Who needs to know about it?**

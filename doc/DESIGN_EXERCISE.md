@@ -34,16 +34,16 @@ that contains instances of rock, paper and scissors, and monitors all attacks.
 
 ### Exercise 3: Cell Society
 
-How does a Cell know what rules to apply for its simulation?
+**How does a Cell know what rules to apply for its simulation?**
 
 Each simulation (game of life, segregation, predator-prey, ...) has its own class that holds
 the rules for that specific simulation. Then, our primary class can get 
 the rules from the each simulation class.
 
-How does a Cell know about its neighbors? How can it update itself without effecting its neighbors update?
+**How does a Cell know about its neighbors? How can it update itself without effecting its neighbors update?**
 
-What is the grid? Does it have any behaviors? Who needs to know about it?
+**What is the grid? Does it have any behaviors? Who needs to know about it?**
 
-What information about a simulation needs to be the configuration file?
+**What information about a simulation needs to be the configuration file?**
 
-How is the GUI updated after all the cells have been updated?
+**How is the GUI updated after all the cells have been updated?**

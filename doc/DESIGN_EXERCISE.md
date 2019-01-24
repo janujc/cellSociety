@@ -63,3 +63,19 @@ This includes frequency of updates and the action done with each update.
 The simulation class will call the GUI class to update. The GUI doesn't know any rules
 about the simulation. It only contains things that the user will see and has a visual for
 the current state of the simulation.
+
+**Basic Map of Project**
+Classes: Simulation, Visualization, Cell
+
+Cell
+* One class for each game (extending abstract superclass)
+* Holds rules
+* Holds current and future (calculated) state
+
+Simulation- handles grid, acts as "main" class (runs configuration and visualization)
+* Handles grid
+* "main class" (calls configuration and visualization)
+* iterates through grid once to calculate future states of each cell
+    * beforehand, assigns "previous" future value to current
+* calls each cell's update function and passes in its neighbors
+* gives the most information needed among games (better abstraction)

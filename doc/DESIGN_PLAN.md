@@ -12,12 +12,16 @@ Jonathan Yu (jy178@duke.edu)
 
 Classes: Simulation, Visualization, Cell
 
-Cell- one class for each game, stores rules
+Cell
+* One class for each game (extending abstract superclass)
+* Holds rules
+* Holds current and future (calculated) state
 
 Simulation- handles grid, acts as "main" class (runs configuration and visualization)
 * Handles grid
 * "main class" (calls configuration and visualization)
-* iterates through grid twice (once to calculate future states, then to update states)
+* iterates through grid once to calculate future states of each cell
+    * beforehand, assigns "previous" future value to current
 * calls each cell's update function and passes in its neighbors
 * gives the most information needed among games (better abstraction)
 

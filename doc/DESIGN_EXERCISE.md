@@ -49,6 +49,9 @@ neighbor's update, each cell object would store its un-updated state, allowing o
 
 **What is the grid? Does it have any behaviors? Who needs to know about it?**
 
+The grid itself does not have any behaviors, it is just a 2-d array of Cell objects. Only the simulation
+and visualization classes now what's inside the grid.
+
 **What information about a simulation needs to be the configuration file?**
 
 We'll have all the rules for each different simulations in different config files.

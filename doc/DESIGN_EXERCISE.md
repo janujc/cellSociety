@@ -56,5 +56,10 @@ and visualization classes now what's inside the grid.
 
 We'll have all the rules for each different simulations in different config files.
 Then, depending on the simulation we want, we can just read a different config file.
+This includes frequency of updates and the action done with each update.
 
 **How is the GUI updated after all the cells have been updated?**
+
+The simulation class will call the GUI class to update. The GUI doesn't know any rules
+about the simulation. It only contains things that the user will see and has a visual for
+the current state of the simulation.

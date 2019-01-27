@@ -10,8 +10,8 @@ public abstract class Simulation {
 
     // grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents the
     // element of each row in a particular column
-    private Cell[][] grid;
-    private int gridSideSize;
+    protected Cell[][] grid;
+    protected int gridSideSize;
 
     public Simulation(int sideSize) {
         gridSideSize = sideSize;

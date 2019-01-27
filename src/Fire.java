@@ -25,7 +25,6 @@ public class Fire extends Simulation {
         final int TREE = 1;
         final int BURNING = 2;
 
-
         // create another grid to hold the updated states, which saves us from writing another nested for loop for
         // updating the states
         int[][] updatedGrid = new int[gridSideSize][gridSideSize];

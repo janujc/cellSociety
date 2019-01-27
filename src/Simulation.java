@@ -9,4 +9,6 @@ public abstract class Simulation {
 
     protected abstract void populateGrid();
 
+    public abstract Cell[][] step();
+
 }

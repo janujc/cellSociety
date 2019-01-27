@@ -1,6 +1,6 @@
 public abstract class Simulation {
 
-    private int[][] grid;
+    private Cell[][] grid;
 
     public Simulation(int sideSize) {
         grid = new Cell[sideSize][sideSize];

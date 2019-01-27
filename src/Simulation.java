@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Superclass for all simulations
@@ -36,34 +38,39 @@ public abstract class Simulation {
      * Gets the neighbors of a particular cell in the grid
      * @param x x-coordinate of the cell
      * @param y y-coordinate of the cell
-     * @return list of ordered pairs, representing the neighbors, in the order {N, NE, E, SE, S, SW, W, NW} where
-     * neighbor cells that are not in the grid (invalid) are null
+     * @return map of neighbors where the key is the neighbor's coordinates (int array where 0th index is the neighbor's
+     * x-coordinate and the 1st index is the neighbor's y-coordinate) and the value is the state of the neighbor
      */
-    protected List<int[]> getNeighbors(int x, int y) {
-        List<int[]> neighbors = new ArrayList<>();
+    protected Map<int[], Integer> getNeighbors(int x, int y) {
+        Map<int[], Integer> neighbors = new HashMap<>();
 
+        // list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
+        // neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
+        List<int[]> neighborCoords = new ArrayList<>();
         // N
-        neighbors.add(new int[]{x, y - 1});
+        neighborCoords.add(new int[]{x, y - 1});
         // NE
-        neighbors.add(new int[]{x + 1, y - 1});
+        neighborCoords.add(new int[]{x + 1, y - 1});
         // E
-        neighbors.add(new int[]{x + 1, y});
+        neighborCoords.add(new int[]{x + 1, y});
         // SE
-        neighbors.add(new int[]{x + 1, y + 1});
+        neighborCoords.add(new int[]{x + 1, y + 1});
         // S
-        neighbors.add(new int[]{x, y + 1});
+        neighborCoords.add(new int[]{x, y + 1});
         // SW
-        neighbors.add(new int[]{x - 1, y + 1});
+        neighborCoords.add(new int[]{x - 1, y + 1});
         // W
-        neighbors.add(new int[]{x - 1, y});
+        neighborCoords.add(new int[]{x - 1, y});
         //NW
-        neighbors.add(new int[]{x -1, y - 1});
+        neighborCoords.add(new int[]{x -1, y - 1});
 
         // mark invalid neighbors (not in grid) null
-        for (int i = 0; i < neighbors.size(); i ++) {
-            int[] neighbor = neighbors.get(i);
-            if (!isCellValid(neighbor[0], neighbor[1])) {
-                neighbors.set(i, null);
+        for (int i = 0; i < neighborCoords.size(); i ++) {
+            int[] neighbor = neighborCoords.get(i);
+            int neighborX = neighbor[0];
+            int neighborY = neighbor[1];
+            if (isCellValid(neighborX, neighborY)) {
+                neighbors.put(neighbor, grid[neighborX][neighborY]);
             }
         }
 

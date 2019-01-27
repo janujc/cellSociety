@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -52,13 +54,27 @@ public class PredatorPrey extends Simulation {
             for(int j = 0; j < gridSideSize; j++) {
                 Map<int[], Integer> neighbors = getCardinalNeighbors(i, j);
                 if (grid[i][j] == FISH) {
-                    
+
                 }
             }
         }
     }
 
-    private Map<int[], Integer> trackFishTurnsSurvived() {
-        for
+    /**
+     * Determines which of the current cell's neighbors are empty and returns their coordinates
+     * @param neighbors map of the cell's neighbors where the key is its coordinates and the value is its state
+     * @return
+     */
+    private List<int[]> getEmptyNeighbors(Map<int[], Integer> neighbors) {
+        List<int[]> emptyNeighbors = new ArrayList<>();
+
+        for (Map.Entry<int[], Integer> neighbor : neighbors.entrySet()) {
+            if (neighbor.getValue() == EMPTY) {
+                emptyNeighbors.add(neighbor.getKey());
+            }
+        }
+
+        return emptyNeighbors;
     }
+
 }

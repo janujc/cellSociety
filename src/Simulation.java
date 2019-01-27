@@ -20,7 +20,7 @@ public abstract class Simulation {
 
     public Simulation(int sideSize) {
         gridSideSize = sideSize;
-        grid = new Cell[gridSideSize][gridSideSize];
+        grid = new int[gridSideSize][gridSideSize];
         populateGrid();
     }
 

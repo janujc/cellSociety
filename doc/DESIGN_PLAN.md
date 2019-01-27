@@ -1,8 +1,8 @@
 Design Plan
 ===
-### 27 January 2019
+27 January 2019
 
-Team members: 
+#### Team members:
 
 Januario Carreiro (jjc70@duke.edu)
 
@@ -10,29 +10,59 @@ Anshu Dwibhashi (ad353@duke.edu)
 
 Jonathan Yu (jy178@duke.edu)
 
-Classes: Simulation, Visualization, Cell
-
-Cell
-* One class for each game (extending abstract superclass)
-* Holds rules
-* Holds current and future (calculated) state
-
-Simulation- handles grid, acts as "main" class (runs configuration and visualization)
-* Handles grid
-* "main class" (calls configuration and visualization)
-* iterates through grid once to calculate future states of each cell
-    * beforehand, assigns "previous" future value to current
-* calls each cell's update function and passes in its neighbors
-* gives the most information needed among games (better abstraction)
-
 ### Introduction
-This section describes the problem your team is trying to solve by writing this program, the primary design goals of the project (i.e., where is it most flexible), and the primary architecture of the design (i.e., what is closed and what is open). This section should discuss the program at a high-level (i.e., without referencing specific classes, data structures, or code).
+The problem we're trying to solve by writing this program is that of building a program to efficiently simulate various natural or abstract phenomena. We need to be able to build a program that is abstract enough to serve as a simulation engine for whatever phenomenon we wish to simulate, by reading in rules for whatever phenomenon it might be, and execute them. The primary design goal is to provide a generic simulation class that can be used by developers to build more concrete simulation classes that inherit from this main simulation class, so that new simulations can be added easily without having to touch the rest of the program.
+
+The program, will be architected in a way that the main driver class simply reads an XML Manifest file (borrowed the idea from Android manifest) to see what classes are available to show as simulations, and then show a selector for users to pick a simulation. Each simulation is isolated from all other simulations, and the driver class. The class that's intended to show visualizations and update the UI simply obtains instructions to show changes in the UI, but is otherwise isolated completely from the simulations.
+
 ### Overview
-This section serves as a map of your design for other programmers to gain a general understanding of how and why the program was divided up, and how the individual parts work together to provide the desired functionality. As such, it should describe specific components you intend to create, their purpose with regards to the program's functionality, and how they collaborate with each other. It should also include a picture of how the components are related (these pictures can be hand drawn and scanned in, created with a standard drawing program, or screen shots from a UML design program). This section should discuss specific classes, methods, and data structures, but not individual lines of code.
+
+Classes: `Driver`, `Simulation`, `Visualization`, `Cell`
+
+The `Driver` class will be the main entry point to the program, where the user picks a simulation to be run. The `Simulation` class is an abstract class that will be inherited by all the individual, specific, concrete simulations, and contains methods to run the simulation. The simulation contains and maintains a grid of `Cell` objects. The `Visualization` class includes methods to take information from the `Simulation` class regarding what has to be rendered and where, and then do the rendering process. The `Cell` class contains display information about a single cell, as dictated by the `Simulation` class.
+
+![CellSocietyUML](https://i.imgur.com/0H3oSOe.png)
+
 ### User Interface
-This section describes how the user will interact with your program (keep it very simple to start). It should describe the overall appearance of program's user interface components and how users interact with these components (especially those specific to your program, i.e., means of input other than menus or toolbars). It should also include one or more pictures of the user interface (these pictures can be hand drawn and scanned in, created with a standard drawing program, or screen shots from a dummy program that serves as a exemplar). Finally, it should describe any erroneous situations that are reported to the user (i.e., bad input data, empty data, etc.). This section should go into as much detail as necessary to cover all your team wants to say.
+The user will interact with the program through two avenues: the main driver class and the visualization class. Before the user has picked a simulation, the driver class will display all available simulations, and respond to user inputs on general help on how to use the program, or when the user chooses a certain simulation to be displayed. Once the user picks a certain simulation to be displayed, all of its outputs will be displayed by the visualization class, and all of the user inputs will be handled by that class and relayed to the simulation class.
+
+The main driver class will have a grid like structure showing the user icons for each simulation that will respond to clicks by starting that particular simulation. The simulation will just be a grid of cells that collectively display the simulation. There won't be any UI elements in the simulation class in order to make it abstract enough for other simulation classes to be easily created. Any initial condition information will be present in the Manifest file. Any errors will be displayed to the user using a design element known as a snackbar (borrowed from Android UI principles).
+
+![Main Driver](https://i.imgur.com/tvMisdr.png)
+![Simulation](https://i.imgur.com/IrLEbCo.png)
+
 ### Design Details 
-This section describes each component introduced in the Overview in detail (as well as any other sub-components that may be needed but are not significant to include in a high-level description of the program). It should describe how each component handles specific features given in the assignment specification, what resources it might use, how it collaborates with other components, and how each could be extended to include additional requirements (from the assignment specification or discussed by your team). Include the steps needed to complete the Use Cases below to help make your descriptions more concrete. Finally, justify the decision to create each component with respect to the design's key goals, principles, and abstractions. This section should go into as much detail as necessary to cover all your team wants to say.
-### Design Considerations 
-This section describes any issues which need to be addressed or resolved before attempting to devise a complete design solution. It should include any design decisions that the group discussed at length (include pros and cons from all sides of the discussion) as well as any assumptions or dependencies regarding the program that impact the overall design. This section should go into as much detail as necessary to cover all your team wants to say.
+The following are the descriptions for the components introduced in the Overview section:
+
+`Driver`:
+* Main driver class that serves as the entry point to the program.
+* Shows an app-store-like display of various simulations that may be selected by the user to be played.
+* Then passes control to the main `Simulation` that is being played.
+
+`Simulation`:
+* Handles grid, acts as "main" class (runs configuration and visualization).
+* Main class for a specific simulation (calls configuration and visualization).
+* Iterates through grid once to calculate future states of each cell beforehand, assigns "previous" future value to current.
+* Calls each cell's update function and passes in its neighbors and/or other relevant information such as user-inputs.
+* Gives the information needed for simulation to cell in an abstract manner. 
+* This class itself will be a generic, potentially-abstract parent class that will be inherited by each new Simulation child class that developers choose to build.
+
+`Cell`:
+* Generic cell class that is populated and controlled by the `Simulation` child-class.
+* Renders information as dictated by a `Simulation` child-class.
+* Holds past and current state.
+
+
+`Visualization`:
+* Serves as an interface for the rest of the program to access the GUI.
+* Has no idea what's going on in the simulation; takes in input from the `Simulation` class and displays it as instructed.
+* We can add a delay between steps of the simulation depending on what the user wants the speed to be
+
+We also have subclasses of sumulation—`GameOfLife`, `Segregation`, `PredatorPrey`, `Fire`, `Percolation`—that extend the abstract simulation class and have their own private methods required to implement the different simulations.
+
+### Design Considerations
+The primary design considerations that our team needs to undertake include decions regarding how abstractions and encapsulations are implemented. For example, our decisions on whether the visualization class will be in charge of controlling the rate of simulation, or the simulation class, will change which of those classes 'knows' what information about the other class. This affects how we choose to encapsulate various details. We had lengthy discussions in our group to determine which classes have which responsibilities. The pros of the visualization class being completely blinded from all simulation aspects and only rendering what it's asked to render by the simulation class are that it implements abstraction quite well and becomes modular. However, the cons outweigh the pros, in that the simulation class should actually be isolated from the rate at which the simulation occurs, and the visualization class should call the simulation class at that frequency.
 ### Team Responsibilities
+Anshu will take primary responisibility of the `Driver` and `Visualization` classes. Jonathan will take
+primary responsibility of `Simulation`, `PredatorPrey`, and `Fire` classes. Januario will take primary
+responsibility of the `Cell`, `Segregation`, `GameOfLife`, and `Percolation` classes.

@@ -15,26 +15,26 @@ public abstract class Simulation {
     protected int[][] grid;
     protected int gridSideSize;
 
-    public Simulation(int sideSize, int[] states, double[] initialFreqs) {
+    public Simulation(int sideSize, int[] states, double[] initialPopulationFreqs) {
         gridSideSize = sideSize;
         grid = new int[gridSideSize][gridSideSize];
-        populateGrid(states, initialFreqs);
+        populateGrid(states, initialPopulationFreqs);
     }
 
     /**
      * Fills the grid with states, based off of the passed-in initial population frequencies (not population percentages)
      * @param states array of possible states
-     * @param initialFreqs array of the initial frequencies of each state, in the same order as states
+     * @param initialPopulationFreqs array of the initial frequencies of each state, in the same order as states
      */
-    protected void populateGrid(int[] states, double[] initialFreqs) {
+    protected void populateGrid(int[] states, double[] initialPopulationFreqs) {
         Random rand = new Random();
         for (int i = 0; i < gridSideSize; i++) {
             for (int j = 0; j < gridSideSize; j++) {
                 int randNum = rand.nextInt(100);
                 for (int k = 0; k < states.length; k++) {
-                    double sumPrevFreqs = sumPrevFreqs(Arrays.copyOfRange(initialFreqs, 0, k));
+                    double sumPrevFreqs = sumPrevFreqs(Arrays.copyOfRange(initialPopulationFreqs, 0, k));
                     // uses Random apply the frequencies
-                    if (randNum < 100 * (sumPrevFreqs + initialFreqs[k])) {
+                    if (randNum < 100 * (sumPrevFreqs + initialPopulationFreqs[k])) {
                         grid[i][j] = states[k];
                     }
                 }

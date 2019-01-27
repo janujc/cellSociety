@@ -1,51 +1,18 @@
 import java.util.Map;
 import java.util.Random;
 
-// TODO: Do I need to write the Spreading of Fire rules in the comments?
+// TODO: Do I need to write the simulation rules in the comments?
 /**
  * Class that represents the Spreading of Fire simulation
  */
 public class Fire extends Simulation {
 
-    // the possible states of each cell
-    final int EMPTY = 0;
-    final int TREE = 1;
-    final int BURNING = 2;
+    // probability that a tree next to a burning tree catches on fire, which is passed to the constructor
+    private final double PROB_CATCH;
 
-    // the initial probabilities of each state for use by populateGrid()
-    final double FREQ_EMPTY;
-    final double FREQ_TREE;
-    final double FREQ_BURNING;
-    // probability that a tree next to a burning tree catches on fire
-    final double PROB_CATCH;
-
-    public Fire(int sideSize, double freqEmpty, double freqTree, double freqBurning, double probCatch) {
-        super(sideSize);
-        FREQ_EMPTY = freqEmpty;
-        FREQ_TREE = freqTree;
-        FREQ_BURNING = freqBurning;
+    public Fire(int sideSize, double[] initialPopulationFreqs, double probCatch) {
+        super(sideSize, new int[]{0, 1, 2}, initialPopulationFreqs); // hard-coded here b/c states are pre-determined
         PROB_CATCH = probCatch;
-    }
-
-    /**
-     * Fills the grid with this simulation's states, based off of the passed-in frequencies
-     */
-    protected void populateGrid() {
-        Random rand = new Random();
-        for (int i = 0; i < gridSideSize; i++) {
-            for (int j = 0; j < gridSideSize; j++) {
-                int randNum = rand.nextInt(100);
-                if (randNum < FREQ_EMPTY * 100) {
-                    grid[i][j] = EMPTY;
-                }
-                else if (randNum < FREQ_EMPTY + FREQ_TREE) {
-                    grid[i][j] = TREE;
-                }
-                else {
-                    grid[i][j] = BURNING;
-                }
-            }
-        }
     }
 
     /**
@@ -53,6 +20,12 @@ public class Fire extends Simulation {
      * PROB_CATCH value, then updates the grid
      */
     public void step() {
+        // the possible states of each cell
+        final int EMPTY = 0;
+        final int TREE = 1;
+        final int BURNING = 2;
+
+
         // create another grid to hold the updated states, which saves us from writing another nested for loop for
         // updating the states
         int[][] updatedGrid = new int[gridSideSize][gridSideSize];

@@ -1,6 +1,10 @@
 import java.util.Map;
 import java.util.Random;
 
+// TODO: Do I need to write the Spreading of Fire rules in the comments?
+/**
+ * Class that represents the Spreading of Fire simulation
+ */
 public class Fire extends Simulation {
 
     // the possible states of each cell
@@ -23,6 +27,9 @@ public class Fire extends Simulation {
         PROB_CATCH = probCatch;
     }
 
+    /**
+     * Fills the grid with this simulation's states, based off of the passed-in frequencies
+     */
     protected void populateGrid() {
         Random rand = new Random();
         for (int i = 0; i < gridSideSize; i++) {
@@ -41,6 +48,10 @@ public class Fire extends Simulation {
         }
     }
 
+    /**
+     * Calculates the next state for each cell in the grid based off this simulation's rules and the passed-in
+     * PROB_CATCH value, then updates the grid
+     */
     public void step() {
         // create another grid to hold the updated states, which saves us from writing another nested for loop for
         // updating the states

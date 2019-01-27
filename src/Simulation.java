@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Superclass for all simulations
  * <p>
- * This class creates a simulation grid and provides functionality to update the grid.
+ * This class creates a simulation grid and declares functionality to update the grid.
  */
 public abstract class Simulation {
 

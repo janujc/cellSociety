@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Superclass for all simulations
@@ -18,16 +15,45 @@ public abstract class Simulation {
     protected int[][] grid;
     protected int gridSideSize;
 
-    public Simulation(int sideSize) {
+    public Simulation(int sideSize, int[] states, double[] initialFreqs) {
         gridSideSize = sideSize;
         grid = new int[gridSideSize][gridSideSize];
-        populateGrid();
+        populateGrid(states, initialFreqs);
     }
 
     /**
-     * Fills the grid with states
+     * Fills the grid with states, based off of the passed-in initial population frequencies (not population percentages)
+     * @param states array of possible states
+     * @param initialFreqs array of the initial frequencies of each state, in the same order as states
      */
-    protected abstract void populateGrid();
+    protected void populateGrid(int[] states, double[] initialFreqs) {
+        Random rand = new Random();
+        for (int i = 0; i < gridSideSize; i++) {
+            for (int j = 0; j < gridSideSize; j++) {
+                int randNum = rand.nextInt(100);
+                for (int k = 0; k < states.length; k++) {
+                    double sumPrevFreqs = sumPrevFreqs(Arrays.copyOfRange(initialFreqs, 0, k));
+                    // uses Random apply the frequencies
+                    if (randNum < 100 * (sumPrevFreqs + initialFreqs[k])) {
+                        grid[i][j] = states[k];
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper function for populateGrid() that sums the "previous" frequencies in the array
+     * @param prevFreqs double array of the "previous" frequencies
+     * @return sum of the previous frequencies
+     */
+    private double sumPrevFreqs (double[] prevFreqs) {
+        double sum = 0;
+        for (double d : prevFreqs) {
+            sum += d;
+        }
+        return sum;
+    }
 
     /**
      * Calculates the next state for each cell in the grid, then updates the grid
@@ -108,8 +134,7 @@ public abstract class Simulation {
     private Map<int[], Integer> validateNeighbors(List<int[]> neighborCoords) {
         Map<int[], Integer> neighbors = new HashMap<>();
 
-        for (int i = 0; i < neighborCoords.size(); i ++) {
-            int[] neighbor = neighborCoords.get(i);
+        for (int[] neighbor : neighborCoords) {
             int neighborX = neighbor[0];
             int neighborY = neighbor[1];
             if (!(neighborX < 0 || neighborX > gridSideSize || neighborY < 0 || neighborY > gridSideSize)) {

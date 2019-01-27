@@ -28,14 +28,14 @@ public abstract class Simulation {
      */
     protected void populateGrid(int[] states, double[] initialPopulationFreqs) {
         Random rand = new Random();
-        for (int i = 0; i < gridSideSize; i++) {
-            for (int j = 0; j < gridSideSize; j++) {
+        for (int x = 0; x < gridSideSize; x++) {
+            for (int y = 0; y < gridSideSize; y++) {
                 int randNum = rand.nextInt(100);
                 for (int k = 0; k < states.length; k++) {
                     double sumPrevFreqs = sumPrevFreqs(Arrays.copyOfRange(initialPopulationFreqs, 0, k));
                     // uses Random apply the frequencies
                     if (randNum < 100 * (sumPrevFreqs + initialPopulationFreqs[k])) {
-                        grid[i][j] = states[k];
+                        grid[x][y] = states[k];
                     }
                 }
             }
@@ -143,6 +143,34 @@ public abstract class Simulation {
         }
 
         return neighbors;
+    }
+
+    /**
+     * Gets either all or just the cardinal neighbors of a cell that have a certain state and returns their coordinates
+     * @param x x-coordinate of the cell
+     * @param y y-coordinate of the cell
+     * @return map of cardinal neighbors with the desired state where the key is the neighbor's coordinates (int array
+     * where 0th index is the neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate) and the value is
+     * the state of the neighbor
+     */
+    protected List<int[]> getNeighborsOfType(int x, int y, int type, boolean onlyCardinal) {
+        List<int[]> neighborsOfType = new ArrayList<>();
+
+        Map<int[], Integer> neighbors;
+        if (onlyCardinal) {
+            neighbors =  getCardinalNeighbors(x, y);
+        }
+        else {
+            neighbors = getAllNeighbors(x, y);
+        }
+
+        for (Map.Entry<int[], Integer> neighbor : neighbors.entrySet()) {
+            if (neighbor.getValue() == type) {
+                neighborsOfType.add(neighbor.getKey());
+            }
+        }
+
+        return neighborsOfType;
     }
 
     /**

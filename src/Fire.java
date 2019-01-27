@@ -4,6 +4,8 @@ import java.util.Random;
 // TODO: Do I need to write the simulation rules in the comments?
 /**
  * Class that represents the Spreading of Fire simulation
+ * <p>
+ * States: 0 (empty), 1 (tree), 2 (burning tree)
  */
 public class Fire extends Simulation {
 

@@ -1,18 +1,64 @@
+import java.util.Map;
 import java.util.Random;
 
 /**
  * Class that represents the Predator-Prey simulation
+ * <p>
+ * States: 0 (empty), 1 (fish), 2 (shark)
  */
 public class PredatorPrey extends Simulation {
 
-    // the possible states of each cell
-    final int EMPTY = 0;
-    final int FISH = 1;
-    final int SHARK = 2;
+    // if a fish survives for this number of turns, the fish will breed
+    private final int NUM_TURNS_TO_BREED;
 
-    public PredatorPrey(int sideSize, double[] initialPopulationFreqs) {
+    // the possible states of each cell (hard-coded b/c states are pre-determined)
+    private final int EMPTY = 0;
+    private final int FISH = 1;
+    private final int SHARK = 2;
+
+    // tracks the number of turns each fish has survived
+    // keys are the current coordinates of the fish, values are the number of turns
+    private Map<int[], Integer> fishTurnTracker;
+
+    public PredatorPrey(int sideSize, double[] initialPopulationFreqs, int numTurnsToBreed) {
         super(sideSize, new int[]{0, 1, 2}, initialPopulationFreqs); // hard-coded b/c states are pre-determined
+        NUM_TURNS_TO_BREED = numTurnsToBreed;
+        initializeFishTurnTracker();
     }
 
-    
+    /**
+     * Finds all of the fish in the initial grid and adds them to the fish turn tracker
+     */
+    private void initializeFishTurnTracker() {
+        for (int i = 0; i < gridSideSize; i++) {
+            for (int j = 0; j < gridSideSize; j++) {
+                if (grid[i][j] == FISH) {
+                    fishTurnTracker.put(new int[]{i, j}, 0); // grid population doesn't count as a turn
+                }
+            }
+        }
+    }
+
+    /**
+     * Calculates the next state for each cell in the grid based off this simulation's rules and then updates the grid
+     */
+    public void step() {
+        // create another grid to hold the updated states, which saves us from writing another nested for loop for
+        // updating the states
+        int[][] updatedGrid = new int[gridSideSize][gridSideSize];
+
+        Random rand = new Random();
+        for (int i = 0; i < gridSideSize; i++) {
+            for(int j = 0; j < gridSideSize; j++) {
+                Map<int[], Integer> neighbors = getCardinalNeighbors(i, j);
+                if (grid[i][j] == FISH) {
+                    
+                }
+            }
+        }
+    }
+
+    private Map<int[], Integer> trackFishTurnsSurvived() {
+        for
+    }
 }

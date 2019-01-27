@@ -4,9 +4,11 @@ import java.util.List;
 public abstract class Simulation {
 
     private Cell[][] grid;
+    private int gridSideSize;
 
     public Simulation(int sideSize) {
-        grid = new Cell[sideSize][sideSize];
+        gridSideSize = sideSize;
+        grid = new Cell[gridSideSize][gridSideSize];
         populateGrid();
     }
 

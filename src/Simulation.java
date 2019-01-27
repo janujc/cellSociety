@@ -11,4 +11,8 @@ public abstract class Simulation {
 
     public abstract Cell[][] step();
 
+    public Cell[][] getGrid() {
+        return grid;
+    }
+
 }

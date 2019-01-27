@@ -1,5 +1,8 @@
 import java.util.*;
 
+// TODO Refactor use Cell objects
+// TODO Do I need to write the simulation rules in the comments?
+// TODO Is it ok to have methods in superclass that are only used by some, not all subclasses?
 /**
  * Superclass for all simulations
  * <p>
@@ -21,12 +24,13 @@ public abstract class Simulation {
         populateGrid(states, initialPopulationFreqs);
     }
 
+    // TODO Is the implementation of frequencies and randomness ok?
     /**
      * Fills the grid with states, based off of the passed-in initial population frequencies (not population percentages)
      * @param states array of possible states
      * @param initialPopulationFreqs array of the initial frequencies of each state, in the same order as states
      */
-    protected void populateGrid(int[] states, double[] initialPopulationFreqs) {
+    private void populateGrid(int[] states, double[] initialPopulationFreqs) {
         Random rand = new Random();
         for (int x = 0; x < gridSideSize; x++) {
             for (int y = 0; y < gridSideSize; y++) {
@@ -107,7 +111,7 @@ public abstract class Simulation {
      * @return map of neighbors where the key is the neighbor's coordinates (int array where 0th index is the neighbor's
      * x-coordinate and the 1st index is the neighbor's y-coordinate) and the value is the state of the neighbor
      */
-    protected Map<int[], Integer>  getCornerNeighbors(int x, int y) {
+    private Map<int[], Integer>  getCornerNeighbors(int x, int y) {
         // list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
         // neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
         List<int[]> neighborCoords = new ArrayList<>();
@@ -145,6 +149,7 @@ public abstract class Simulation {
         return neighbors;
     }
 
+    // TODO Should this method be separate or built into the base getNeighbors method
     /**
      * Gets either all or just the cardinal neighbors of a cell that have a certain state and returns their coordinates
      * @param x x-coordinate of the cell

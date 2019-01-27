@@ -1,7 +1,6 @@
 import java.util.Map;
 import java.util.Random;
 
-// TODO: Do I need to write the simulation rules in the comments?
 /**
  * Class that represents the Spreading of Fire simulation
  * <p>
@@ -17,6 +16,7 @@ public class Fire extends Simulation {
         PROB_CATCH = probCatch;
     }
 
+    // TODO Should I put the body of the for loop in another method?
     /**
      * Calculates the next state for each cell in the grid based off this simulation's rules and the passed-in
      * PROB_CATCH value, then updates the grid
@@ -32,26 +32,26 @@ public class Fire extends Simulation {
         int[][] updatedGrid = new int[gridSideSize][gridSideSize];
 
         Random rand = new Random();
-        for (int i = 0; i < gridSideSize; i++) {
-            for (int j = 0; j < gridSideSize; j++) {
-                Map<int[], Integer> neighbors = getCardinalNeighbors(i, j);
+        for (int x = 0; x < gridSideSize; x++) {
+            for (int y = 0; y < gridSideSize; y++) {
+                Map<int[], Integer> neighbors = getCardinalNeighbors(x, y);
                 // if a tree is next to a burning tree, it will catch fire with a probability of PROB_CATCH
-                if (grid[i][j] == TREE && neighbors.containsValue(BURNING)) {
+                if (grid[x][y] == TREE && neighbors.containsValue(BURNING)) {
                     int randNum = rand.nextInt(100);
                     if (randNum < PROB_CATCH * 100) {
-                        updatedGrid[i][j] = BURNING;
+                        updatedGrid[x][y] = BURNING;
                     }
                     else {
-                        updatedGrid[i][j] = grid[i][j];
+                        updatedGrid[x][y] = grid[x][y];
                     }
                 }
                 // if a tree is burning, it will burn down (become empty cell)
-                else if (grid[i][j] == BURNING) {
-                    updatedGrid[i][j] = EMPTY;
+                else if (grid[x][y] == BURNING) {
+                    updatedGrid[x][y] = EMPTY;
                 }
                 // otherwise, the cell remains the same
                 else {
-                    updatedGrid[i][j] = grid[i][j];
+                    updatedGrid[x][y] = grid[x][y];
                 }
             }
         }

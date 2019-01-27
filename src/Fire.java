@@ -1,4 +1,3 @@
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -30,13 +29,13 @@ public class Fire extends Simulation {
             for (int j = 0; j < gridSideSize; j++) {
                 int randNum = rand.nextInt(100);
                 if (randNum < FREQ_EMPTY * 100) {
-                    grid[i][j] = new Cell(EMPTY);
+                    grid[i][j] = EMPTY;
                 }
                 else if (randNum < FREQ_EMPTY + FREQ_TREE) {
-                    grid[i][j] = new Cell(TREE);
+                    grid[i][j] = TREE;
                 }
                 else {
-                    grid[i][j] = new Cell(BURNING);
+                    grid[i][j] = BURNING;
                 }
             }
         }

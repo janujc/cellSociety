@@ -8,9 +8,12 @@ import java.util.List;
  */
 public abstract class Simulation {
 
-    // grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents the
-    // element of each row in a particular column
-    protected Cell[][] grid;
+    /*
+     * Simulation grid made up of states, represented by ints
+     * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
+     * the element of each row in a particular column
+     */
+    protected int[][] grid;
     protected int gridSideSize;
 
     public Simulation(int sideSize) {
@@ -20,12 +23,12 @@ public abstract class Simulation {
     }
 
     /**
-     * Fills the grid with Cell objects
+     * Fills the grid with states
      */
     protected abstract void populateGrid();
 
     /**
-     * Calculates the next state for each Cell object in the grid, then updates the grid
+     * Calculates the next state for each cell in the grid, then updates the grid
      */
     public abstract void step();
 
@@ -85,7 +88,7 @@ public abstract class Simulation {
      * Returns the grid for other classes to access
      * @return the simulation grid
      */
-    public Cell[][] getGrid() {
+    public int[][] getGrid() {
         return grid;
     }
 

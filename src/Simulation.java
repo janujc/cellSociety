@@ -36,7 +36,23 @@ public abstract class Simulation {
         //NW
         neighbors.add(new int[]{x -1, y - 1});
 
+        // mark invalid neighbors (not in grid) null
+        for (int i = 0; i < neighbors.size(); i ++) {
+            int[] neighbor = neighbors.get(i);
+            if (!isCellValid(neighbor[0], neighbor[1])) {
+                neighbors.set(i, null);
+            }
+        }
+
         return neighbors;
+    }
+
+    protected boolean isCellValid(int x, int y) {
+        if (x < 0 || x >= gridSideSize || y < 0 || y >= gridSideSize) {
+            return false;
+        }
+
+        return true;
     }
 
     public Cell[][] getGrid() {

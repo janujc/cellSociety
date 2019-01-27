@@ -66,3 +66,5 @@ The primary design considerations that our team needs to undertake include decio
 Anshu will take primary responisibility of the `Driver` and `Visualization` classes. Jonathan will take
 primary responsibility of `Simulation`, `PredatorPrey`, and `Fire` classes. Januario will take primary
 responsibility of the `Cell`, `Segregation`, `GameOfLife`, and `Percolation` classes.
+
+The plan is to work on all of the classes simultaneously, and to be consistent on how they interact with one another.

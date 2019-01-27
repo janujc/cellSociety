@@ -49,7 +49,7 @@ public class Fire extends Simulation {
         Random rand = new Random();
         for (int i = 0; i < gridSideSize; i++) {
             for (int j = 0; j < gridSideSize; j++) {
-                Map<int[], Integer> neighbors = getNeighbors(i, j);
+                Map<int[], Integer> neighbors = getCardinalNeighbors(i, j);
                 // if a tree is next to a burning tree, it will catch fire with a probability of PROB_CATCH
                 if (grid[i][j] == TREE && neighbors.containsValue(BURNING)) {
                     int randNum = rand.nextInt(100);

@@ -10,7 +10,7 @@ import java.util.Random;
  */
 public class PredatorPrey extends Simulation {
 
-    // if a fish survives for this number of turns, the fish will breed
+    // if a fish or shark survives for this number of turns, the it will breed
     private final int NUM_TURNS_TO_BREED;
 
     // the possible states of each cell (hard-coded b/c states are pre-determined)
@@ -20,22 +20,22 @@ public class PredatorPrey extends Simulation {
 
     // tracks the number of turns each fish has survived
     // keys are the current coordinates of the fish, values are the number of turns
-    private Map<int[], Integer> fishTurnTracker;
+    private Map<int[], Integer> animalTurnTracker;
 
     public PredatorPrey(int sideSize, double[] initialPopulationFreqs, int numTurnsToBreed) {
         super(sideSize, new int[]{0, 1, 2}, initialPopulationFreqs); // hard-coded b/c states are pre-determined
         NUM_TURNS_TO_BREED = numTurnsToBreed;
-        initializeFishTurnTracker();
+        initializeAnimalTurnTracker();
     }
 
     /**
-     * Finds all of the fish in the initial grid and adds them to the fish turn tracker
+     * Finds all of the fish and sharks in the initial grid and adds them to the turn tracker
      */
-    private void initializeFishTurnTracker() {
+    private void initializeAnimalTurnTracker() {
         for (int i = 0; i < gridSideSize; i++) {
             for (int j = 0; j < gridSideSize; j++) {
                 if (grid[i][j] == FISH) {
-                    fishTurnTracker.put(new int[]{i, j}, 0); // grid population doesn't count as a turn
+                    animalTurnTracker.put(new int[]{i, j}, 0); // grid population doesn't count as a turn
                 }
             }
         }
@@ -54,14 +54,15 @@ public class PredatorPrey extends Simulation {
             for(int j = 0; j < gridSideSize; j++) {
                 Map<int[], Integer> neighbors = getCardinalNeighbors(i, j);
                 if (grid[i][j] == FISH) {
-
+                    // TODO add move functionality
                 }
+                else if (grid[i][j])
             }
         }
     }
 
     /**
-     * Determines which of the current cell's neighbors are empty and returns their coordinates
+     * Helper function that determines which of the current cell's neighbors are empty and returns their coordinates
      * @param neighbors map of the cell's neighbors where the key is its coordinates and the value is its state
      * @return
      */

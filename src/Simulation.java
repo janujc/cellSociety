@@ -62,10 +62,31 @@ public abstract class Simulation {
         }
     }
 
+    // TODO Is it okay to have a method just made up of two method calls? It makes sense logically but might be superfluous.
     /**
-     * Calculates the next state for each cell in the grid, then updates the grid
+     * Calculates the next state for each cell in the grid, then updates the grid. This represents a single step in the
+     * simulation.
      */
-    public abstract void step();
+    public void step() {
+        calculateNextStates();
+        updateStates();
+    }
+
+    /**
+     * Calculates the next state of each cell in the grid (will be defined in subclasses to implement specific rules)
+     */
+    protected abstract void calculateNextStates();
+
+    /**
+     * Updates the state of each cell in the grid
+     */
+    protected void updateStates() {
+        for (Cell[] xCells : grid) {
+            for (Cell cell : xCells) {
+                cell.updateState();
+            }
+        }
+    }
 
     // TODO Is it better to leave getCornerNeighbors() separate or put it inside getAllNeighbors() since that's the only time it's needed?
     /**
@@ -78,7 +99,7 @@ public abstract class Simulation {
 
         // as the cardinal and corner neighbors are disjoint, no worry about double-counting
         neighbors.addAll(getCardinalNeighbors(center));
-        neighbors.addAll(getCornerNeighbors(center);
+        neighbors.addAll(getCornerNeighbors(center));
         return neighbors;
     }
 
@@ -158,7 +179,7 @@ public abstract class Simulation {
     protected List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
         List<Cell> neighbors;
         List<Cell> neighborsOfType = new ArrayList<>();
-        
+
         if (onlyCardinal) {
             neighbors =  getCardinalNeighbors(center);
         }
@@ -181,5 +202,4 @@ public abstract class Simulation {
     public Cell[][] getGrid() {
         return grid;
     }
-
 }

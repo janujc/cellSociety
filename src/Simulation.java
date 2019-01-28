@@ -62,7 +62,7 @@ public abstract class Simulation {
         }
     }
 
-    // TODO Is it okay to have a method just made up of two method calls? It makes sense logically but might be superfluous.
+    // TODO Is it okay to have a method just made up of two method calls? It makes sense logically but might be unecessary.
     /**
      * Calculates the next state for each cell in the grid, then updates the grid. This represents a single step in the
      * simulation.
@@ -188,7 +188,7 @@ public abstract class Simulation {
         }
 
         for (Cell neighbor : neighbors) {
-            if (neighbor.getState() == type) {
+            if (neighbor.getCurrState() == type) {
                 neighborsOfType.add(neighbor);
             }
         }

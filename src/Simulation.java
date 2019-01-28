@@ -24,7 +24,7 @@ public abstract class Simulation {
         populateGrid(states, initialPopulationFreqs);
     }
 
-    // TODO Is the implementation of frequencies and randomness ok?
+    // TODO Is the implementation of frequencies and randomness ok? Or should it be absolute percentages?
     /**
      * Fills the grid with states, based off of the passed-in initial population frequencies (not population percentages)
      * @param states array of possible states

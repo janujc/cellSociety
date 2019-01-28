@@ -59,7 +59,7 @@ The following are the descriptions for the components introduced in the Overview
 
 We also have subclasses of simulation—`GameOfLife`, `Segregation`, `PredatorPrey`, `Fire`, `Percolation`—that extend the abstract simulation class and have their own private methods required to implement the different simulations with their unique states and rules.
 
-####Use Cases
+__**Use Cases**__
 * Case 1: Apply the rules to a middle cell: set the next state of a cell to dead by counting its number of neighbors using the Game of Life rules for a cell in the middle (i.e., with all its neighbors)
     * Get all 8 of the cell's neighbors by calling the Simulation classes' method
     * Count the number of living neighbors

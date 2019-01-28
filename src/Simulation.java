@@ -2,18 +2,18 @@ import java.util.*;
 
 // TODO Refactor use Cell objects
 // TODO Do I need to write the simulation rules in the comments?
-// TODO Is it ok to have methods in superclass that are only used by some, not all subclasses?
+// TODO Is it ok to have methods in superclass that are only used by some, but not all subclasses?
 /**
  * Superclass for all simulations
  * <p>
- * This class creates a simulation grid and declares functionality to update the grid.
+ * This class provides methods to create a simulation grid and functionality to update the grid.
  *
  * @author Jonathan Yu
  */
 public abstract class Simulation {
 
     /**
-     * Simulation grid made up of cells each with their own state (represented by an int)
+     * The simulation grid made up of cells each with their own state (represented by an int)
      * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
      * the element of each row in a particular column.
      */
@@ -45,11 +45,12 @@ public abstract class Simulation {
      */
     private void populateGrid(int[] states, double[] populationFreqs) {
         Random rand = new Random();
+
         for (int x = 0; x < gridSideSize; x++) {
             for (int y = 0; y < gridSideSize; y++) {
-                // uses Random and the cumulative frequencies to decide the state of each cell
                 int randNum = rand.nextInt(100);
                 double cumulativeFreqs = 0;
+
                 for (int k = 0; k < states.length; k++) {
                     cumulativeFreqs += populationFreqs[k];
                     if (randNum < 100 * (cumulativeFreqs + populationFreqs[k])) {
@@ -74,6 +75,7 @@ public abstract class Simulation {
      */
     protected List<Cell> getAllNeighbors(Cell center) {
         List<Cell> neighbors = new ArrayList<>();
+
         // as the cardinal and corner neighbors are disjoint, no worry about double-counting
         neighbors.addAll(getCardinalNeighbors(center));
         neighbors.addAll(getCornerNeighbors(center);
@@ -86,19 +88,19 @@ public abstract class Simulation {
      * @return the list of cells that neighbor center in the cardinal directions
      */
     protected List<Cell> getCardinalNeighbors(Cell center) {
-        // list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
-        // neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
+
+        /*
+         * list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
+         * neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
+         */
         List<int[]> neighborCoords = new ArrayList<>();
         int centerX = center.getX();
         int centerY = center.getY();
-        // N
-        neighborCoords.add(new int[]{centerX, centerY - 1});
-        // E
-        neighborCoords.add(new int[]{centerX + 1, centerY});
-        // S
-        neighborCoords.add(new int[]{centerX, centerY + 1});
-        // W
-        neighborCoords.add(new int[]{centerX - 1, centerY});
+
+        neighborCoords.add(new int[]{centerX, centerY - 1});    // North
+        neighborCoords.add(new int[]{centerX + 1, centerY});    // East
+        neighborCoords.add(new int[]{centerX, centerY + 1});    // South
+        neighborCoords.add(new int[]{centerX - 1, centerY});    // West
         return validateNeighbors(neighborCoords);
     }
 
@@ -108,20 +110,19 @@ public abstract class Simulation {
      * @return the list of cells that neighbor center at its corners
      */
     private List<Cell> getCornerNeighbors(Cell center) {
-        // list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
-        // neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
+
+        /*
+         * list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
+         * neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
+         */
         List<int[]> neighborCoords = new ArrayList<>();
         int centerX = center.getX();
         int centerY = center.getY();
-        // NE
-        neighborCoords.add(new int[]{centerX + 1, centerY - 1});
-        // SE
-        neighborCoords.add(new int[]{centerX + 1, centerY + 1});
-        // SW
-        neighborCoords.add(new int[]{centerX - 1, centerY + 1});
-        //NW
-        neighborCoords.add(new int[]{centerX -1, centerY - 1});
 
+        neighborCoords.add(new int[]{centerX + 1, centerY - 1});    //Northeast
+        neighborCoords.add(new int[]{centerX + 1, centerY + 1});    //Southeast
+        neighborCoords.add(new int[]{centerX - 1, centerY + 1});    //Southwest
+        neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest
         return validateNeighbors(neighborCoords);
     }
 
@@ -134,9 +135,11 @@ public abstract class Simulation {
      */
     private List<Cell> validateNeighbors(List<int[]> neighborCoords) {
        List<Cell> neighbors = new ArrayList<>();
+
         for (int[] neighbor : neighborCoords) {
             int neighborX = neighbor[0];
             int neighborY = neighbor[1];
+
             if (!(neighborX < 0 || neighborX > gridSideSize || neighborY < 0 || neighborY > gridSideSize)) {
                 neighbors.add(grid[neighborX][neighborY]);
             }
@@ -154,6 +157,8 @@ public abstract class Simulation {
      */
     protected List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
         List<Cell> neighbors;
+        List<Cell> neighborsOfType = new ArrayList<>();
+        
         if (onlyCardinal) {
             neighbors =  getCardinalNeighbors(center);
         }
@@ -161,7 +166,6 @@ public abstract class Simulation {
             neighbors = getAllNeighbors(center);
         }
 
-        List<Cell> neighborsOfType = new ArrayList<>();
         for (Cell neighbor : neighbors) {
             if (neighbor.getState() == type) {
                 neighborsOfType.add(neighbor);

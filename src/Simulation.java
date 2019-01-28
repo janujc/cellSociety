@@ -7,39 +7,54 @@ import java.util.*;
  * Superclass for all simulations
  * <p>
  * This class creates a simulation grid and declares functionality to update the grid.
+ *
+ * @author Jonathan Yu
  */
 public abstract class Simulation {
 
-    /*
-     * Simulation grid made up of states, represented by ints
+    /**
+     * Simulation grid made up of cells each with their own state (represented by an int)
      * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
-     * the element of each row in a particular column
+     * the element of each row in a particular column.
      */
-    protected int[][] grid;
+    protected Cell[][] grid;
+
+    /**
+     * The length of one side of the grid
+     * Grid is always a square, so its dimensions are gridSideSize x gridSideSize.
+     */
     protected int gridSideSize;
 
-    public Simulation(int sideSize, int[] states, double[] initialPopulationFreqs) {
+    /**
+     * Creates and populates the simulation grid
+     * @param sideSize the length of one side of the grid
+     * @param states the possible states of the cells in the simulation grid
+     * @param populationFreqs the population frequencies of the states (not exact percentages)
+     */
+    public Simulation(int sideSize, int[] states, double[] populationFreqs) {
         gridSideSize = sideSize;
-        grid = new int[gridSideSize][gridSideSize];
-        populateGrid(states, initialPopulationFreqs);
+        grid = new Cell[gridSideSize][gridSideSize];
+        populateGrid(states, populationFreqs);
     }
 
     // TODO Is the implementation of frequencies and randomness ok? Or should it be absolute percentages?
     /**
-     * Fills the grid with states, based off of the passed-in initial population frequencies (not population percentages)
-     * @param states array of possible states
-     * @param initialPopulationFreqs array of the initial frequencies of each state, in the same order as states
+     * Fills the grid with cells, with states based off of their population frequencies (not exact percentages)
+     * @param states the possible states
+     * @param populationFreqs the populations frequencies of each state the same order as the states parameter
      */
-    private void populateGrid(int[] states, double[] initialPopulationFreqs) {
+    private void populateGrid(int[] states, double[] populationFreqs) {
         Random rand = new Random();
         for (int x = 0; x < gridSideSize; x++) {
             for (int y = 0; y < gridSideSize; y++) {
+                // uses Random and the cumulative frequencies to decide the state of each cell
                 int randNum = rand.nextInt(100);
+                double cumulativeFreqs = 0;
                 for (int k = 0; k < states.length; k++) {
-                    double sumPrevFreqs = sumPrevFreqs(Arrays.copyOfRange(initialPopulationFreqs, 0, k));
-                    // uses Random apply the frequencies
-                    if (randNum < 100 * (sumPrevFreqs + initialPopulationFreqs[k])) {
-                        grid[x][y] = states[k];
+                    cumulativeFreqs += populationFreqs[k];
+                    if (randNum < 100 * (cumulativeFreqs + populationFreqs[k])) {
+                        grid[x][y] = new Cell(states[k]);
+                        break;
                     }
                 }
             }
@@ -47,142 +62,119 @@ public abstract class Simulation {
     }
 
     /**
-     * Helper function for populateGrid() that sums the "previous" frequencies in the array
-     * @param prevFreqs double array of the "previous" frequencies
-     * @return sum of the previous frequencies
-     */
-    private double sumPrevFreqs (double[] prevFreqs) {
-        double sum = 0;
-        for (double d : prevFreqs) {
-            sum += d;
-        }
-        return sum;
-    }
-
-    /**
      * Calculates the next state for each cell in the grid, then updates the grid
      */
     public abstract void step();
 
+    // TODO Is it better to leave getCornerNeighbors() separate or put it inside getAllNeighbors() since that's the only time it's needed?
     /**
      * Gets the all neighbors (cardinal and corner) of a particular cell in the grid
-     * @param x x-coordinate of the cell
-     * @param y y-coordinate of the cell
-     * @return map of neighbors where the key is the neighbor's coordinates (int array where 0th index is the neighbor's
-     * x-coordinate and the 1st index is the neighbor's y-coordinate) and the value is the state of the neighbor
+     * @param center the cell whose neighbors are being retrieved
+     * @return the list of cells that neighbor center
      */
-    protected Map<int[], Integer> getAllNeighbors(int x, int y) {
-        Map<int[], Integer> neighbors = new HashMap<>();
-
-        // as the coordinates of the cardinal and corner neighbors are distinct, no worry about overwriting entries
-        neighbors.putAll(getCardinalNeighbors(x, y));
-        neighbors.putAll(getCornerNeighbors(x, y));
-
+    protected List<Cell> getAllNeighbors(Cell center) {
+        List<Cell> neighbors = new ArrayList<>();
+        // as the cardinal and corner neighbors are disjoint, no worry about double-counting
+        neighbors.addAll(getCardinalNeighbors(center));
+        neighbors.addAll(getCornerNeighbors(center);
         return neighbors;
     }
 
     /**
      * Gets the cardinal direction neighbors of a particular cell in the grid
-     * @param x x-coordinate of the cell
-     * @param y y-coordinate of the cell
-     * @return map of neighbors where the key is the neighbor's coordinates (int array where 0th index is the neighbor's
-     * x-coordinate and the 1st index is the neighbor's y-coordinate) and the value is the state of the neighbor
+     * @param center the cell whose neighbors are being retrieved
+     * @return the list of cells that neighbor center in the cardinal directions
      */
-    protected Map<int[], Integer> getCardinalNeighbors(int x, int y) {
+    protected List<Cell> getCardinalNeighbors(Cell center) {
         // list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
         // neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
         List<int[]> neighborCoords = new ArrayList<>();
-
+        int centerX = center.getX();
+        int centerY = center.getY();
         // N
-        neighborCoords.add(new int[]{x, y - 1});
+        neighborCoords.add(new int[]{centerX, centerY - 1});
         // E
-        neighborCoords.add(new int[]{x + 1, y});
+        neighborCoords.add(new int[]{centerX + 1, centerY});
         // S
-        neighborCoords.add(new int[]{x, y + 1});
+        neighborCoords.add(new int[]{centerX, centerY + 1});
         // W
-        neighborCoords.add(new int[]{x - 1, y});
+        neighborCoords.add(new int[]{centerX - 1, centerY});
         return validateNeighbors(neighborCoords);
     }
 
     /**
      * Gets the corner neighbors of a particular cell in the grid
-     * @param x x-coordinate of the cell
-     * @param y y-coordinate of the cell
-     * @return map of neighbors where the key is the neighbor's coordinates (int array where 0th index is the neighbor's
-     * x-coordinate and the 1st index is the neighbor's y-coordinate) and the value is the state of the neighbor
+     * @param center the cell whose neighbors are being retrieved
+     * @return the list of cells that neighbor center at its corners
      */
-    private Map<int[], Integer>  getCornerNeighbors(int x, int y) {
+    private List<Cell> getCornerNeighbors(Cell center) {
         // list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
         // neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
         List<int[]> neighborCoords = new ArrayList<>();
-
+        int centerX = center.getX();
+        int centerY = center.getY();
         // NE
-        neighborCoords.add(new int[]{x + 1, y - 1});
+        neighborCoords.add(new int[]{centerX + 1, centerY - 1});
         // SE
-        neighborCoords.add(new int[]{x + 1, y + 1});
+        neighborCoords.add(new int[]{centerX + 1, centerY + 1});
         // SW
-        neighborCoords.add(new int[]{x - 1, y + 1});
+        neighborCoords.add(new int[]{centerX - 1, centerY + 1});
         //NW
-        neighborCoords.add(new int[]{x -1, y - 1});
+        neighborCoords.add(new int[]{centerX -1, centerY - 1});
 
         return validateNeighbors(neighborCoords);
     }
 
     /**
      * Takes a list possible neighbors and checks that they are in the grid (valid)
-     * @param neighborCoords list of the coordinates of the cell's possible neighbors, represented by an array, where the
-     *                       0th index is the neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
-     * @return map of valid neighbors where the key is the neighbor's coordinates (int array where 0th index is the
-     * neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate) and the value is the state of the neighbor
+     * @param neighborCoords the list of the coordinates of the cell's possible neighbors, represented by an array,
+     *                       where the 0th index is the neighbor's x-coordinate and the 1st index is the neighbor's
+     *                       y-coordinate
+     * @return the list of cells that are valid neighbors
      */
-    private Map<int[], Integer> validateNeighbors(List<int[]> neighborCoords) {
-        Map<int[], Integer> neighbors = new HashMap<>();
-
+    private List<Cell> validateNeighbors(List<int[]> neighborCoords) {
+       List<Cell> neighbors = new ArrayList<>();
         for (int[] neighbor : neighborCoords) {
             int neighborX = neighbor[0];
             int neighborY = neighbor[1];
             if (!(neighborX < 0 || neighborX > gridSideSize || neighborY < 0 || neighborY > gridSideSize)) {
-                neighbors.put(neighbor, grid[neighborX][neighborY]);
+                neighbors.add(grid[neighborX][neighborY]);
             }
         }
-
         return neighbors;
     }
 
-    // TODO Should this method be separate or built into the base getNeighbors method
+    // TODO Should this method be separate or built into the base getNeighbors method? The current implementation keeps the method parameters simple but adds another method and inefficiently gets neighbors of all type before checking the state.
     /**
-     * Gets either all or just the cardinal neighbors of a cell that have a certain state and returns their coordinates
-     * @param x x-coordinate of the cell
-     * @param y y-coordinate of the cell
-     * @return map of cardinal neighbors with the desired state where the key is the neighbor's coordinates (int array
-     * where 0th index is the neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate) and the value is
-     * the state of the neighbor
+     * Gets either all or just the cardinal neighbors of a cell that have a certain state
+     * @param center the cell whose neighbors are being retrieved
+     * @param type the desired state
+     * @param onlyCardinal whether only the cardinal neighbors or all neighbors are retrieved
+     * @return the list of cells that neighbor center and have the desired state
      */
-    protected List<int[]> getNeighborsOfType(int x, int y, int type, boolean onlyCardinal) {
-        List<int[]> neighborsOfType = new ArrayList<>();
-
-        Map<int[], Integer> neighbors;
+    protected List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
+        List<Cell> neighbors;
         if (onlyCardinal) {
-            neighbors =  getCardinalNeighbors(x, y);
+            neighbors =  getCardinalNeighbors(center);
         }
         else {
-            neighbors = getAllNeighbors(x, y);
+            neighbors = getAllNeighbors(center);
         }
 
-        for (Map.Entry<int[], Integer> neighbor : neighbors.entrySet()) {
-            if (neighbor.getValue() == type) {
-                neighborsOfType.add(neighbor.getKey());
+        List<Cell> neighborsOfType = new ArrayList<>();
+        for (Cell neighbor : neighbors) {
+            if (neighbor.getState() == type) {
+                neighborsOfType.add(neighbor);
             }
         }
-
         return neighborsOfType;
     }
 
     /**
-     * Returns the grid for other classes to access
+     * Returns the grid for Visualizer to access
      * @return the simulation grid
      */
-    public int[][] getGrid() {
+    public Cell[][] getGrid() {
         return grid;
     }
 

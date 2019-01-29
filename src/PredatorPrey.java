@@ -3,24 +3,39 @@ import java.util.*;
 /**
  * Class that represents the Predator-Prey simulation
  * <p>
- * States: 0 (empty), 1 (fish), 2 (shark)
+ * States: empty (0), fish (1), shark (2)
+ *
+ * @author Jonathan Yu
  */
 public class PredatorPrey extends Simulation {
 
-    // if a fish or shark survives for this number of turns, the it will breed
+    /**
+     * If a fish or shark survives for this number of turns, it will breed.
+     */
     private final int NUM_TURNS_TO_BREED;
 
-    // the possible states of each cell (hard-coded b/c states are pre-determined)
+    /**
+     * The possible states of each cell (hard-coded b/c states are pre-determined)
+     */
     private final int EMPTY = 0;
     private final int FISH = 1;
     private final int SHARK = 2;
 
-    // tracks the number of turns each fish and shark has gone since being born or breeding
-    // keys are the current coordinates of the fish, values are the number of turns
-    private Map<int[], Integer> animalTurnTracker;
+    /**
+     * Tracks the number of turns each fish and shark has survived since being born or breeding.
+     * <p>
+     * Key is the cell that currently holds the fish (prior to step). Values are the number of turns survived.
+     */
+    private Map<Cell, Integer> animalTurnTracker;
 
-    public PredatorPrey(int sideSize, double[] initialPopulationFreqs, int numTurnsToBreed) {
-        super(sideSize, new int[]{0, 1, 2}, initialPopulationFreqs); // hard-coded b/c states are pre-determined
+    /**
+     * Creates the simulation and calls the super constructor to create the grid
+     * @param sideSize the length of one side of the grid
+     * @param populationFreqs the population frequencies of the states (not exact percentages)
+     * @param numTurnsToBreed number of turns survived needed to breed
+     */
+    public PredatorPrey(int sideSize, double[] populationFreqs, int numTurnsToBreed) {
+        super(sideSize, new int[]{0, 1, 2}, populationFreqs);    // hard-coded b/c states are pre-determined
         NUM_TURNS_TO_BREED = numTurnsToBreed;
         initializeAnimalTurnTracker();
     }
@@ -30,146 +45,164 @@ public class PredatorPrey extends Simulation {
      */
     private void initializeAnimalTurnTracker() {
         animalTurnTracker = new HashMap<>();
-        for (int i = 0; i < gridSideSize; i++) {
-            for (int j = 0; j < gridSideSize; j++) {
-                if (grid[i][j] != EMPTY) {
-                    animalTurnTracker.put(new int[]{i, j}, 0); // grid population doesn't count as a turn
+        for (Cell[] xCells : grid) {
+            for (Cell cell : xCells) {
+                if (Cell.getCurrState() != EMPTY) {
+                    animalTurnTracker.put(cell, 0);    // grid population doesn't count as a turn
                 }
             }
         }
     }
 
-    // TODO Refactor into multiple methods
+    // TODO Is it okay that eating, moving, and breeding don't follow lock-step synchronization?
+    // TODO Should for-each loop in calculateNextStates() be in separate method? Pro of that design is shorter methods. Con is need instance variables (toEat, toMove) instead of just returning objects.
     /**
-     * Calculates the next state for each cell in the grid based off this simulation's rules and then updates the grid
+     * Calculates the next state for each cell in the grid based off this simulation's rules
      */
-    public void step() {
-        // create another grid to hold the updated states for each step, will be re-initialized upon the start of each step
-        int[][] updatedGrid = new int[gridSideSize][gridSideSize];
+    public void calculateNextStates() {
 
-        // keys are sharks that will eat, values are fish to be eaten (all represented by their current coordinates)
-        Map<int[], int[]> toEat = new HashMap<>();
+        // keys are sharks that will eat, values are fish to be eaten (all represented by their current cells)
+        Map<Cell, Cell> toEat = new HashMap<>();
 
-        // list of animals that will move (all represented by their current coordinates)
-        List<int[]> toMove = new ArrayList<>();
+        // list of animals that will move (all represented by their current cells)
+        List<Cell> toMove = new ArrayList<>();
 
         Random rand = new Random();
 
-        for (int x = 0; x < gridSideSize; x++) {
-            for(int y = 0; y < gridSideSize; y++) {
-                if (grid[x][y] == EMPTY) {
-                    continue;
+        // determine type of behavior for each cell (move or eat)
+        for (Cell[] xCells : grid) {
+            for (Cell cell : xCells) {
+
+                // TODO This might be overwritten when animals move/breed. Can this be avoided?
+                // empty cells stay empty (unless they are moved/breeded into)
+                if (cell.getCurrState() == EMPTY) {
+                    cell.setNextState(EMPTY);
                 }
 
-                // need to get the array object straight from the tracker for map operations to work
-                int[] currAnimal = getKeyFromTracker(new int[]{x, y});
-
-                if (grid[x][y] == FISH) {
-                    toMove.add(currAnimal);
+                // fish attempt to move every turn
+                else if (cell.getCurrState() == FISH) {
+                    toMove.add(cell);
                 }
-                else if (grid[x][y] == SHARK) {
+
+                // shark will randomly choose a fish in a cardinal neighbor cell to eat, will move if none exist
+                else {
+
                     // fish that the shark can eat
-                    // predator-prey simulation only looks at adjacent neighbors, not corners
-                    List<int[]> fishEdible = getNeighborsOfType(x, y, FISH, true);
+                    List<Cell> fishEdible = getNeighborsOfType(cell, FISH, true);
                     if (!fishEdible.isEmpty()) {
-                        // if there are fish the shark can eat, randomly choose one
-                        int[] randomFish = fishEdible.get(rand.nextInt(fishEdible.size()));
-                        // need to get the array object straight from the tracker for map operations to work
-                        toEat.put(currAnimal, getKeyFromTracker(randomFish));
-                    }
-                    else {
-                        toMove.add(currAnimal);
+
+                        // randomly choose from fishEdible
+                        Cell randomFish = fishEdible.get(rand.nextInt(fishEdible.size()));
+                        toEat.put(cell, randomFish);
+                    } else {
+                        toMove.add(cell);
                     }
                 }
             }
         }
 
-        // have sharks eat their fish and remove the fish from the animalTurnTracker
-        for (Map.Entry<int[], int[]> eat : toEat.entrySet()) {
-            // need to get the array object straight from the tracker for map operations to work
-            int[] eater = eat.getKey();
-            int[] eaten = eat.getValue();
+        // perform animal behaviors
+        makeSharksEat(toEat);
+        moveAllAnimals(toMove);
+        breedAnimals();
+    }
+
+    // TODO What to do if two sharks try to eat the same fish? Currently, one shark just eats the other.
+    /**
+     * Make all sharks that will eat eat
+     * @param toEat the map of all eating that will occur, where the key is the shark that will eat and value is the
+     *              fish being eaten.
+     */
+    private void makeSharksEat(Map<Cell, Cell> toEat) {
+
+        for (Map.Entry<Cell, Cell> eat : toEat.entrySet()) {
+            Cell eater = eat.getKey();
+            Cell eaten = eat.getValue();
+
+            // remove the eaten fish from the simulation
             toMove.remove(eaten);
             animalTurnTracker.remove(eaten);
-            moveAnimal(eater, eaten, updatedGrid);
+
+            moveAnimal(eater, eaten);
         }
+    }
 
-        // TODO Determine if the small duplicated part of these two loops needs to be refactored
+    // TODO Look at other ways to handle move conflicts. Right now, moves aren't parallel.
+    /**
+     * Move all animals that are supposed to move (sharks that don't eat, fish that aren't eaten and have empty cardinal
+     * neighbor cells)
+     * @param toMove the list of all animals that are supposed to move
+     */
+    private void moveAllAnimals(List<Cell> toMove) {
 
-        // TODO Look at other ways to handle move conflicts
-        // move all animals that need to be moved
-        for (int[] mover : toMove) {
-            List<int[]> canMoveTo = getNeighborsOfType(mover[0], mover[1], EMPTY, true);
-            // if no empty adjacent cells, don't move
+        for (Cell mover : toMove) {
+            List<Cell> canMoveTo = getNeighborsOfType(mover, EMPTY, true);
+
+            // if no empty cardinal neighbor cells, don't move
             if (canMoveTo.isEmpty()) {
-                int moverX = mover[0];
-                int moverY = mover[1];
-                updatedGrid[moverX][moverY] = grid[moverX][moverY];
+                mover.setNextState(mover.getCurrState());
             }
+
+            // otherwise, randomly choose an empty cardinal neighbor cell to move to
             else {
-                // randomly choose an empty adjacent cell to move to
-                int[] willMoveTo = canMoveTo.get(rand.nextInt(canMoveTo.size()));
-                moveAnimal(mover, willMoveTo, updatedGrid);
-            }
-        }
-
-        // TODO Look at other ways to handle breed conflicts
-        // have all animals that can breed breed
-        for (Map.Entry<int[], Integer> animalTracked : animalTurnTracker.entrySet()) {
-            // only breed if animal has survived enough turns after being born or breeding
-            int[] animal = animalTracked.getKey();
-
-            // update the turn tracker by incrementing all animal's turns survived
-            animalTurnTracker.put(animal, animalTurnTracker.get(animal) + 1);
-
-            // because the tracker update happens first, need to add 1 to NUM_TURNS_TO_BREED
-            if (animalTracked.getValue() >= NUM_TURNS_TO_BREED + 1) {
-                int animalX = animal[0];
-                int animalY = animal[1];
-                List<int[]> canBreedInto = getNeighborsOfType(animalX, animalY, EMPTY, true);
-                // if there is at least one adjacent empty cell, randomly choose one to breed into
-                if (!canBreedInto.isEmpty()) {
-                    int[] willBreedInto = canBreedInto.get(rand.nextInt(canBreedInto.size()));
-                    updatedGrid[willBreedInto[0]][willBreedInto[1]] = updatedGrid[animalX][animalY];
-                    animalTurnTracker.put(willBreedInto, 0);
-                }
+                Cell willMoveTo = canMoveTo.get(rand.nextInt(canMoveTo.size()));
+                moveAnimal(mover, willMoveTo);
             }
         }
     }
 
     /**
-     * Moves animal from one cell to another and updates animalTurnTracker
-     * @param source coordinates of animal's original location
-     * @param dest coordinates of animal's destination
+     * Moves animal from one cell to another and updates animalTurnTracker accordingly
+     * @param source the original cell of the animal being moved
+     * @param dest the cell where the animal is being moved to
      */
-    private void moveAnimal (int[] source, int[] dest, int[][] toUpdate) {
-        int sourceX = source[0];
-        int sourceY = source[1];
-        int destX = dest[0];
-        int destY = dest[1];
+    private void moveAnimal (Cell source, Cell dest) {
+
         // place animal in destination
-        toUpdate[destX][destY] = toUpdate[sourceX][sourceY];
+        dest.setNextState(source.getCurrState());
+
         // make animal's original location empty
-        toUpdate[sourceX][sourceY] = EMPTY;
+        source.setNextState(EMPTY);
+
         // update animalTurnTracker
         animalTurnTracker.put(dest, animalTurnTracker.get(source));
         animalTurnTracker.remove(source);
     }
 
-    // TODO Remove after adding Cell class and refactoring
+    // TODO Look at other ways to handle breed conflicts. Right now, breeding isn't parallel.
+    // TODO Should I make a helper function for this method? For example: breedAnimal()
     /**
-     * Gets the animalTurnTracker key equivalent to a certain animal
-     * @param animal coordinates of the animal in question
-     * @return key from animalTurnTracker equivalent to the parameter animal
+     * Have all animals that can breed (survived enough turns, have empty cardinal neighbor cell to breed into) breed
      */
-    private int[] getKeyFromTracker(int[] animal) {
-        for (int[] tracked : animalTurnTracker.keySet()) {
-            // check array equality
-            if (tracked[0] == animal[0] && tracked[1] == animal[1]) {
-                return tracked;
-            }
-        }
-        return null; // will never get here, implementation guarantees animal is in tracker
-    }
+    private void breedAnimals() {
 
+        // list of all animals that are bred during the current simulation step (reprented by their cells)
+        List<Cell> bred = new ArrayList<>();
+
+        // have all animals that can breed breed
+        for (Map.Entry<Cell, Integer> animalTracked : animalTurnTracker.entrySet()) {
+            Cell animal = animalTracked.getKey();
+
+            // only breed if animal has survived enough turns after being born or breeding
+            if (animalTracked.getValue() >= NUM_TURNS_TO_BREED) {
+
+                // if there is at least one empty cardinal neighbor cell, randomly choose one to breed into
+                List<Cell> canBreedInto = getNeighborsOfType(animal, EMPTY, true);
+                if (!canBreedInto.isEmpty()) {
+                    Cell willBreedInto = canBreedInto.get(rand.nextInt(canBreedInto.size()));
+                    willBreedInto.setNextState(animal.getCurrState());
+
+                    bred.add(willBreedInto);
+                }
+            }
+
+            // update the turn tracker by incrementing all animal's turns survived
+            animalTurnTracker.put(animal, animalTurnTracker.get(animal) + 1);
+        }
+
+        // add all the newly bred animals to the animalTurnTracker
+        for (Cell animal : bred) {
+            animalTurnTracker.put(animal, 0);    // being bred does not count as having survived a turn
+        }
+    }
 }

@@ -1,6 +1,5 @@
 import java.util.*;
 
-// TODO Refactor use Cell objects
 // TODO Do I need to write the simulation rules in the comments?
 // TODO Is it ok to have methods in superclass that are only used by some, but not all subclasses?
 /**

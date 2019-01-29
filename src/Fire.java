@@ -15,7 +15,7 @@ public class Fire extends Simulation {
     private final double PROB_CATCH;
 
     /**
-     * Creates the simulation and calls the super construction to create the grid
+     * Creates the simulation and calls the super constructor to create the grid
      * @param sideSize the length of one side of the grid
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      * @param probCatch the probability that a tree next to a burning tree catches on fire, read from the XML file
@@ -39,15 +39,15 @@ public class Fire extends Simulation {
         Random rand = new Random();
 
         for (Cell[] xCells : grid) {
+            // TODO Is naming a variable after its type ok?
             for (Cell cell : xCells) {
 
                 // Fire only looks at cardinal neighbors, so pass in true
                 List<Cell> neighbors = getNeighborsOfType(center, BURNING, true);
 
                 // if a tree neighbors a burning tree, it will catch fire with a probability of PROB_CATCH
-                if (cell.getState() == TREE && !neighbors.isEmpty) {
+                if (cell.getCurrState() == TREE && !neighbors.isEmpty) {
                     int randNum = rand.nextInt(100);
-
                     if (randNum < PROB_CATCH * 100) {
                         cell.setNextState(BURNING);
                     }

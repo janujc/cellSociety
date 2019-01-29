@@ -14,6 +14,7 @@ public abstract class Simulation {
 
     /**
      * The simulation grid made up of cells each with their own state (represented by an int)
+     * <p>
      * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
      * the element of each row in a particular column.
      */
@@ -50,7 +51,6 @@ public abstract class Simulation {
             for (int y = 0; y < gridSideSize; y++) {
                 int randNum = rand.nextInt(100);
                 double cumulativeFreqs = 0;
-
                 for (int k = 0; k < states.length; k++) {
                     cumulativeFreqs += populationFreqs[k];
                     if (randNum < 100 * (cumulativeFreqs + populationFreqs[k])) {
@@ -155,12 +155,11 @@ public abstract class Simulation {
      * @return the list of cells that are valid neighbors
      */
     private List<Cell> validateNeighbors(List<int[]> neighborCoords) {
-       List<Cell> neighbors = new ArrayList<>();
+        List<Cell> neighbors = new ArrayList<>();
 
         for (int[] neighbor : neighborCoords) {
             int neighborX = neighbor[0];
             int neighborY = neighbor[1];
-
             if (!(neighborX < 0 || neighborX > gridSideSize || neighborY < 0 || neighborY > gridSideSize)) {
                 neighbors.add(grid[neighborX][neighborY]);
             }

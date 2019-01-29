@@ -23,7 +23,7 @@ public abstract class Simulation {
      * The length of one side of the grid
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize.
      */
-    protected int gridSideSize;
+    private int gridSideSize;
 
     /**
      * Creates and populates the simulation grid

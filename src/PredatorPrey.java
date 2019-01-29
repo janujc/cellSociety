@@ -59,7 +59,7 @@ public class PredatorPrey extends Simulation {
     /**
      * Calculates the next state for each cell in the grid based off this simulation's rules
      */
-    public void calculateNextStates() {
+    protected void calculateNextStates() {
 
         // keys are sharks that will eat, values are fish to be eaten (all represented by their current cells)
         Map<Cell, Cell> toEat = new HashMap<>();

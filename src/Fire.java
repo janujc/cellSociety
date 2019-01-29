@@ -29,7 +29,7 @@ public class Fire extends Simulation {
     /**
      * Calculates the next state for each cell in the grid based off this simulation's rules and the PROB_CATCH value
      */
-    public void calculateNextStates() {
+    protected void calculateNextStates() {
 
         // the possible states of each cell
         final int EMPTY = 0;

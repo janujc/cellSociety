@@ -32,7 +32,7 @@ public abstract class Simulation {
      * @param states the possible states of the cells in the simulation grid
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      */
-    public Simulation(int sideSize, int[] states, double[] populationFreqs) {
+    protected Simulation(int sideSize, int[] states, double[] populationFreqs) {
         gridSideSize = sideSize;
         grid = new Cell[gridSideSize][gridSideSize];
         populateGrid(states, populationFreqs);

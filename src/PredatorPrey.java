@@ -103,7 +103,7 @@ public class PredatorPrey extends Simulation {
         }
 
         // perform animal behaviors
-        makeSharksEat(toEat);
+        makeSharksEat(toEat, toMove);
         moveAllAnimals(toMove);
         breedAnimals();
     }
@@ -113,8 +113,10 @@ public class PredatorPrey extends Simulation {
      * Make all sharks that will eat eat
      * @param toEat the map of all eating that will occur, where the key is the shark that will eat and value is the
      *              fish being eaten.
+     * @param toMove the list of all animals that are suppose to move (used to acknowledge the fact that eaten fish no
+     *               longer move)
      */
-    private void makeSharksEat(Map<Cell, Cell> toEat) {
+    private void makeSharksEat(Map<Cell, Cell> toEat, List<Cell> toMove) {
         for (Map.Entry<Cell, Cell> eat : toEat.entrySet()) {
             Cell eater = eat.getKey();
             Cell eaten = eat.getValue();

@@ -31,7 +31,7 @@ public class Fire extends Simulation {
      */
     protected void calculateNextStates() {
 
-        // the possible states of each cell
+        // the possible states of each cell in the Fire simulation
         final int EMPTY = 0;
         final int TREE = 1;
         final int BURNING = 2;

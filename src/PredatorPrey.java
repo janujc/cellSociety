@@ -16,11 +16,10 @@ public class PredatorPrey extends Simulation {
     private final int NUM_TURNS_TO_BREED;
 
     /**
-     * The possible states of each cell (hard-coded b/c states are pre-determined)
+     * The empty state is the only state that needs to a be an instance variable.
      */
     private final int EMPTY = 0;
-    private final int FISH = 1;
-    private final int SHARK = 2;
+
 
     /**
      * Tracks the number of turns each fish and shark has survived since being born or breeding.
@@ -56,11 +55,12 @@ public class PredatorPrey extends Simulation {
     }
 
     // TODO Is it okay that eating, moving, and breeding don't follow lock-step synchronization?
-    // TODO Should for-each loop in calculateNextStates() be in separate method? Pro of that design is shorter methods. Con is need instance variables (toEat, toMove) instead of just returning objects.
+    // TODO Should for-each loop in calculateNextStates() be in separate method? Pro of that design is shorter methods. Con is need instance variables (toEat, toMove).
     /**
      * Calculates the next state for each cell in the grid based off this simulation's rules
      */
     protected void calculateNextStates() {
+        final int FISH = 1;
 
         // keys are sharks that will eat, values are fish to be eaten (all represented by their current cells)
         Map<Cell, Cell> toEat = new HashMap<>();
@@ -115,12 +115,11 @@ public class PredatorPrey extends Simulation {
      *              fish being eaten.
      */
     private void makeSharksEat(Map<Cell, Cell> toEat) {
-
         for (Map.Entry<Cell, Cell> eat : toEat.entrySet()) {
             Cell eater = eat.getKey();
             Cell eaten = eat.getValue();
 
-            // remove the eaten fish from the simulation
+            // remove the eaten fish from the simulation data
             toMove.remove(eaten);
             animalTurnTracker.remove(eaten);
 
@@ -135,6 +134,7 @@ public class PredatorPrey extends Simulation {
      * @param toMove the list of all animals that are supposed to move
      */
     private void moveAllAnimals(List<Cell> toMove) {
+        Random rand = new Random();
 
         for (Cell mover : toMove) {
             List<Cell> canMoveTo = getNeighborsOfType(mover, EMPTY, true);
@@ -177,8 +177,10 @@ public class PredatorPrey extends Simulation {
      */
     private void breedAnimals() {
 
-        // list of all animals that are bred during the current simulation step (reprented by their cells)
+        // list of all animals that are bred during the current simulation step (represented by their cells)
         List<Cell> bred = new ArrayList<>();
+
+        Random rand = new Random();
 
         // have all animals that can breed breed
         for (Map.Entry<Cell, Integer> animalTracked : animalTurnTracker.entrySet()) {
@@ -192,7 +194,6 @@ public class PredatorPrey extends Simulation {
                 if (!canBreedInto.isEmpty()) {
                     Cell willBreedInto = canBreedInto.get(rand.nextInt(canBreedInto.size()));
                     willBreedInto.setNextState(animal.getCurrState());
-
                     bred.add(willBreedInto);
                 }
             }

@@ -62,7 +62,7 @@ public abstract class Simulation {
         }
     }
 
-    // TODO Is it okay to have a method just made up of two method calls? It makes sense logically but might be unecessary.
+    // TODO Is it okay to have a method just made up of two method calls? It makes sense logically but might be unnecessary.
     /**
      * Calculates the next state for each cell in the grid, then updates the grid. This represents a single step in the
      * simulation.
@@ -89,6 +89,7 @@ public abstract class Simulation {
     }
 
     // TODO Is it better to leave getCornerNeighbors() separate or put it inside getAllNeighbors() since that's the only time it's needed?
+    // TODO Is it better to have getAllNeighbors() and getCardinalNeighbors() as separate methods or should I use an extra parameter to differentiate between the two implementations in one method?
     /**
      * Gets the all neighbors (cardinal and corner) of a particular cell in the grid
      * @param center the cell whose neighbors are being retrieved

@@ -12,32 +12,31 @@ public class Cell {
     private int myNextState;
     private int myXCoord;
     private int myYCoord;
-    private Color myColor;
+    private Color myCurrColor;
+    private Color myNextColor;
 
     public Cell(int state, int xCoord, int yCoord) {
         myCurrState = state;
         myXCoord = xCoord;
         myYCoord = yCoord;
-        myColor = Color.GHOSTWHITE;
+        myCurrColor = Color.GHOSTWHITE;
     }
 
     public Cell(int state, int xCoord, int yCoord, Color color) {
         myCurrState = state;
         myXCoord = xCoord;
         myYCoord = yCoord;
-        myColor = color;
+        myCurrColor = color;
     }
 
     public void updateState() {
         myCurrState = myNextState;
+        myCurrColor = myNextColor;
     }
 
-    public void setNextState(int state) {
+    public void setNextState(int state, Color color) {
         myNextState = state;
-    }
-
-    public void setColor(Color color) {
-        myColor = color;
+        myNextColor = color;
     }
 
     public int getCurrState() {
@@ -53,6 +52,6 @@ public class Cell {
     }
 
     public Color getColor() {
-        return myColor;
+        return myCurrColor;
     }
 }

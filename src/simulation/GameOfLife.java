@@ -1,5 +1,8 @@
 package simulation;
 
+import utils.Cell;
+import java.util.List;
+
 /**
  * Class that represents the GameOfLife simulation
  * <p>
@@ -29,5 +32,16 @@ public class GameOfLife extends Simulation {
          * Any LIVE cell with more than 3 neighbors DIES
          * Any DEAD cell with more than 3 LIVE neighbors, becomes ALIVE.
          */
+
+        for (Cell[] xCells : grid) {
+            // TODO Is naming a variable after its type ok?
+            for (Cell cell : xCells) {
+
+                // Fire only looks at cardinal neighbors, so pass in true
+                List<Cell> neighbors = getNeighborsOfType(cell, ALIVE, true);
+                boolean hasBurningNeighbor = !neighbors.isEmpty();
+                calculateNextStateOfOneCell(cell, hasBurningNeighbor);
+            }
+        }
     }
 }

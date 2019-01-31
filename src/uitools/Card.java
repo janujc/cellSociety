@@ -11,7 +11,9 @@ import visualization.Controller;
 
 public class Card {
     private Group cardView;
-    public Card(Image background, String label) {
+    private String className; // Name of class to handle this particular simulation
+    public Card(Image background, String label, String className) {
+        this.className = className;
         cardView = new Group();
         ImageView mainCard = new ImageView(background);
 

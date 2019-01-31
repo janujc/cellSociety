@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import uitools.CardGridGenerator;
 
 import static uitools.TextGenerator.makeText;
 import static visualization.Controller.bebasKai;
@@ -23,6 +24,7 @@ public class HomeScreen {
 
         container.getChildren().addAll(titleText, subTitleText);
         root.getChildren().add(container);
+        CardGridGenerator.makeGrid();
     }
     public Scene getScene() {
         return myScene;

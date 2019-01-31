@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import utils.ScreenType;
@@ -83,29 +84,18 @@ public class Controller extends Application {
         // TODO
     }
 
-    private void animate(Group root, ScreenType finalScreen, double startY1, double startY2,
-                         double finishY1, double finishY2, boolean remove) {
-        KeyFrame start = new KeyFrame(Duration.ZERO,
-                new KeyValue(root.getChildren().get(0).translateYProperty(), startY1),
-                new KeyValue(((Group) myScene.getRoot()).getChildren().get(0).translateYProperty(), startY2));
-        KeyFrame end = new KeyFrame(Duration.seconds(1),
-                new KeyValue(root.getChildren().get(0).translateYProperty(), finishY1),
-                new KeyValue(((Group) myScene.getRoot()).getChildren().get(0).translateYProperty(), finishY2));
-        Timeline slide = new Timeline(start, end);
 
-        slide.setOnFinished(e -> {
-            inTransition = false;
-            currentScreen = finalScreen;
-            if (remove) {
-                ((Group) myScene.getRoot()).getChildren().remove(1);
-            }
-        });
-        inTransition = true;
-        slide.play();
-    }
 
     private void handleKeyReleased (KeyCode code) {
        // TODO
+    }
+
+    public void setInTransition(boolean transition) {
+        this.inTransition = transition;
+    }
+
+    public void setCurrentScreen(ScreenType currentScreen) {
+        this.currentScreen = currentScreen;
     }
 
 

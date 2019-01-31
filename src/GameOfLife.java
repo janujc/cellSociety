@@ -2,7 +2,7 @@
 /**
  * Class that represents the GameOfLife simulation
  * <p>
- * States: empty(0), full(1)
+ * States: dead(0), alive(1)
  *
  * @author Januario Carreiro
  *
@@ -15,6 +15,12 @@ public class GameOfLife extends Simulation {
 
     @Override
     protected void calculateNextStates() {
-
+        // TODO: Change a cell's state according to a few rules:
+        /**
+         * Any LIVE cell with fewer than 2 neighbors DIES
+         * Any LIVE cell with two or three neighbors LIVES
+         * Any LIVE cell with more than 3 neighbors DIES
+         * Any DEAD cell with more than 3 LIVE neighbors, becomes ALIVE.
+         */
     }
 }

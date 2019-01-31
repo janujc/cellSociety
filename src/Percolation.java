@@ -15,6 +15,6 @@ public class Percolation extends Simulation {
 
     @Override
     protected void calculateNextStates() {
-
+        // TODO: Change a cell's state if one of its neighbors is percolated and it is open
     }
 }

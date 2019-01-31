@@ -10,8 +10,10 @@ public class Cell {
     private int myXCor;
     private int myYCor;
 
-    public Cell(int state) {
+    public Cell(int state, int xCor, int yCor) {
         myCurrState = state;
+        myXCor = xCor;
+        myYCor = yCor;
     }
 
     public void updateState() {
@@ -26,12 +28,11 @@ public class Cell {
         return myCurrState;
     }
 
-    public int getXCor() {
+    public int getX() {
         return myXCor;
     }
 
-    public int getYCor() {
+    public int getY() {
         return myYCor;
     }
-
 }

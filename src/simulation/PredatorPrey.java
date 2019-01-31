@@ -4,11 +4,9 @@ import utils.Cell;
 
 import java.util.*;
 
-// TODO deal with eat, move, and breed conflicts (currently, unexpected overwriting is possible)
-
 // TODO Should I use Cell objects (current) or Fish/Shark objects?
 // TODO Is it okay that eating, moving, and breeding don't truly follow lock-step synchronization when dealing with conflicts?
-// TODO Is my away of ensuring lock-step synchronization when it comes to moving/breeding into empty cells ok?
+// TODO Does this class even make sense?
 /**
  * Class that represents the Predator-Prey simulation
  * <p>
@@ -57,6 +55,15 @@ public class PredatorPrey extends Simulation {
      */
     private List<Cell> willStayEmpty;
 
+    // TODO Is this way of avoiding conflicts ok?
+    /**
+     * The list of cells that have each already had an animal eat, move, or breed into it.
+     * <p>
+     * This is used to prevent conflicts where animals "overwrite" each other after eating, moving, or breeding into the
+     * same cell.
+     */
+    private List<Cell> animalAlreadyHere;
+
     /**
      * Creates the simulation and calls the super constructor to create the grid
      * @param sideSize the length of one side of the grid
@@ -87,7 +94,10 @@ public class PredatorPrey extends Simulation {
     /**
      * Calculates the next state for each cell in the grid based off this simulation's rules
      */
+    @Override
     protected void calculateNextStates() {
+        animalAlreadyHere = new ArrayList<>();
+
         determineCellBehaviors();
         makeSharksEat();
         moveAbleAnimals();
@@ -130,6 +140,8 @@ public class PredatorPrey extends Simulation {
     private void makeSharksEat() {
         for (Cell shark : willEat) {
             List<Cell> fishEdible = getNeighborsOfType(shark, FISH, true);
+            fishEdible = removeCellsWithAnimalsAlreadyThere(fishEdible);
+
             if (!fishEdible.isEmpty()) {
                 Cell fishEaten = chooseRandomCellFromList(fishEdible);
 
@@ -153,12 +165,11 @@ public class PredatorPrey extends Simulation {
         for (Cell mover : willMove) {
             List<Cell> canMoveTo = getNeighborsOfType(mover, EMPTY, true);
             canMoveTo = removeNewEmptyCells(canMoveTo);
-            // if no empty cardinal neighbor cells, don't move
+            canMoveTo = removeCellsWithAnimalsAlreadyThere(canMoveTo);
+
             if (canMoveTo.isEmpty()) {
                 mover.setNextState(mover.getCurrState());
             }
-
-            // otherwise, randomly choose an empty cardinal neighbor cell to move to
             else {
                 Cell willMoveTo = chooseRandomCellFromList(canMoveTo);
                 moveAnimal(mover, willMoveTo);
@@ -170,7 +181,7 @@ public class PredatorPrey extends Simulation {
     }
 
     /**
-     * Moves animal from one cell to another and updates animalTurnTracker accordingly
+     * Moves animal from one cell to another and updates animalTurnTracker and animalAlreadyHere accordingly
      * @param source the original cell of the animal being moved
      * @param dest the cell where the animal is being moved to
      */
@@ -182,9 +193,10 @@ public class PredatorPrey extends Simulation {
         // make animal's original location empty
         source.setNextState(EMPTY);
 
-        // update animalTurnTracker
         animalTurnTracker.put(dest, animalTurnTracker.get(source));
         animalTurnTracker.remove(source);
+
+        animalAlreadyHere.add(dest);
     }
 
     /**
@@ -223,12 +235,17 @@ public class PredatorPrey extends Simulation {
         if (turnsSurvived >= NUM_TURNS_TO_BREED) {
             List<Cell> canBreedInto = getNeighborsOfType(animal, EMPTY, true);
             canBreedInto = removeNewEmptyCells(canBreedInto);
+            canBreedInto = removeCellsWithAnimalsAlreadyThere(canBreedInto);
+
             if (!canBreedInto.isEmpty()) {
                 Cell willBreedInto = chooseRandomCellFromList(canBreedInto);
                 willBreedInto.setNextState(animal.getCurrState());
 
                 // as this empty cell has been bred into, it will no longer stay empty
                 willStayEmpty.remove(willBreedInto);
+
+                // as an animal has now bred here, update animalAlreadyHere accordingly
+                animalAlreadyHere.add(willBreedInto);
 
                 return willBreedInto;
             }
@@ -245,12 +262,14 @@ public class PredatorPrey extends Simulation {
         }
     }
 
+    // TODO Is this way of ensuring lock-step synchronization when it comes to moving/breeding into empty cells ok?
     /**
-     * Takes a list of empty neighbor cells and returns a copy of the list with only cells that were empty at the
-     * beginning of the simulation step.
+     * Takes a list of empty neighbor cells and returns a copy of the list with only cells that were empty prior to the
+     * current simulation step.
      * <p>
      * This ensures lock-step synchronization and that animals don't move/breed into cells made empty by another animal
-     * moving in the same step.
+     * moving in the same step. willStayEmpty is the list of cells that were empty prior to the step except for the ones
+     * that have since been filled by an animal (doesn't affect this method).
      * @param emptyCells the list of empty neighbor cells
      * @return the list of empty neighbor cells that were originally empty
      */
@@ -263,5 +282,24 @@ public class PredatorPrey extends Simulation {
             }
         }
         return noNewEmptyCells;
+    }
+
+    // TODO Is this method name ok?
+    /**
+     * Takes a list of potential destination cells for an animal (after eating, moving, or breeding) and returns a copy
+     * of the list with only cells that each have not been eaten, moved, or bred into by another animal.
+     * <p>
+     * This ensures no conflicts occur where animals "overwrite" each other after eating, moving, or breeding into the
+     * same cell.
+     */
+    private List<Cell> removeCellsWithAnimalsAlreadyThere(List<Cell> potentialDests) {
+        List<Cell> noAnimalsAlreadyThere = new ArrayList<>();
+
+        for (Cell potentialDest : potentialDests) {
+            if (!animalAlreadyHere.contains(potentialDest)) {
+                noAnimalsAlreadyThere.add(potentialDest);
+            }
+        }
+        return noAnimalsAlreadyThere;
     }
 }

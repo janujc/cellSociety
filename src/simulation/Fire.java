@@ -41,6 +41,7 @@ public class Fire extends Simulation {
     /**
      * Calculates the next state for each cell in the grid based off this simulation's rules and the PROB_CATCH value
      */
+    @Override
     protected void calculateNextStates() {
         for (Cell[] xCells : grid) {
             // TODO Is naming a variable after its type ok?

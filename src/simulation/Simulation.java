@@ -41,7 +41,7 @@ public abstract class Simulation {
         populateGrid(states, populationFreqs);
     }
 
-    // TODO Is the implementation of frequencies and randomness ok? Or should it be absolute percentages?
+    // TODO Is the implementation of frequencies and randomness ok? Or should it be exact percentages?
     /**
      * Fills the grid with cells, with states based off of their population frequencies (not exact percentages)
      * @param states the possible states
@@ -65,7 +65,6 @@ public abstract class Simulation {
         }
     }
 
-    // TODO Is it okay to have a method just made up of two method calls? It makes sense logically but might be unnecessary.
     /**
      * Calculates the next state for each cell in the grid, then updates the grid. This represents a single step in the
      * simulation.
@@ -145,9 +144,9 @@ public abstract class Simulation {
         int centerX = center.getXCoord();
         int centerY = center.getYCoord();
 
-        neighborCoords.add(new int[]{centerX + 1, centerY - 1});    //Northeast
-        neighborCoords.add(new int[]{centerX + 1, centerY + 1});    //Southeast
-        neighborCoords.add(new int[]{centerX - 1, centerY + 1});    //Southwest
+        neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
+        neighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast
+        neighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest
         neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest
         return validateNeighbors(neighborCoords);
     }

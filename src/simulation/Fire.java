@@ -1,5 +1,6 @@
 package simulation;
 
+import javafx.scene.paint.Color;
 import utils.Cell;
 
 import java.util.List;
@@ -67,21 +68,21 @@ public class Fire extends Simulation {
         if (cell.getCurrState() == TREE && hasBurningNeighbor) {
             int randNum = rand.nextInt(100);
             if (randNum < PROB_CATCH * 100) {
-                cell.setNextState(BURNING);
+                cell.setNextState(BURNING, Color.ORANGERED);
             }
             else {
-                cell.setNextState(TREE);
+                cell.setNextState(TREE, Color.FORESTGREEN);
             }
         }
 
         // if a tree is burning, it will burn down (become empty cell)
         else if (cell.getCurrState() == BURNING) {
-            cell.setNextState(EMPTY);
+            cell.setNextState(EMPTY, Color.GHOSTWHITE);
         }
 
         // otherwise, the cell remains the same (tree with no burning neighbors, empty cell)
         else {
-            cell.setNextState(cell.getCurrState());
+            cell.setNextState(cell.getCurrState(), cell.getColor());
         }
     }
 }

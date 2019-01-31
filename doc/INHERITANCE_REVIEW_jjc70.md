@@ -1,7 +1,7 @@
 Inheritance Review
 ===
 
-author: Januario Carreiro (jjc70)
+Januario Carreiro (jjc70) and Yao Yuan (yy123)
 
 ## Part 1
 
@@ -30,7 +30,7 @@ have to make sure that no two cells move to the same grid location.
 
 **Why do you think your design is good (also define what your measure of good is)?**
 
-I think that our design is good because each class has a specific function within the whole program. In other words,
+Our design is good because each class has a specific function within the whole program. In other words,
 the cell knows all it has to know and function as a cell, the simulation only simulates each step, and it is the
 visualization class's sole job to show the current state of the simulation. The classes do not do more than is needed.
-This makes everything easier to debug and keeps the project well-organized, and I believe that is good design.
+This makes everything easier to debug and keeps the project well-organized, which I believe is good design.

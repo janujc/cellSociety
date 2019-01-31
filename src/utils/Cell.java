@@ -1,6 +1,6 @@
 package utils;
 
-import java.awt.*;
+import javafx.scene.paint.Color;
 
 /**
  * Class that represents each agent/empty cell in our simulation
@@ -35,7 +35,7 @@ public class Cell {
         myNextState = state;
         myColor = color;
     }
-    
+
     public void setColor(Color color) {
         myColor = color;
     }

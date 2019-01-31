@@ -1,10 +1,13 @@
 package uitools;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import utils.Cell;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -29,12 +32,12 @@ public class CardGridGenerator {
             int colCount = Integer.parseInt(
                     ((Element) rootNode.getElementsByTagName("Columns").item(0))
                             .getAttribute("count"));
+            cardGrid = new Card[rowCount][colCount];
             for(int i = 0; i < cardCount; i++) {
                 processCard((Element) ((Element) rootNode.getElementsByTagName("Simulations").item(0)).
                         getElementsByTagName("Simulation").item(i));
             }
 
-            cardGrid = new Card[rowCount][colCount];
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,13 +50,11 @@ public class CardGridGenerator {
         String label = simulation.getAttribute("label");
         String className = simulation.getAttribute("class");
         Card card = new Card(new Image(CardGridGenerator.class.getResourceAsStream(imagePath)), label, className);
-        cardGrid[x][y] = card;
+        cardGrid[y][x] = card;
     }
 
-    public static GridPane makeGrid() {
-        GridPane gp = new GridPane();
+    public static Card[][] makeGrid() {
         parseXML();
-        // TODO: Add stuff from cardGrid to gridpane
-        return gp;
+        return cardGrid;
     }
 }

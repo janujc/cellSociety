@@ -5,5 +5,5 @@ module cellsociety.team17 {
     requires javafx.media;
     requires javafx.web;
 
-    // TODO: WHAT DO WE EXPORT?
+    exports visualization;
 }

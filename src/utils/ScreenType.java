@@ -1,0 +1,5 @@
+package utils;
+
+public enum ScreenType {
+    HOME_SCREEN, FIRE_SIM, GOL_SIM, PERCOLATION_SIM, PRED_PREY_SIM, SEGREGATION_SIM
+}

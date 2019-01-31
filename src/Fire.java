@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -63,7 +64,7 @@ public class Fire extends Simulation {
 
                 // otherwise, the cell remains the same (tree with no burning neighbors, empty cell)
                 else {
-                    cell.setNextState(cell.getCurrState);
+                    cell.setNextState(cell.getCurrState());
                 }
             }
         }

@@ -9,8 +9,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import simulation.Fire;
+import simulation.PredatorPrey;
+import simulation.Simulation;
+import uitools.Animator;
 import uitools.Card;
 import uitools.CardGridGenerator;
+import utils.ScreenType;
 
 import java.util.ArrayList;
 
@@ -45,7 +50,8 @@ public class HomeScreen {
                     cardView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
-                            System.out.println(card.getClassName()+" needs to be called");
+                            //System.out.println(card.getClassName()+" needs to be called");
+                            startSimulation(card.getClassName(), myScene);
                         }
                     });
                     grid.getChildren().add(cardView);
@@ -59,6 +65,13 @@ public class HomeScreen {
         container.getChildren().addAll(titleText, subTitleText);
         container.getChildren().addAll(grid);
         myContainer = container;
+    }
+
+    private void startSimulation(String className, Scene myScene) {
+        SimulationScreen simulationScreen = new SimulationScreen(myScene, context, new PredatorPrey(2, new double[]{.3, .4, .3}, 4)); // Just an arbitrary class for test
+        ((Group)myScene.getRoot()).getChildren().add(simulationScreen.getContainer());
+        Animator.animate(myScene, simulationScreen.getContainer(), ScreenType.SIMULATION_SCREEN, myScene.getWidth(),
+                0, 0, -myScene.getWidth(), false, context);
     }
 
     public Group getContainer() {

@@ -116,8 +116,8 @@ public abstract class Simulation {
          * neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
          */
         List<int[]> neighborCoords = new ArrayList<>();
-        int centerX = center.getX();
-        int centerY = center.getY();
+        int centerX = center.getXCoord();
+        int centerY = center.getYCoord();
 
         neighborCoords.add(new int[]{centerX, centerY - 1});    // North
         neighborCoords.add(new int[]{centerX + 1, centerY});    // East
@@ -126,6 +126,7 @@ public abstract class Simulation {
         return validateNeighbors(neighborCoords);
     }
 
+    // TODO Should this be protected in case some future simulation needs just the corners?
     /**
      * Gets the corner neighbors of a particular cell in the grid
      * @param center the cell whose neighbors are being retrieved
@@ -138,8 +139,8 @@ public abstract class Simulation {
          * neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
          */
         List<int[]> neighborCoords = new ArrayList<>();
-        int centerX = center.getX();
-        int centerY = center.getY();
+        int centerX = center.getXCoord();
+        int centerY = center.getYCoord();
 
         neighborCoords.add(new int[]{centerX + 1, centerY - 1});    //Northeast
         neighborCoords.add(new int[]{centerX + 1, centerY + 1});    //Southeast

@@ -7,8 +7,8 @@
 public class Cell {
     private int myCurrState;
     private int myNextState;
-    private int myXCor;
-    private int myYCor;
+    private int myXCoord;
+    private int myYCoord;
 
     public Cell(int state, int xCor, int yCor) {
         myCurrState = state;
@@ -28,11 +28,20 @@ public class Cell {
         return myCurrState;
     }
 
+<<<<<<< Updated upstream
     public int getX() {
         return myXCor;
     }
 
     public int getY() {
         return myYCor;
+=======
+    public int getXCoord() {
+        return myXCoord;
+    }
+
+    public int getYCoord() {
+        return myYCoord;
+>>>>>>> Stashed changes
     }
 }

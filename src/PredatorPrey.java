@@ -47,7 +47,7 @@ public class PredatorPrey extends Simulation {
         animalTurnTracker = new HashMap<>();
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
-                if (Cell.getCurrState() != EMPTY) {
+                if (cell.getCurrState() != EMPTY) {
                     animalTurnTracker.put(cell, 0);    // grid population doesn't count as a turn
                 }
             }
@@ -75,7 +75,7 @@ public class PredatorPrey extends Simulation {
             for (Cell cell : xCells) {
 
                 // TODO This might be overwritten when animals move/breed. Can this be avoided?
-                // empty cells stay empty (unless they are moved/breeded into)
+                // empty cells stay empty (unless they are moved/bred into)
                 if (cell.getCurrState() == EMPTY) {
                     cell.setNextState(EMPTY);
                 }

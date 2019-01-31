@@ -3,7 +3,6 @@ package visualization;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import static uitools.TextGenerator.makeText;

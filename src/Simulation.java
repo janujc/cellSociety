@@ -17,13 +17,13 @@ public abstract class Simulation {
      * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
      * the element of each row in a particular column.
      */
-    protected Cell[][] grid;
+    protected final Cell[][] grid;
 
     /**
      * The length of one side of the grid
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize.
      */
-    private int gridSideSize;
+    private final int gridSideSize;
 
     /**
      * Creates and populates the simulation grid

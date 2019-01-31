@@ -26,7 +26,7 @@ public class PredatorPrey extends Simulation {
      * <p>
      * Key is the cell that currently holds the fish (prior to step). Values are the number of turns survived.
      */
-    private Map<Cell, Integer> animalTurnTracker;
+    private final Map<Cell, Integer> animalTurnTracker;
 
     /**
      * Creates the simulation and calls the super constructor to create the grid
@@ -37,6 +37,7 @@ public class PredatorPrey extends Simulation {
     public PredatorPrey(int sideSize, double[] populationFreqs, int numTurnsToBreed) {
         super(sideSize, new int[]{0, 1, 2}, populationFreqs);    // hard-coded b/c states are pre-determined
         NUM_TURNS_TO_BREED = numTurnsToBreed;
+        animalTurnTracker = new HashMap<>();
         initializeAnimalTurnTracker();
     }
 
@@ -44,7 +45,6 @@ public class PredatorPrey extends Simulation {
      * Finds all of the fish and sharks in the initial grid and adds them to the turn tracker
      */
     private void initializeAnimalTurnTracker() {
-        animalTurnTracker = new HashMap<>();
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
                 if (cell.getCurrState() != EMPTY) {

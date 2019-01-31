@@ -36,6 +36,11 @@ public class Controller extends Application {
 
     private ScreenType currentScreen = ScreenType.HOME_SCREEN;
     private boolean inTransition = false;
+    private SimulationScreen simulationScreen;
+
+    public void setSimulationScreen(SimulationScreen ss) {
+        this.simulationScreen = ss;
+    }
 
     /**
      * Function where we build the stage with the first scene

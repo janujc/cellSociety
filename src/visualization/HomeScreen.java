@@ -68,7 +68,10 @@ public class HomeScreen {
     }
 
     private void startSimulation(String className, Scene myScene) {
-        SimulationScreen simulationScreen = new SimulationScreen(myScene, context, new PredatorPrey(2, new double[]{.3, .4, .3}, 4)); // Just an arbitrary class for test
+        // Just use an arbitrary simulation class for test
+        SimulationScreen simulationScreen = new SimulationScreen(myScene, context,
+                new PredatorPrey(2, new double[]{.3, .4, .3}, 4));
+        context.setSimulationScreen(simulationScreen);
         ((Group)myScene.getRoot()).getChildren().add(simulationScreen.getContainer());
         Animator.animate(myScene, simulationScreen.getContainer(), ScreenType.SIMULATION_SCREEN, myScene.getWidth(),
                 0, 0, -myScene.getWidth(), false, context);

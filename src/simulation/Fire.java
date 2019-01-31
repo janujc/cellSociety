@@ -1,8 +1,12 @@
+package simulation;
+
+import utils.Cell;
+
 import java.util.List;
 import java.util.Random;
 
 /**
- * Class that represents the Spreading of Fire simulation
+ * Class that represents the Spreading of simulation.Fire simulation
  * <p>
  * States: empty (0), tree (1), burning tree (2)
  *
@@ -32,7 +36,7 @@ public class Fire extends Simulation {
      */
     protected void calculateNextStates() {
 
-        // the possible states of each cell in the Fire simulation
+        // the possible states of each cell in the simulation.Fire simulation
         final int EMPTY = 0;
         final int TREE = 1;
         final int BURNING = 2;
@@ -43,7 +47,7 @@ public class Fire extends Simulation {
             // TODO Is naming a variable after its type ok?
             for (Cell cell : xCells) {
 
-                // Fire only looks at cardinal neighbors, so pass in true
+                // simulation.Fire only looks at cardinal neighbors, so pass in true
                 List<Cell> neighbors = getNeighborsOfType(cell, BURNING, true);
 
                 // if a tree neighbors a burning tree, it will catch fire with a probability of PROB_CATCH

@@ -1,6 +1,10 @@
+package simulation;
+
+import utils.Cell;
+
 import java.util.*;
 
-// TODO Should I use Cell objects (current) or Fish/Shark objects?
+// TODO Should I use utils.Cell objects (current) or Fish/Shark objects?
 /**
  * Class that represents the Predator-Prey simulation
  * <p>

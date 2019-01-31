@@ -66,6 +66,7 @@ public class Controller extends Application {
         // create a place to see the shapes
         var scene = new Scene(root, width, height, Color.GHOSTWHITE);
         HomeScreen homeScreen = new HomeScreen(scene);
+        ((Group) scene.getRoot()).getChildren().add(homeScreen.getContainer());
 
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         scene.setOnKeyReleased(e -> handleKeyReleased(e.getCode()));

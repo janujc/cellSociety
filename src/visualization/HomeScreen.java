@@ -1,9 +1,11 @@
 package visualization;
 
+import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -17,6 +19,7 @@ import static visualization.Controller.bebasKai;
 import static visualization.Controller.sofiaPro;
 
 public class HomeScreen {
+    private Group myContainer;
     public HomeScreen(Scene myScene) {
 
         var container = new Group();
@@ -32,11 +35,19 @@ public class HomeScreen {
         for (int i = 0; i < cardGrid.length; i++) {
             for (int j = 0; j < cardGrid[0].length; j++) {
                 if(cardGrid[i][j] != null) {
-                    Group card = cardGrid[i][j].getCardView();
-                    card.setLayoutY(150*i + 50*i);
-                    card.setLayoutX(150*j + 25*j);
-                    card.setCursor(Cursor.HAND);
-                    grid.getChildren().add(card);
+                    Group cardView = cardGrid[i][j].getCardView();
+                    cardView.setLayoutY(150*i + 50*i);
+                    cardView.setLayoutX(150*j + 25*j);
+                    cardView.setCursor(Cursor.HAND);
+                    final var card = cardGrid[i][j];
+                    cardView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) {
+                            System.out.println(card.getClassName()+" needs to be called");
+                        }
+
+                    });
+                    grid.getChildren().add(cardView);
                 }
             }
         }
@@ -46,6 +57,10 @@ public class HomeScreen {
 
         container.getChildren().addAll(titleText, subTitleText);
         container.getChildren().addAll(grid);
-        ((Group) myScene.getRoot()).getChildren().add(container);
+        myContainer = container;
+    }
+
+    public Group getContainer() {
+        return myContainer;
     }
 }

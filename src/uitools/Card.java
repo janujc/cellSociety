@@ -31,15 +31,11 @@ public class Card {
         labelView.setY(mainCard.getLayoutBounds().getHeight() + 30 - labelView.getLayoutBounds().getHeight()/2);
 
         cardView.getChildren().addAll(mainCard, labelView);
-        cardView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                System.out.println(className+" needs to be called");
-            }
-
-        });
     }
     public Group getCardView() {
         return cardView;
+    }
+    public String getClassName() {
+        return className;
     }
 }

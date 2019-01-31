@@ -53,7 +53,7 @@ public abstract class Simulation {
                 double cumulativeFreqs = 0;
                 for (int k = 0; k < states.length; k++) {
                     cumulativeFreqs += populationFreqs[k];
-                    if (randNum < 100 * (cumulativeFreqs + populationFreqs[k])) {
+                    if (randNum < 100 * (cumulativeFreqs)) {
                         grid[x][y] = new Cell(states[k], x, y);
                         break;
                     }
@@ -162,7 +162,7 @@ public abstract class Simulation {
         for (int[] neighbor : neighborCoords) {
             int neighborX = neighbor[0];
             int neighborY = neighbor[1];
-            if (!(neighborX < 0 || neighborX > gridSideSize || neighborY < 0 || neighborY > gridSideSize)) {
+            if (!(neighborX < 0 || neighborX >= gridSideSize || neighborY < 0 || neighborY >= gridSideSize)) {
                 neighbors.add(grid[neighborX][neighborY]);
             }
         }

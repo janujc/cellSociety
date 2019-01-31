@@ -18,6 +18,7 @@ public class Cell {
         myCurrState = state;
         myXCoord = xCoord;
         myYCoord = yCoord;
+        myColor = Color.GHOSTWHITE;
     }
 
     public Cell(int state, int xCoord, int yCoord, Color color) {
@@ -31,9 +32,8 @@ public class Cell {
         myCurrState = myNextState;
     }
 
-    public void setNextState(int state, Color color) {
+    public void setNextState(int state) {
         myNextState = state;
-        myColor = color;
     }
 
     public void setColor(Color color) {
@@ -53,5 +53,6 @@ public class Cell {
     }
 
     public Color getColor() {
-        return myColor; }
+        return myColor;
+    }
 }

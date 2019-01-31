@@ -5,7 +5,6 @@ import utils.Cell;
 import java.util.*;
 
 // TODO Should I use Cell objects (current) or Fish/Shark objects?
-// TODO Is it okay that eating, moving, and breeding don't truly follow lock-step synchronization when dealing with conflicts?
 // TODO Does this class even make sense?
 /**
  * Class that represents the Predator-Prey simulation

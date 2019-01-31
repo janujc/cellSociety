@@ -6,6 +6,8 @@ import java.util.*;
 
 // TODO Do I need to write the simulation rules in the comments?
 // TODO Do I have too many comments?
+// TODO Is it okay for superclass to have methods that only some subclasses use?
+// TODO Is it okay to pass by reference and modify method parameters?
 /**
  * Superclass for all simulations
  * <p>
@@ -21,13 +23,13 @@ public abstract class Simulation {
      * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
      * the element of each row in a particular column.
      */
-    protected Cell[][] grid;
+    protected final Cell[][] grid;
 
     /**
      * The length of one side of the grid
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize.
      */
-    private int gridSideSize;
+    private final int gridSideSize;
 
     /**
      * Creates and populates the simulation grid
@@ -41,7 +43,7 @@ public abstract class Simulation {
         populateGrid(states, populationFreqs);
     }
 
-    // TODO Is the implementation of frequencies and randomness ok? Or should it be absolute percentages?
+    // TODO Is the implementation of frequencies and randomness ok? Or should it be exact percentages?
     /**
      * Fills the grid with cells, with states based off of their population frequencies (not exact percentages)
      * @param states the possible states
@@ -65,7 +67,6 @@ public abstract class Simulation {
         }
     }
 
-    // TODO Is it okay to have a method just made up of two method calls? It makes sense logically but might be unnecessary.
     /**
      * Calculates the next state for each cell in the grid, then updates the grid. This represents a single step in the
      * simulation.
@@ -145,9 +146,9 @@ public abstract class Simulation {
         int centerX = center.getXCoord();
         int centerY = center.getYCoord();
 
-        neighborCoords.add(new int[]{centerX + 1, centerY - 1});    //Northeast
-        neighborCoords.add(new int[]{centerX + 1, centerY + 1});    //Southeast
-        neighborCoords.add(new int[]{centerX - 1, centerY + 1});    //Southwest
+        neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
+        neighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast
+        neighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest
         neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest
         return validateNeighbors(neighborCoords);
     }
@@ -205,5 +206,16 @@ public abstract class Simulation {
      */
     public Cell[][] getGrid() {
         return grid;
+    }
+
+    /**
+     * Randomly chooses a cell from a given list
+     * @param lst the list of cells
+     * @return the randomly chosen cell
+     */
+    protected Cell chooseRandomCellFromList(List<Cell> lst) {
+        Random rand = new Random();
+
+        return lst.get(rand.nextInt(lst.size()));
     }
 }

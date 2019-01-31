@@ -4,7 +4,9 @@ import utils.Cell;
 
 import java.util.*;
 
-// TODO Should I use utils.Cell objects (current) or Fish/Shark objects?
+// TODO Should I use Cell objects (current) or Fish/Shark objects?
+// TODO Is it okay that eating, moving, and breeding don't truly follow lock-step synchronization when dealing with conflicts?
+// TODO Does this class even make sense?
 /**
  * Class that represents the Predator-Prey simulation
  * <p>
@@ -14,23 +16,53 @@ import java.util.*;
  */
 public class PredatorPrey extends Simulation {
 
+    // TODO Shark is never used, but it's more readable to initialize here. Is that ok?
+    /**
+     * The possible states of each cell in the Fire simulation
+     */
+    private final int EMPTY = 0;
+    private final int FISH = 1;
+    private final int SHARK = 2;
+
     /**
      * If a fish or shark survives for this number of turns, it will breed.
      */
     private final int NUM_TURNS_TO_BREED;
 
     /**
-     * The empty state is the only state that needs to a be an instance variable.
-     */
-    private final int EMPTY = 0;
-
-
-    /**
      * Tracks the number of turns each fish and shark has survived since being born or breeding.
      * <p>
      * Key is the cell that currently holds the fish (prior to step). Values are the number of turns survived.
      */
-    private Map<Cell, Integer> animalTurnTracker;
+    private final Map<Cell, Integer> animalTurnTracker;
+
+    // TODO How to justify these lists being instance variables? They allow the step() method to be broken up into multiple, more readable ones.
+    /**
+     * The list of sharks in the grid, represented by their current cells
+     */
+    private List<Cell> willEat;
+
+    /**
+     * The list of animals that will move on a given step, represented by their current cells
+     */
+    private List<Cell> willMove;
+
+    /**
+     * The list of empty cells that will stay empty on a given step, represented by their current cells.
+     * <p>
+     * This avoids unnecessarily setting the next state of empty cells as empty if they are ultimately going to have an
+     * animal move or breed into them.
+     */
+    private List<Cell> willStayEmpty;
+
+    // TODO Is this way of avoiding conflicts ok?
+    /**
+     * The list of cells that have each already had an animal eat, move, or breed into it.
+     * <p>
+     * This is used to prevent conflicts where animals "overwrite" each other after eating, moving, or breeding into the
+     * same cell.
+     */
+    private List<Cell> animalAlreadyHere;
 
     /**
      * Creates the simulation and calls the super constructor to create the grid
@@ -41,6 +73,7 @@ public class PredatorPrey extends Simulation {
     public PredatorPrey(int sideSize, double[] populationFreqs, int numTurnsToBreed) {
         super(sideSize, new int[]{0, 1, 2}, populationFreqs);    // hard-coded b/c states are pre-determined
         NUM_TURNS_TO_BREED = numTurnsToBreed;
+        animalTurnTracker = new HashMap<>();
         initializeAnimalTurnTracker();
     }
 
@@ -48,7 +81,6 @@ public class PredatorPrey extends Simulation {
      * Finds all of the fish and sharks in the initial grid and adds them to the turn tracker
      */
     private void initializeAnimalTurnTracker() {
-        animalTurnTracker = new HashMap<>();
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
                 if (cell.getCurrState() != EMPTY) {
@@ -58,108 +90,98 @@ public class PredatorPrey extends Simulation {
         }
     }
 
-    // TODO Is it okay that eating, moving, and breeding don't follow lock-step synchronization?
-    // TODO Should for-each loop in calculateNextStates() be in separate method? Pro of that design is shorter methods. Con is need instance variables (toEat, toMove).
+    // TODO Is this method being made up of five method calls w/o parameters ok?
     /**
      * Calculates the next state for each cell in the grid based off this simulation's rules
      */
+    @Override
     protected void calculateNextStates() {
-        final int FISH = 1;
+        animalAlreadyHere = new ArrayList<>();
 
-        // keys are sharks that will eat, values are fish to be eaten (all represented by their current cells)
-        Map<Cell, Cell> toEat = new HashMap<>();
+        determineCellBehaviors();
+        makeSharksEat();
+        moveAbleAnimals();
+        breedAbleAnimalsAndUpdateTracker();
+        stayEmpty();
+    }
 
-        // list of animals that will move (all represented by their current cells)
-        List<Cell> toMove = new ArrayList<>();
+    /**
+     * Determine the type of behavior for each cell (stay empty, move, or eat)
+     */
+    private void determineCellBehaviors() {
+        willEat = new ArrayList<>();
+        willMove = new ArrayList<>();
+        willStayEmpty = new ArrayList<>();
 
-        Random rand = new Random();
-
-        // determine type of behavior for each cell (move or eat)
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
 
-                // TODO This might be overwritten when animals move/breed. Can this be avoided?
-                // empty cells stay empty (unless they are moved/bred into)
+                // empty cells stay empty unless they are moved/bred into
                 if (cell.getCurrState() == EMPTY) {
-                    cell.setNextState(EMPTY);
+                    willStayEmpty.add(cell);
                 }
 
                 // fish attempt to move every turn
                 else if (cell.getCurrState() == FISH) {
-                    toMove.add(cell);
+                    willMove.add(cell);
                 }
 
-                // shark will randomly choose a fish in a cardinal neighbor cell to eat, will move if none exist
+                // shark attempt to eat every turn
                 else {
-
-                    // fish that the shark can eat
-                    List<Cell> fishEdible = getNeighborsOfType(cell, FISH, true);
-                    if (!fishEdible.isEmpty()) {
-
-                        // randomly choose from fishEdible
-                        Cell randomFish = fishEdible.get(rand.nextInt(fishEdible.size()));
-                        toEat.put(cell, randomFish);
-                    } else {
-                        toMove.add(cell);
-                    }
+                    willEat.add(cell);
                 }
             }
         }
-
-        // perform animal behaviors
-        makeSharksEat(toEat, toMove);
-        moveAllAnimals(toMove);
-        breedAnimals();
     }
 
-    // TODO What to do if two sharks try to eat the same fish? Currently, one shark just eats the other.
     /**
-     * Make all sharks that will eat eat
-     * @param toEat the map of all eating that will occur, where the key is the shark that will eat and value is the
-     *              fish being eaten.
-     * @param toMove the list of all animals that are suppose to move (used to acknowledge the fact that eaten fish no
-     *               longer move)
+     * Make each shark randomly choose a fish in a cardinal neighbor cell to eat or move if no such fish exists
      */
-    private void makeSharksEat(Map<Cell, Cell> toEat, List<Cell> toMove) {
-        for (Map.Entry<Cell, Cell> eat : toEat.entrySet()) {
-            Cell eater = eat.getKey();
-            Cell eaten = eat.getValue();
+    private void makeSharksEat() {
+        for (Cell shark : willEat) {
+            List<Cell> fishEdible = getNeighborsOfType(shark, FISH, true);
+            fishEdible = removeCellsWithAnimalsAlreadyThere(fishEdible);
 
-            // remove the eaten fish from the simulation data
-            toMove.remove(eaten);
-            animalTurnTracker.remove(eaten);
+            if (!fishEdible.isEmpty()) {
+                Cell fishEaten = chooseRandomCellFromList(fishEdible);
 
-            moveAnimal(eater, eaten);
+                // remove the eaten fish from the simulation data
+                willMove.remove(fishEaten);
+                animalTurnTracker.remove(fishEaten);
+
+                moveAnimal(shark, fishEaten);
+            }
+            else {
+                willMove.add(shark);
+            }
         }
     }
 
-    // TODO Look at other ways to handle move conflicts. Right now, moves can overwrite each other.
     /**
-     * Move all animals that are supposed to move (sharks that don't eat, fish that aren't eaten and have empty cardinal
-     * neighbor cells)
-     * @param toMove the list of all animals that are supposed to move
+     * Move each animal that is supposed to move (sharks that don't eat, fish that aren't eaten) into a randomly chosen
+     * empty cardinal neighbor cell or leave it in the current cell if no such neighbor exists
      */
-    private void moveAllAnimals(List<Cell> toMove) {
-        Random rand = new Random();
-
-        for (Cell mover : toMove) {
+    private void moveAbleAnimals() {
+        for (Cell mover : willMove) {
             List<Cell> canMoveTo = getNeighborsOfType(mover, EMPTY, true);
+            canMoveTo = removeNewEmptyCells(canMoveTo);
+            canMoveTo = removeCellsWithAnimalsAlreadyThere(canMoveTo);
 
-            // if no empty cardinal neighbor cells, don't move
             if (canMoveTo.isEmpty()) {
                 mover.setNextState(mover.getCurrState());
             }
-
-            // otherwise, randomly choose an empty cardinal neighbor cell to move to
             else {
-                Cell willMoveTo = canMoveTo.get(rand.nextInt(canMoveTo.size()));
+                Cell willMoveTo = chooseRandomCellFromList(canMoveTo);
                 moveAnimal(mover, willMoveTo);
+
+                // as this empty cell has had an animal move into it, it will no longer stay empty
+                willStayEmpty.remove(willMoveTo);
             }
         }
     }
 
     /**
-     * Moves animal from one cell to another and updates animalTurnTracker accordingly
+     * Moves animal from one cell to another and updates animalTurnTracker and animalAlreadyHere accordingly
      * @param source the original cell of the animal being moved
      * @param dest the cell where the animal is being moved to
      */
@@ -171,46 +193,113 @@ public class PredatorPrey extends Simulation {
         // make animal's original location empty
         source.setNextState(EMPTY);
 
-        // update animalTurnTracker
         animalTurnTracker.put(dest, animalTurnTracker.get(source));
         animalTurnTracker.remove(source);
+
+        animalAlreadyHere.add(dest);
     }
 
-    // TODO Look at other ways to handle breed conflicts. Right now, breeding can overwrite each other.
-    // TODO Should I make a helper function for this method? For example: breedAnimal()
     /**
-     * Have all animals that can breed (survived enough turns, have empty cardinal neighbor cell to breed into) breed
+     * Have all animals that can breed (survived enough turns, have empty cardinal neighbor cell to breed into) breed.
+     * Also, update the animalTurnTracker.
+     * <p>
+     * The tracker is updated here to save having to iterate through the map another time.
      */
-    private void breedAnimals() {
-
-        // list of all animals that are bred during the current simulation step (represented by their cells)
-        List<Cell> bred = new ArrayList<>();
-
-        Random rand = new Random();
-
-        // have all animals that can breed breed
+    private void breedAbleAnimalsAndUpdateTracker() {
         for (Map.Entry<Cell, Integer> animalTracked : animalTurnTracker.entrySet()) {
             Cell animal = animalTracked.getKey();
+            int turnsSurvived = animalTracked.getValue();
 
-            // only breed if animal has survived enough turns after being born or breeding
-            if (animalTracked.getValue() >= NUM_TURNS_TO_BREED) {
-
-                // if there is at least one empty cardinal neighbor cell, randomly choose one to breed into
-                List<Cell> canBreedInto = getNeighborsOfType(animal, EMPTY, true);
-                if (!canBreedInto.isEmpty()) {
-                    Cell willBreedInto = canBreedInto.get(rand.nextInt(canBreedInto.size()));
-                    willBreedInto.setNextState(animal.getCurrState());
-                    bred.add(willBreedInto);
-                }
+            Cell bred = breedAnimalIfAble(animal, turnsSurvived);
+            // TODO Are these if statements ok?
+            if (bred == null) {
+                continue;
             }
 
-            // update the turn tracker by incrementing all animal's turns survived
+            if (!animalTurnTracker.containsKey(bred)) {
+                animalTurnTracker.put(bred, -1);    // being bred does not count as having survived a turn
+            }
             animalTurnTracker.put(animal, animalTurnTracker.get(animal) + 1);
         }
+    }
 
-        // add all the newly bred animals to the animalTurnTracker
-        for (Cell animal : bred) {
-            animalTurnTracker.put(animal, 0);    // being bred does not count as having survived a turn
+    /**
+     * Breed animal into empty cardinal neighbor cell if it has survived enough turns after being born or last breeding.
+     * If no such neighbor exists, don't breed.
+     * @param animal the animal to potentially breed, represented by its current cell
+     * @param turnsSurvived the number of turns survived by that animal since being born or last breeding (whichever was
+     *                      most recent)
+     * @return the cell that is bred into, null if no breeding occurs
+     */
+    private Cell breedAnimalIfAble(Cell animal, int turnsSurvived) {
+        if (turnsSurvived >= NUM_TURNS_TO_BREED) {
+            List<Cell> canBreedInto = getNeighborsOfType(animal, EMPTY, true);
+            canBreedInto = removeNewEmptyCells(canBreedInto);
+            canBreedInto = removeCellsWithAnimalsAlreadyThere(canBreedInto);
+
+            if (!canBreedInto.isEmpty()) {
+                Cell willBreedInto = chooseRandomCellFromList(canBreedInto);
+                willBreedInto.setNextState(animal.getCurrState());
+
+                // as this empty cell has been bred into, it will no longer stay empty
+                willStayEmpty.remove(willBreedInto);
+
+                // as an animal has now bred here, update animalAlreadyHere accordingly
+                animalAlreadyHere.add(willBreedInto);
+
+                return willBreedInto;
+            }
         }
+        return null;
+    }
+
+    /**
+     * Have each empty cell that has not had an animal move or breed into it stay empty
+     */
+    private void stayEmpty() {
+        for (Cell empty : willStayEmpty) {
+            empty.setNextState(EMPTY);
+        }
+    }
+
+    // TODO Is this way of ensuring lock-step synchronization when it comes to moving/breeding into empty cells ok?
+    /**
+     * Takes a list of empty neighbor cells and returns a copy of the list with only cells that were empty prior to the
+     * current simulation step.
+     * <p>
+     * This ensures lock-step synchronization and that animals don't move/breed into cells made empty by another animal
+     * moving in the same step. willStayEmpty is the list of cells that were empty prior to the step except for the ones
+     * that have since been filled by an animal (doesn't affect this method).
+     * @param emptyCells the list of empty neighbor cells
+     * @return the list of empty neighbor cells that were originally empty
+     */
+    private List<Cell> removeNewEmptyCells(List<Cell> emptyCells) {
+        List<Cell> noNewEmptyCells = new ArrayList<>();
+
+        for (Cell emptyCell : emptyCells) {
+            if (willStayEmpty.contains(emptyCell)) {
+                noNewEmptyCells.add(emptyCell);
+            }
+        }
+        return noNewEmptyCells;
+    }
+
+    // TODO Is this method name ok?
+    /**
+     * Takes a list of potential destination cells for an animal (after eating, moving, or breeding) and returns a copy
+     * of the list with only cells that each have not been eaten, moved, or bred into by another animal.
+     * <p>
+     * This ensures no conflicts occur where animals "overwrite" each other after eating, moving, or breeding into the
+     * same cell.
+     */
+    private List<Cell> removeCellsWithAnimalsAlreadyThere(List<Cell> potentialDests) {
+        List<Cell> noAnimalsAlreadyThere = new ArrayList<>();
+
+        for (Cell potentialDest : potentialDests) {
+            if (!animalAlreadyHere.contains(potentialDest)) {
+                noAnimalsAlreadyThere.add(potentialDest);
+            }
+        }
+        return noAnimalsAlreadyThere;
     }
 }

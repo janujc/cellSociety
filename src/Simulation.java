@@ -1,7 +1,6 @@
 import java.util.*;
 
 // TODO Do I need to write the simulation rules in the comments?
-// TODO Is it ok to have methods in superclass that are only used by some, but not all subclasses?
 // TODO Do I have too many comments?
 /**
  * Superclass for all simulations

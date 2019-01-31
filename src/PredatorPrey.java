@@ -129,7 +129,7 @@ public class PredatorPrey extends Simulation {
         }
     }
 
-    // TODO Look at other ways to handle move conflicts. Right now, moves aren't parallel.
+    // TODO Look at other ways to handle move conflicts. Right now, moves can overwrite each other.
     /**
      * Move all animals that are supposed to move (sharks that don't eat, fish that aren't eaten and have empty cardinal
      * neighbor cells)
@@ -172,7 +172,7 @@ public class PredatorPrey extends Simulation {
         animalTurnTracker.remove(source);
     }
 
-    // TODO Look at other ways to handle breed conflicts. Right now, breeding isn't parallel.
+    // TODO Look at other ways to handle breed conflicts. Right now, breeding can overwrite each other.
     // TODO Should I make a helper function for this method? For example: breedAnimal()
     /**
      * Have all animals that can breed (survived enough turns, have empty cardinal neighbor cell to breed into) breed

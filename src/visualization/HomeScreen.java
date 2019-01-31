@@ -20,7 +20,9 @@ import static visualization.Controller.sofiaPro;
 
 public class HomeScreen {
     private Group myContainer;
-    public HomeScreen(Scene myScene) {
+    private Controller context;
+    public HomeScreen(Scene myScene, Controller context) {
+        this.context = context;
 
         var container = new Group();
         Text titleText = makeText("SimuCell", sofiaPro, Color.SLATEGREY,
@@ -45,7 +47,6 @@ public class HomeScreen {
                         public void handle(MouseEvent event) {
                             System.out.println(card.getClassName()+" needs to be called");
                         }
-
                     });
                     grid.getChildren().add(cardView);
                 }

@@ -54,7 +54,7 @@ public abstract class Simulation {
                 for (int k = 0; k < states.length; k++) {
                     cumulativeFreqs += populationFreqs[k];
                     if (randNum < 100 * (cumulativeFreqs + populationFreqs[k])) {
-                        grid[x][y] = new Cell(states[k]);
+                        grid[x][y] = new Cell(states[k], x, y);
                         break;
                     }
                 }

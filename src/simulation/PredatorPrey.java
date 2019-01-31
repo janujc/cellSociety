@@ -4,11 +4,11 @@ import utils.Cell;
 
 import java.util.*;
 
-// TODO make it so animal moves don't affect each other
 // TODO deal with eat, move, and breed conflicts (currently, unexpected overwriting is possible)
 
 // TODO Should I use Cell objects (current) or Fish/Shark objects?
-// TODO Is it okay that eating, moving, and breeding don't follow lock-step synchronization?
+// TODO Is it okay that eating, moving, and breeding don't truly follow lock-step synchronization when dealing with conflicts?
+// TODO Is my away of ensuring lock-step synchronization when it comes to moving/breeding into empty cells ok?
 /**
  * Class that represents the Predator-Prey simulation
  * <p>
@@ -124,7 +124,6 @@ public class PredatorPrey extends Simulation {
         }
     }
 
-    // TODO What to do if two sharks try to eat the same fish? Currently, one shark just eats the other.
     /**
      * Make each shark randomly choose a fish in a cardinal neighbor cell to eat or move if no such fish exists
      */
@@ -146,7 +145,6 @@ public class PredatorPrey extends Simulation {
         }
     }
 
-    // TODO Look at ways to handle move conflicts. Right now, moves overwrite each other.
     /**
      * Move each animal that is supposed to move (sharks that don't eat, fish that aren't eaten) into a randomly chosen
      * empty cardinal neighbor cell or leave it in the current cell if no such neighbor exists
@@ -154,7 +152,7 @@ public class PredatorPrey extends Simulation {
     private void moveAbleAnimals() {
         for (Cell mover : willMove) {
             List<Cell> canMoveTo = getNeighborsOfType(mover, EMPTY, true);
-
+            canMoveTo = removeNewEmptyCells(canMoveTo);
             // if no empty cardinal neighbor cells, don't move
             if (canMoveTo.isEmpty()) {
                 mover.setNextState(mover.getCurrState());
@@ -189,7 +187,6 @@ public class PredatorPrey extends Simulation {
         animalTurnTracker.remove(source);
     }
 
-    // TODO Look at ways to handle breed conflicts. Right now, breeding overwrites.
     /**
      * Have all animals that can breed (survived enough turns, have empty cardinal neighbor cell to breed into) breed.
      * Also, update the animalTurnTracker.
@@ -225,6 +222,7 @@ public class PredatorPrey extends Simulation {
     private Cell breedAnimalIfAble(Cell animal, int turnsSurvived) {
         if (turnsSurvived >= NUM_TURNS_TO_BREED) {
             List<Cell> canBreedInto = getNeighborsOfType(animal, EMPTY, true);
+            canBreedInto = removeNewEmptyCells(canBreedInto);
             if (!canBreedInto.isEmpty()) {
                 Cell willBreedInto = chooseRandomCellFromList(canBreedInto);
                 willBreedInto.setNextState(animal.getCurrState());
@@ -245,5 +243,25 @@ public class PredatorPrey extends Simulation {
         for (Cell empty : willStayEmpty) {
             empty.setNextState(EMPTY);
         }
+    }
+
+    /**
+     * Takes a list of empty neighbor cells and returns a copy of the list with only cells that were empty at the
+     * beginning of the simulation step.
+     * <p>
+     * This ensures lock-step synchronization and that animals don't move/breed into cells made empty by another animal
+     * moving in the same step.
+     * @param emptyCells the list of empty neighbor cells
+     * @return the list of empty neighbor cells that were originally empty
+     */
+    private List<Cell> removeNewEmptyCells(List<Cell> emptyCells) {
+        List<Cell> noNewEmptyCells = new ArrayList<>();
+
+        for (Cell emptyCell : emptyCells) {
+            if (willStayEmpty.contains(emptyCell)) {
+                noNewEmptyCells.add(emptyCell);
+            }
+        }
+        return noNewEmptyCells;
     }
 }

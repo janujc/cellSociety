@@ -1,5 +1,6 @@
 package simulation;
 
+import javafx.scene.paint.Color;
 import utils.Cell;
 
 import java.util.*;
@@ -167,7 +168,7 @@ public class PredatorPrey extends Simulation {
             canMoveTo = removeCellsWithAnimalsAlreadyThere(canMoveTo);
 
             if (canMoveTo.isEmpty()) {
-                mover.setNextState(mover.getCurrState());
+                mover.setNextState(mover.getCurrState(), mover.getColor());
             }
             else {
                 Cell willMoveTo = chooseRandomCellFromList(canMoveTo);
@@ -187,10 +188,10 @@ public class PredatorPrey extends Simulation {
     private void moveAnimal (Cell source, Cell dest) {
 
         // place animal in destination
-        dest.setNextState(source.getCurrState());
+        dest.setNextState(source.getCurrState(), source.getColor());
 
         // make animal's original location empty
-        source.setNextState(EMPTY);
+        source.setNextState(EMPTY, Color.GHOSTWHITE);
 
         animalTurnTracker.put(dest, animalTurnTracker.get(source));
         animalTurnTracker.remove(source);
@@ -238,7 +239,7 @@ public class PredatorPrey extends Simulation {
 
             if (!canBreedInto.isEmpty()) {
                 Cell willBreedInto = chooseRandomCellFromList(canBreedInto);
-                willBreedInto.setNextState(animal.getCurrState());
+                willBreedInto.setNextState(animal.getCurrState(), animal.getColor());
 
                 // as this empty cell has been bred into, it will no longer stay empty
                 willStayEmpty.remove(willBreedInto);
@@ -257,7 +258,7 @@ public class PredatorPrey extends Simulation {
      */
     private void stayEmpty() {
         for (Cell empty : willStayEmpty) {
-            empty.setNextState(EMPTY);
+            empty.setNextState(EMPTY, Color.GHOSTWHITE);
         }
     }
 

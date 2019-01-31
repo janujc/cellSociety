@@ -1,6 +1,7 @@
+package simulation;
 
 /**
- * Class that represents the Segregation simulation.
+ * Class that represents the simulation.Segregation simulation.
  * <p>
  * States: empty(0), occupied(1)
  *

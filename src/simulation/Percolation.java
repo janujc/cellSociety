@@ -1,6 +1,7 @@
+package simulation;
 
 /**
- * Class that represents the Percolation simulation.
+ * Class that represents the simulation.Percolation simulation.
  * <p>
  * States: blocked(0), open(1), percolated(1)
  *

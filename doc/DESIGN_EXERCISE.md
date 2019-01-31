@@ -32,15 +32,15 @@ and return true or false based on the following rules:
 To decide winners, losers, and settle tiebreakers, there will be the main _Supervisor_ class
 that contains instances of rock, paper and scissors, and monitors all attacks.
 
-### Exercise 3: Cell Society
+### Exercise 3: utils.Cell Society
 
-**How does a Cell know what rules to apply for its simulation?**
+**How does a utils.Cell know what rules to apply for its simulation?**
 
 Each simulation (game of life, segregation, predator-prey, ...) has its own config file that holds
 the rules for that specific simulation. Then, our primary class can get 
 the rules from the each config file..
 
-**How does a Cell know about its neighbors? How can it update itself without effecting its neighbors update?**
+**How does a utils.Cell know about its neighbors? How can it update itself without effecting its neighbors update?**
 
 The _Simulation_ superclass contains a grid of all the cells, which are represented by objects of 
 the _Cell_ class. Each cell class can call the _getCellInfo()_ method that will be provided by
@@ -49,7 +49,7 @@ neighbor's update, each cell object would store its un-updated state, allowing o
 
 **What is the grid? Does it have any behaviors? Who needs to know about it?**
 
-The grid itself does not have any behaviors, it is just a 2-d array of Cell objects. Only the simulation
+The grid itself does not have any behaviors, it is just a 2-d array of utils.Cell objects. Only the simulation
 and visualization classes know what's inside the grid.
 
 **What information about a simulation needs to be the configuration file?**
@@ -66,14 +66,14 @@ the current state of the simulation.
 
 **Basic Map of Project**
 
-Classes: Simulation, Visualization, Cell
+Classes: simulation.Simulation, Visualization, utils.Cell
 
-Cell
+utils.Cell
 * One class for each game (extending abstract superclass)
 * Holds rules
 * Holds current and future (calculated) state
 
-Simulation- handles grid, acts as "main" class (runs configuration and visualization)
+simulation.Simulation- handles grid, acts as "main" class (runs configuration and visualization)
 * Handles grid
 * "main class" (calls configuration and visualization)
 * iterates through grid once to calculate future states of each cell

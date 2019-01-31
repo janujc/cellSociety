@@ -1,6 +1,7 @@
+package simulation;
 
 /**
- * Class that represents the GameOfLife simulation
+ * Class that represents the simulation.GameOfLife simulation
  * <p>
  * States: dead(0), alive(1)
  *

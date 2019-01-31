@@ -1,3 +1,4 @@
+package utils;
 
 /**
  * Class that represents each agent/empty cell in our simulation

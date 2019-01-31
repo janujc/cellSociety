@@ -1,3 +1,7 @@
+package simulation;
+
+import utils.Cell;
+
 import java.util.*;
 
 // TODO Do I need to write the simulation rules in the comments?

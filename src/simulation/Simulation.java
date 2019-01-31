@@ -6,6 +6,7 @@ import java.util.*;
 
 // TODO Add color functionality
 // TODO Make interface for helper functions in this class.
+// TODO Find a way to hide grid data structure.
 // TODO Delete unnecessary comments.
 
 // TODO Do I need to write the simulation rules in the comments?

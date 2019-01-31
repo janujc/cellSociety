@@ -206,4 +206,15 @@ public abstract class Simulation {
     public Cell[][] getGrid() {
         return grid;
     }
+
+    /**
+     * Randomly chooses a cell from a given list
+     * @param lst the list of cells
+     * @return the randomly chosen cell
+     */
+    protected Cell chooseRandomCellFromList(List<Cell> lst) {
+        Random rand = new Random();
+
+        return lst.get(rand.nextInt(lst.size()));
+    }
 }

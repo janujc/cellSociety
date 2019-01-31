@@ -72,8 +72,6 @@ public class PredatorPrey extends Simulation {
         // list of animals that will move (all represented by their current cells)
         List<Cell> toMove = new ArrayList<>();
 
-        Random rand = new Random();
-
         // determine type of behavior for each cell (move or eat)
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
@@ -97,7 +95,7 @@ public class PredatorPrey extends Simulation {
                     if (!fishEdible.isEmpty()) {
 
                         // randomly choose from fishEdible
-                        Cell randomFish = fishEdible.get(rand.nextInt(fishEdible.size()));
+                        Cell randomFish = chooseRandomCellFromList(fishEdible);
                         toEat.put(cell, randomFish);
                     } else {
                         toMove.add(cell);
@@ -140,8 +138,6 @@ public class PredatorPrey extends Simulation {
      * @param toMove the list of all animals that are supposed to move
      */
     private void moveAllAnimals(List<Cell> toMove) {
-        Random rand = new Random();
-
         for (Cell mover : toMove) {
             List<Cell> canMoveTo = getNeighborsOfType(mover, EMPTY, true);
 
@@ -152,7 +148,7 @@ public class PredatorPrey extends Simulation {
 
             // otherwise, randomly choose an empty cardinal neighbor cell to move to
             else {
-                Cell willMoveTo = canMoveTo.get(rand.nextInt(canMoveTo.size()));
+                Cell willMoveTo = chooseRandomCellFromList(canMoveTo);
                 moveAnimal(mover, willMoveTo);
             }
         }
@@ -186,8 +182,6 @@ public class PredatorPrey extends Simulation {
         // list of all animals that are bred during the current simulation step (represented by their cells)
         List<Cell> bred = new ArrayList<>();
 
-        Random rand = new Random();
-
         // have all animals that can breed breed
         for (Map.Entry<Cell, Integer> animalTracked : animalTurnTracker.entrySet()) {
             Cell animal = animalTracked.getKey();
@@ -198,7 +192,7 @@ public class PredatorPrey extends Simulation {
                 // if there is at least one empty cardinal neighbor cell, randomly choose one to breed into
                 List<Cell> canBreedInto = getNeighborsOfType(animal, EMPTY, true);
                 if (!canBreedInto.isEmpty()) {
-                    Cell willBreedInto = canBreedInto.get(rand.nextInt(canBreedInto.size()));
+                    Cell willBreedInto = chooseRandomCellFromList(canBreedInto);
                     willBreedInto.setNextState(animal.getCurrState());
                     bred.add(willBreedInto);
                 }

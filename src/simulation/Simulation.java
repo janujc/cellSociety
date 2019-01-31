@@ -4,6 +4,7 @@ import utils.Cell;
 
 import java.util.*;
 
+// TODO Add color functionality
 // TODO Make interface for helper functions in this class.
 // TODO Delete unnecessary comments.
 

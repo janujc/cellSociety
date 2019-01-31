@@ -64,8 +64,8 @@ public class Controller extends Application {
         var root = new Group();
 
         // create a place to see the shapes
-        HomeScreen homeScreen = new HomeScreen(root, width, height, Color.GHOSTWHITE);
-        var scene = homeScreen.getScene();
+        var scene = new Scene(root, width, height, Color.GHOSTWHITE);
+        HomeScreen homeScreen = new HomeScreen(scene);
 
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
         scene.setOnKeyReleased(e -> handleKeyReleased(e.getCode()));

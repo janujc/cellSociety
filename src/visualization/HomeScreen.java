@@ -17,9 +17,8 @@ import static visualization.Controller.bebasKai;
 import static visualization.Controller.sofiaPro;
 
 public class HomeScreen {
-    Scene myScene;
-    public HomeScreen(Group root, double width, double height, Color background) {
-        myScene = new Scene(root, width, height, background);
+    public HomeScreen(Scene myScene) {
+
         var container = new Group();
         Text titleText = makeText("SimuCell", sofiaPro, Color.SLATEGREY,
                 myScene.getWidth()/2,
@@ -47,9 +46,6 @@ public class HomeScreen {
 
         container.getChildren().addAll(titleText, subTitleText);
         container.getChildren().addAll(grid);
-        root.getChildren().add(container);
-    }
-    public Scene getScene() {
-        return myScene;
+        ((Group) myScene.getRoot()).getChildren().add(container);
     }
 }

@@ -3,12 +3,16 @@ package simulation;
 import utils.Cell;
 
 import java.util.*;
+import javafx.scene.paint.Color;
 
-// TODO Add color functionality
 // TODO Make interface for helper functions in this class.
 // TODO Find a way to hide grid data structure.
+// TODO Implement way to display the color key to the user.
 // TODO Delete unnecessary comments.
 
+// TODO What's the best data structure to save data read from the config file?
+// TODO Is it okay to use array instead of map for colors?
+// TODO Are the color constants necessary?
 // TODO Do I need to write the simulation rules in the comments?
 /**
  * Superclass for all simulations
@@ -23,25 +27,33 @@ public abstract class Simulation {
      * The simulation grid made up of cells each with their own state (represented by an int)
      * <p>
      * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
-     * the element of each row in a particular column.
+     * the element of each row in a particular column
      */
     protected final Cell[][] grid;
 
     /**
      * The length of one side of the grid
-     * Grid is always a square, so its dimensions are gridSideSize x gridSideSize.
+     * <p>
+     * Grid is always a square, so its dimensions are gridSideSize x gridSideSize
      */
     private final int gridSideSize;
 
+    /**
+     * The array of colors for each possible state where the index is the corresponding state
+     */
+    protected final Color[] colors;
+
+    // TODO Should constructor parameters be lists or arrays?
     /**
      * Creates and populates the simulation grid
      * @param sideSize the length of one side of the grid
      * @param states the possible states of the cells in the simulation grid
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      */
-    protected Simulation(int sideSize, int[] states, double[] populationFreqs) {
+    protected Simulation(int sideSize, int[] states, double[] populationFreqs, Color[] stateColors) {
         gridSideSize = sideSize;
         grid = new Cell[gridSideSize][gridSideSize];
+        colors = stateColors;
         populateGrid(states, populationFreqs);
     }
 

@@ -4,6 +4,7 @@ import utils.Cell;
 
 import java.util.List;
 import java.util.Random;
+import javafx.scene.paint.Color;
 
 /**
  * Class that represents the Spreading of Fire simulation
@@ -23,6 +24,15 @@ public class Fire extends Simulation {
     private final int BURNING = 2;
 
     /**
+     * The colors of each possible state in the Fire Simulation
+     * <p>
+     * Used to minimize array accesses
+     */
+    private final Color COLOR_EMPTY;
+    private final Color COLOR_TREE;
+    private final Color COLOR_BURNING;
+
+    /**
      * The probability that a tree next to a burning tree catches on fire, which is read from the XML file
      */
     private final double PROB_CATCH;
@@ -33,8 +43,11 @@ public class Fire extends Simulation {
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      * @param probCatch the probability that a tree next to a burning tree catches on fire, read from the XML file
      */
-    public Fire(int sideSize, double[] populationFreqs, double probCatch) {
-        super(sideSize, new int[]{0, 1, 2}, populationFreqs);    // hard-coded here b/c states are pre-determined
+    public Fire(int sideSize, double[] populationFreqs, Color[] stateColors, double probCatch) {
+        super(sideSize, new int[]{0, 1, 2}, populationFreqs, stateColors);    // hard-coded as states are pre-determined
+        COLOR_EMPTY = colors[EMPTY];
+        COLOR_TREE = colors[TREE];
+        COLOR_BURNING = colors[BURNING];
         PROB_CATCH = probCatch;
     }
 
@@ -67,21 +80,22 @@ public class Fire extends Simulation {
         if (cell.getCurrState() == TREE && hasBurningNeighbor) {
             int randNum = rand.nextInt(100);
             if (randNum < PROB_CATCH * 100) {
-                cell.setNextState(BURNING);
+                cell.setNextState(BURNING, COLOR_BURNING);
             }
             else {
-                cell.setNextState(TREE);
+                cell.setNextState(TREE, COLOR_TREE);
             }
         }
 
         // if a tree is burning, it will burn down (become empty cell)
         else if (cell.getCurrState() == BURNING) {
-            cell.setNextState(EMPTY);
+            cell.setNextState(EMPTY, COLOR_EMPTY);
         }
 
         // otherwise, the cell remains the same (tree with no burning neighbors, empty cell)
         else {
-            cell.setNextState(cell.getCurrState());
+            int curr = cell.getCurrState();
+            cell.setNextState(curr, colors[curr]);
         }
     }
 }

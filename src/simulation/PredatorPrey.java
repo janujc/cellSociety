@@ -3,6 +3,7 @@ package simulation;
 import utils.Cell;
 
 import java.util.*;
+import javafx.scene.paint.Color;
 
 // TODO Should I use Cell objects (current) or Fish/Shark objects?
 // TODO Does this class even make sense?
@@ -17,11 +18,18 @@ public class PredatorPrey extends Simulation {
 
     // TODO Shark is never used, but it's more readable to initialize here. Is that ok?
     /**
-     * The possible states of each cell in the Fire simulation
+     * The possible states of each cell in the PredatorPrey simulation
      */
     private final int EMPTY = 0;
     private final int FISH = 1;
     private final int SHARK = 2;
+
+    /**
+     * The colors of the empty state (the other colors are only used by accessing the color array)
+     * <p>
+     * Used to minimize array accesses
+     */
+    private final Color COLOR_EMPTY;
 
     /**
      * If a fish or shark survives for this number of turns, it will breed.
@@ -29,7 +37,7 @@ public class PredatorPrey extends Simulation {
     private final int NUM_TURNS_TO_BREED;
 
     /**
-     * Tracks the number of turns each fish and shark has survived since being born or breeding.
+     * Tracks the number of turns each fish and shark has survived since being born or breeding
      * <p>
      * Key is the cell that currently holds the fish (prior to step). Values are the number of turns survived.
      */
@@ -47,19 +55,19 @@ public class PredatorPrey extends Simulation {
     private List<Cell> willMove;
 
     /**
-     * The list of empty cells that will stay empty on a given step, represented by their current cells.
+     * The list of empty cells that will stay empty on a given step, represented by their current cells
      * <p>
      * This avoids unnecessarily setting the next state of empty cells as empty if they are ultimately going to have an
-     * animal move or breed into them.
+     * animal move or breed into them
      */
     private List<Cell> willStayEmpty;
 
     // TODO Is this way of avoiding conflicts ok?
     /**
-     * The list of cells that have each already had an animal eat, move, or breed into it.
+     * The list of cells that have each already had an animal eat, move, or breed into it
      * <p>
      * This is used to prevent conflicts where animals "overwrite" each other after eating, moving, or breeding into the
-     * same cell.
+     * same cell
      */
     private List<Cell> animalAlreadyHere;
 
@@ -69,8 +77,9 @@ public class PredatorPrey extends Simulation {
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      * @param numTurnsToBreed number of turns survived needed to breed
      */
-    public PredatorPrey(int sideSize, double[] populationFreqs, int numTurnsToBreed) {
-        super(sideSize, new int[]{0, 1, 2}, populationFreqs);    // hard-coded b/c states are pre-determined
+    public PredatorPrey(int sideSize, double[] populationFreqs, Color[] stateColors, int numTurnsToBreed) {
+        super(sideSize, new int[]{0, 1, 2}, populationFreqs, stateColors);    // hard-coded b/c states are pre-determined
+        COLOR_EMPTY = colors[EMPTY];
         NUM_TURNS_TO_BREED = numTurnsToBreed;
         animalTurnTracker = new HashMap<>();
         initializeAnimalTurnTracker();
@@ -167,7 +176,8 @@ public class PredatorPrey extends Simulation {
             canMoveTo = removeCellsWithAnimalsAlreadyThere(canMoveTo);
 
             if (canMoveTo.isEmpty()) {
-                mover.setNextState(mover.getCurrState());
+                int curr = mover.getCurrState();
+                mover.setNextState(curr, colors[curr]);
             }
             else {
                 Cell willMoveTo = chooseRandomCellFromList(canMoveTo);
@@ -185,12 +195,13 @@ public class PredatorPrey extends Simulation {
      * @param dest the cell where the animal is being moved to
      */
     private void moveAnimal (Cell source, Cell dest) {
+        int curr = source.getCurrState();
 
         // place animal in destination
-        dest.setNextState(source.getCurrState());
+        dest.setNextState(curr, colors[curr]);
 
         // make animal's original location empty
-        source.setNextState(EMPTY);
+        source.setNextState(EMPTY, COLOR_EMPTY);
 
         animalTurnTracker.put(dest, animalTurnTracker.get(source));
         animalTurnTracker.remove(source);
@@ -238,7 +249,8 @@ public class PredatorPrey extends Simulation {
 
             if (!canBreedInto.isEmpty()) {
                 Cell willBreedInto = chooseRandomCellFromList(canBreedInto);
-                willBreedInto.setNextState(animal.getCurrState());
+                int curr = animal.getCurrState();
+                willBreedInto.setNextState(curr, colors[curr]);
 
                 // as this empty cell has been bred into, it will no longer stay empty
                 willStayEmpty.remove(willBreedInto);
@@ -257,7 +269,7 @@ public class PredatorPrey extends Simulation {
      */
     private void stayEmpty() {
         for (Cell empty : willStayEmpty) {
-            empty.setNextState(EMPTY);
+            empty.setNextState(EMPTY, COLOR_EMPTY);
         }
     }
 

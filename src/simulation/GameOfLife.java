@@ -1,5 +1,6 @@
 package simulation;
 
+import javafx.scene.paint.Color;
 import utils.Cell;
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class GameOfLife extends Simulation {
     private final int DEAD = 0;
     private final int ALIVE = 1;
 
-    public GameOfLife(int sideSize, int[] states, double[] populationFreqs) {
-        super(sideSize, new int[]{0, 1}, populationFreqs);
+    public GameOfLife(int sideSize, int[] states, double[] populationFreqs, Color[] colors) {
+        super(sideSize, new int[]{0, 1}, populationFreqs, colors);
     }
 
     @Override
@@ -40,7 +41,9 @@ public class GameOfLife extends Simulation {
                 // Fire only looks at cardinal neighbors, so pass in true
                 List<Cell> neighbors = getNeighborsOfType(cell, ALIVE, true);
                 boolean hasBurningNeighbor = !neighbors.isEmpty();
-                calculateNextStateOfOneCell(cell, hasBurningNeighbor);
+                // Gonna comment out lines that prevent compilation
+                // TODO: Fix
+                //calculateNextStateOfOneCell(cell, hasBurningNeighbor);
             }
         }
     }

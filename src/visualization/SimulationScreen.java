@@ -18,7 +18,8 @@ public class SimulationScreen {
     private Simulation simulation;
     private int rate = 1; // Frequency in Hertz
     private Text rateText;
-    private Control speedUpControl, speedDownControl, nextStateControl, prevStateControl;
+    private Control speedUpControl, speedDownControl, nextStateControl, prevStateControl, playPauseToggle;
+    private boolean isPaused = true; // Paused by default
 
     public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label) {
         this.simulation = simulation;
@@ -57,8 +58,14 @@ public class SimulationScreen {
         prevStateControl.getView().setLayoutY(scene.getHeight()-70);
         prevStateControl.getView().setTooltip(new Tooltip("Step backwards"));
 
+        playPauseToggle = new PlayPauseToggleControl(this);
+        playPauseToggle.getView().setLayoutX(scene.getWidth() - 2*30 - 25 -15);
+        playPauseToggle.getView().setLayoutY(scene.getHeight()-70);
+        playPauseToggle.getView().setTooltip(new Tooltip("Toggle play or pause"));
+
         container.getChildren().addAll(titleText, pressEscape, speedUpControl.getView(),
-                rateText, speedDownControl.getView(), nextStateControl.getView(), prevStateControl.getView());
+                rateText, speedDownControl.getView(), nextStateControl.getView(), prevStateControl.getView(),
+                playPauseToggle.getView());
     }
 
     public Group getContainer() {
@@ -83,5 +90,13 @@ public class SimulationScreen {
 
     public void stepForward() {
         // TODO
+    }
+
+    public boolean getIsPaused() {
+        return isPaused;
+    }
+
+    public void setIsPaused(boolean isPaused) {
+        this.isPaused = isPaused;
     }
 }

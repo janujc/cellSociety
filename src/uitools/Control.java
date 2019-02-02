@@ -9,7 +9,7 @@ import javafx.scene.layout.Background;
 import utils.ConfigParser;
 
 public abstract class Control {
-    Button icon;
+    private Button icon;
     protected Control (Image image) {
         this.icon = new Button();
         this.icon.setGraphic(new ImageView(image));

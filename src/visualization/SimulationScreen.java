@@ -8,6 +8,10 @@ import javafx.scene.text.Text;
 import simulation.PredatorPrey;
 import simulation.Simulation;
 import uitools.*;
+import utils.Cell;
+import utils.Snapshot;
+
+import java.util.Stack;
 
 import static uitools.TextGenerator.makeText;
 import static visualization.Controller.*;
@@ -23,8 +27,11 @@ public class SimulationScreen {
     private double continueIn = 1000.0/rate; // How many milliseconds we'll continue the animation in
     private double pausedFor = 0; // How many milliseconds we've been paused for before animating
 
+    private Stack<Snapshot> history;
+
     public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label) {
         this.simulation = simulation;
+        this.history = new Stack<>();
 
         var container = new Group();
         Text titleText = makeText(label, sofiaPro, Color.SLATEGREY,
@@ -77,13 +84,21 @@ public class SimulationScreen {
                 pausedFor = 0;
                 continueIn = 1000.0/rate;
 
-                // TODO: Get next state
-                // TODO: Push current state in history stack
-                // TODO: Render next state
+                history.push(new Snapshot(simulation.getGrid())); // Save current grid in history
+                //double start = System.currentTimeMillis();
+                simulation.step(); // Compute next grid
+                //System.out.println("Took: "+(System.currentTimeMillis()-start)+"ms");
+                Cell[][] newGrid = simulation.getGrid(); // Get next grid
+
+                renderGrid(newGrid);
             } else {
-                pausedFor = elapsedTime * 1000; // We continue to pause the animation
+                pausedFor += elapsedTime * 1000; // We continue to pause the animation
             }
         }
+    }
+
+    private void renderGrid(Cell[][] grid) {
+        // TODO
     }
 
     public Group getContainer() {

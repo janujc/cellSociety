@@ -85,9 +85,7 @@ public class SimulationScreen {
                 continueIn = 1000.0/rate;
 
                 history.push(new Snapshot(simulation.getGrid())); // Save current grid in history
-                //double start = System.currentTimeMillis();
                 simulation.step(); // Compute next grid
-                //System.out.println("Took: "+(System.currentTimeMillis()-start)+"ms");
                 Cell[][] newGrid = simulation.getGrid(); // Get next grid
 
                 renderGrid(newGrid);

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Class that represents the GameOfLife simulation
  * <p>
- * States: dead (0), alive (1)
+ * States: alive (1), dead (0)
  *
  * @author Januario Carreiro
  *
@@ -18,12 +18,8 @@ public class GameOfLife extends Simulation {
     /**
      * The possible states of each cell in the GameOfLife simulation
      */
-    private final Integer ALIVE = 0;
-    private final Integer DEAD = 1;
-    private final HashMap<Integer, Color> stateMap = new HashMap<>() {{
-        put(DEAD, Color.GHOSTWHITE);
-        put(ALIVE, Color.BLACK);
-    }};
+    private final Integer DEAD = 0;
+    private final Integer ALIVE = 1;
 
     public GameOfLife(int sideSize, int[] states, double[] populationFreqs, Color[] colors) {
         super(sideSize, new int[]{0, 1}, populationFreqs, colors);

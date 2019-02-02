@@ -1,15 +1,19 @@
 package utils;
 
+import javafx.scene.paint.Color;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import simulation.Simulation;
 import uitools.Card;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 
 public class ConfigParser {
-    public static void parseConfigFile (String fileName, String className) {
+    public static Simulation parseConfigFile (String fileName, String className) {
         try {
             File inputFile = new File(fileName);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -17,23 +21,31 @@ public class ConfigParser {
             Document doc = dBuilder.parse(inputFile);
             doc.getDocumentElement().normalize();
             Element rootNode = doc.getDocumentElement();
-            int cardCount = Integer.parseInt(
-                    ((Element) rootNode.getElementsByTagName("Number").item(0))
+            int sideSize = Integer.parseInt(
+                    ((Element) rootNode.getElementsByTagName("SideSize").item(0))
                             .getAttribute("count"));
-            int rowCount = Integer.parseInt(
-                    ((Element) rootNode.getElementsByTagName("Rows").item(0))
-                            .getAttribute("count"));
-            int colCount = Integer.parseInt(
-                    ((Element) rootNode.getElementsByTagName("Columns").item(0))
-                            .getAttribute("count"));
-            cardGrid = new Card[rowCount][colCount];
-            for(int i = 0; i < cardCount; i++) {
-                processCard((Element) ((Element) rootNode.getElementsByTagName("Simulations").item(0)).
-                        getElementsByTagName("Simulation").item(i));
-            }
 
+            Element data = ((Element) rootNode.getElementsByTagName("Data").item(0));
+            if (data.getAttribute("type").equals("frequencies")) {
+                ArrayList<Double> popFreqs = new ArrayList<>();
+                ArrayList<Integer> states = new ArrayList<>();
+                ArrayList<Color> colors = new ArrayList<>();
+                for(int i = 0; i < data.getElementsByTagName("Item").getLength(); i++) {
+                    Element item = (Element) data.getElementsByTagName("Item").item(i);
+                    popFreqs.add(Double.valueOf(item.getAttribute("popFreq")));
+                    states.add(Integer.valueOf(item.getAttribute("state")));
+                    colors.add(Color.web(item.getAttribute("color")));
+                }
+                Class<?> clazz = Class.forName(className);
+                Constructor<?> constructor = clazz.getConstructor(int.class, int[].class, double[].class, Color[].class);
+                Simulation instance = (Simulation) constructor.newInstance(sideSize, states.toArray(), popFreqs.toArray(), colors.toArray());
+                return instance;
+            } else {
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
     }
 }

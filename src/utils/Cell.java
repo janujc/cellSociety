@@ -36,11 +36,11 @@ public class Cell {
 
     public void setNextState(int state, Color color) {
         myNextState = state;
-        myNextColor = color;
+        setNextColor(color);
     }
 
-    public int getCurrState() {
-        return myCurrState;
+    public void setNextColor(Color color) {
+        myNextColor = color;
     }
 
     public int getXCoord() {
@@ -51,7 +51,11 @@ public class Cell {
         return myYCoord;
     }
 
-    public Color getColor() {
+    public int getCurrState() {
+        return myCurrState;
+    }
+
+    public Color getCurrColor() {
         return myCurrColor;
     }
 }

@@ -19,6 +19,7 @@ public class SimulationScreen {
     private int rate = 1; // Frequency in Hertz
     private Text rateText;
     private Control speedUpControl, speedDownControl, nextStateControl, prevStateControl;
+
     public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label) {
         this.simulation = simulation;
 
@@ -65,7 +66,7 @@ public class SimulationScreen {
     }
 
     public void setRate(int rate) {
-        if (rate > 0) { // rate can't go below 1 (that's just pause)
+        if (rate > 0 && rate <= 10) { // rate can't go below 1 (that's just pause), and can't see clearly above 10
             this.rate = rate;
             this.rateText.setText(String.valueOf(rate));
             speedDownControl.getView().setLayoutX(rateText.getX() + rateText.getLayoutBounds().getWidth()); // recalc pos

@@ -76,7 +76,6 @@ public class Controller extends Application {
         ((Group) scene.getRoot()).getChildren().add(homeScreen.getContainer());
 
         scene.setOnKeyPressed(e -> handleKeyInput(e.getCode()));
-        scene.setOnKeyReleased(e -> handleKeyReleased(e.getCode()));
         return scene;
     }
 
@@ -87,17 +86,10 @@ public class Controller extends Application {
 
     // What to do each time a key is pressed
     private void handleKeyInput (KeyCode code) {
-        // TODO
         if (code == KeyCode.ESCAPE && currentScreen == ScreenType.SIMULATION_SCREEN) {
             Animator.animate(myScene, (Group) ((Group)myScene.getRoot()).getChildren().get(1), ScreenType.HOME_SCREEN,
                     0, -WINDOW_WIDTH, WINDOW_WIDTH, 0, true, this);
         }
-    }
-
-
-
-    private void handleKeyReleased (KeyCode code) {
-       // TODO
     }
 
     public void setInTransition(boolean transition) {

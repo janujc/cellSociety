@@ -3,6 +3,7 @@ package utils;
 import javafx.scene.paint.Color;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import simulation.Simulation;
 import uitools.Card;
 
@@ -16,11 +17,7 @@ public class ConfigParser {
     public static Simulation parseConfigFile (String fileName, String className) {
         try {
             File inputFile = new File(fileName);
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            Document doc = dBuilder.parse(inputFile);
-            doc.getDocumentElement().normalize();
-            Element rootNode = doc.getDocumentElement();
+            Element rootNode = ParserTools.getRootNode(inputFile);
             int sideSize = Integer.parseInt(
                     ((Element) rootNode.getElementsByTagName("SideSize").item(0))
                             .getAttribute("count"));

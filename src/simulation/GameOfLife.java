@@ -1,6 +1,8 @@
 package simulation;
 
+import javafx.scene.paint.Color;
 import utils.Cell;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,32 +18,40 @@ public class GameOfLife extends Simulation {
     /**
      * The possible states of each cell in the GameOfLife simulation
      */
-    private final int DEAD = 0;
-    private final int ALIVE = 1;
+    private final Integer ALIVE = 0;
+    private final Integer DEAD = 1;
+    private final HashMap<Integer, Color> stateMap = new HashMap<>() {{
+        put(DEAD, Color.GHOSTWHITE);
+        put(ALIVE, Color.BLACK);
+    }};
 
-    public GameOfLife(int sideSize, int[] states, double[] populationFreqs) {
-        super(sideSize, new int[]{0, 1}, populationFreqs);
+    public GameOfLife(int sideSize, int[] states, double[] populationFreqs, Color[] colors) {
+        super(sideSize, new int[]{0, 1}, populationFreqs, colors);
     }
 
     @Override
     protected void calculateNextStates() {
-        /*
-         * TODO: Change a cell's state according to a few rules:
-         * Any LIVE cell with fewer than 2 neighbors DIES
-         * Any LIVE cell with two or three neighbors LIVES
-         * Any LIVE cell with more than 3 neighbors DIES
-         * Any DEAD cell with more than 3 LIVE neighbors, becomes ALIVE.
-         */
-
         for (Cell[] xCells : grid) {
-            // TODO Is naming a variable after its type ok?
             for (Cell cell : xCells) {
-
-                // Fire only looks at cardinal neighbors, so pass in true
-                List<Cell> neighbors = getNeighborsOfType(cell, ALIVE, true);
-                boolean hasBurningNeighbor = !neighbors.isEmpty();
-                calculateNextStateOfOneCell(cell, hasBurningNeighbor);
+                List<Cell> neighbors = getNeighborsOfType(cell, ALIVE, false);
+                int numOfAliveNeighbors = neighbors.size();
+                calculateNextStateOfOneCell(cell, numOfAliveNeighbors);
             }
+        }
+    }
+
+    protected void calculateNextStateOfOneCell(Cell cell, int numOfAliveNeighbors) {
+        if (cell.getCurrState() == ALIVE && numOfAliveNeighbors < 2) {
+            cell.setNextState(DEAD, colors[DEAD]);
+        }
+        else if (cell.getCurrState() == ALIVE && (numOfAliveNeighbors == 2 || numOfAliveNeighbors == 3)) {
+            cell.setNextState(ALIVE, colors[ALIVE]);
+        }
+        else if (cell.getCurrState() == ALIVE && numOfAliveNeighbors > 3) {
+            cell.setNextState(DEAD, colors[DEAD]);
+        }
+        else if (cell.getCurrState() == DEAD && numOfAliveNeighbors > 3) {
+            cell.setNextState(ALIVE, colors[ALIVE]);
         }
     }
 }

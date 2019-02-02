@@ -20,6 +20,8 @@ public class SimulationScreen {
     private Text rateText;
     private Control speedUpControl, speedDownControl, nextStateControl, prevStateControl, playPauseToggle;
     private boolean isPaused = true; // Paused by default
+    private double continueIn = 1000.0/rate; // How many milliseconds we'll continue the animation in
+    private double pausedFor = 0; // How many milliseconds we've been paused for before animating
 
     public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label) {
         this.simulation = simulation;
@@ -66,6 +68,22 @@ public class SimulationScreen {
         container.getChildren().addAll(titleText, pressEscape, speedUpControl.getView(),
                 rateText, speedDownControl.getView(), nextStateControl.getView(), prevStateControl.getView(),
                 playPauseToggle.getView());
+    }
+
+    public void step(double elapsedTime) {
+        if (!isPaused) {
+            if (pausedFor >= continueIn) {
+                // We've paused enough
+                pausedFor = 0;
+                continueIn = 1000.0/rate;
+
+                // TODO: Get next state
+                // TODO: Push current state in history stack
+                // TODO: Render next state
+            } else {
+                pausedFor = elapsedTime * 1000; // We continue to pause the animation
+            }
+        }
     }
 
     public Group getContainer() {

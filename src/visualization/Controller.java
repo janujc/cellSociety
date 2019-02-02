@@ -81,7 +81,9 @@ public class Controller extends Application {
 
 
     private void step(double elapsedTime){
-
+        if (currentScreen == ScreenType.SIMULATION_SCREEN) {
+            simulationScreen.step(elapsedTime);
+        }
     }
 
     // What to do each time a key is pressed

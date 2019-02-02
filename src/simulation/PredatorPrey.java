@@ -1,7 +1,6 @@
 package simulation;
 
 import utils.Cell;
-
 import java.util.*;
 import javafx.scene.paint.Color;
 

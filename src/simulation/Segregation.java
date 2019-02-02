@@ -84,7 +84,7 @@ public class Segregation extends Simulation {
      *
      * e.g.
      * oppositeAgent(1) returns 2.
-     * 
+     *
      * e.g.
      * oppositeAgent(0) returns 0.
      *

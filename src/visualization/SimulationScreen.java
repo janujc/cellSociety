@@ -8,6 +8,7 @@ import simulation.PredatorPrey;
 import simulation.Simulation;
 
 import static uitools.TextGenerator.makeText;
+import static visualization.Controller.bebasKai;
 import static visualization.Controller.sofiaPro;
 
 public class SimulationScreen {
@@ -16,15 +17,17 @@ public class SimulationScreen {
     private Simulation simulation;
     public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label) {
         this.simulation = simulation;
-        System.out.println(simulation instanceof PredatorPrey);
-
 
         var container = new Group();
         Text titleText = makeText(label, sofiaPro, Color.SLATEGREY,
                 scene.getWidth()/2,
                 scene.getHeight()/10);
-        container.getChildren().addAll(titleText);
+
         myContainer = container;
+
+        Text pressEscape = makeText("Press Escape To Exit", bebasKai, Color.SLATEGREY, scene.getWidth()/2, scene.getHeight()-15);
+
+        container.getChildren().addAll(titleText, pressEscape);
     }
     public Group getContainer() {
         return myContainer;

@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import uitools.Animator;
 import utils.ScreenType;
 
 import static uitools.TextGenerator.makeText;
@@ -87,6 +88,10 @@ public class Controller extends Application {
     // What to do each time a key is pressed
     private void handleKeyInput (KeyCode code) {
         // TODO
+        if (code == KeyCode.ESCAPE && currentScreen == ScreenType.SIMULATION_SCREEN) {
+            Animator.animate(myScene, (Group) ((Group)myScene.getRoot()).getChildren().get(1), ScreenType.HOME_SCREEN,
+                    0, -WINDOW_WIDTH, WINDOW_WIDTH, 0, true, this);
+        }
     }
 
 

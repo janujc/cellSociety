@@ -71,6 +71,7 @@ public class PredatorPrey extends Simulation {
      */
     private List<Cell> animalAlreadyHere;
 
+    // TODO Do we need to pass in states since it's hard-coded for each simulation?
     /**
      * Creates the simulation and calls the super constructor to create the grid
      * @param sideSize the length of one side of the grid

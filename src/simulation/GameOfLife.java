@@ -25,7 +25,7 @@ public class GameOfLife extends Simulation {
         put(ALIVE, Color.BLACK);
     }};
 
-    public GameOfLife(int sideSize, int[] states, double[] populationFreqs, Color[] colors, Object metadata) {
+    public GameOfLife(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, Object metadata) {
         super(sideSize, states, populationFreqs, colors, null);
     }
 

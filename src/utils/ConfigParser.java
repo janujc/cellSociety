@@ -24,6 +24,8 @@ public class ConfigParser {
             int sideSize = Integer.parseInt(
                     ((Element) rootNode.getElementsByTagName("SideSize").item(0))
                             .getAttribute("count"));
+            String metadata = ((Element) rootNode.getElementsByTagName("Metadata").item(0))
+                    .getAttribute("value");
 
             Element data = ((Element) rootNode.getElementsByTagName("Data").item(0));
             if (data.getAttribute("type").equals("frequencies")) {
@@ -37,8 +39,8 @@ public class ConfigParser {
                     colors.add(Color.web(item.getAttribute("color")));
                 }
                 Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(int.class, int[].class, double[].class, Color[].class);
-                Simulation instance = (Simulation) constructor.newInstance(sideSize, states.toArray(), popFreqs.toArray(), colors.toArray());
+                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Double[].class, Color[].class, String.class);
+                Simulation instance = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), popFreqs.toArray(new Double[0]), colors.toArray(new Color[0]), metadata);
                 return instance;
             } else {
                 return null;

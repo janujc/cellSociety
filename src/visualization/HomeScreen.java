@@ -9,6 +9,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import simulation.Fire;
 import simulation.PredatorPrey;
 import simulation.Simulation;
@@ -17,6 +19,9 @@ import uitools.Card;
 import uitools.CardGridGenerator;
 import utils.ScreenType;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.util.ArrayList;
 
 import static uitools.TextGenerator.makeText;
@@ -51,7 +56,7 @@ public class HomeScreen {
                         @Override
                         public void handle(MouseEvent event) {
                             //System.out.println(card.getClassName()+" needs to be called");
-                            startSimulation(card.getClassName(), myScene, card.getLabel());
+                            startSimulation(card.getClassName(), myScene, card.getLabel(), card.getConfigFolder());
                         }
                     });
                     grid.getChildren().add(cardView);
@@ -67,10 +72,10 @@ public class HomeScreen {
         myContainer = container;
     }
 
-    private void startSimulation(String className, Scene myScene, String label) {
+    private void startSimulation(String className, Scene myScene, String label, String configFolder) {
         // Just use an arbitrary simulation class for test
         SimulationScreen simulationScreen = new SimulationScreen(myScene, context,
-                new PredatorPrey(2, new double[]{.3, .4, .3}, new Color[]{Color.RED, Color.BLUE, Color.GREEN},4),
+                new PredatorPrey(2, new int[]{0, 1, 2}, new double[]{.3, .4, .3}, new Color[]{Color.RED, Color.BLUE, Color.GREEN},4),
                 label);
         context.setSimulationScreen(simulationScreen);
         ((Group)myScene.getRoot()).getChildren().add(simulationScreen.getContainer());

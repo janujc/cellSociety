@@ -77,8 +77,8 @@ public class PredatorPrey extends Simulation {
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      * @param numTurnsToBreed number of turns survived needed to breed
      */
-    public PredatorPrey(int sideSize, double[] populationFreqs, Color[] stateColors, int numTurnsToBreed) {
-        super(sideSize, new int[]{0, 1, 2}, populationFreqs, stateColors);    // hard-coded b/c states are pre-determined
+    public PredatorPrey(int sideSize, int[] states, double[] populationFreqs, Color[] stateColors, int numTurnsToBreed) {
+        super(sideSize, states, populationFreqs, stateColors);    // hard-coded b/c states are pre-determined
         COLOR_EMPTY = colors[EMPTY];
         NUM_TURNS_TO_BREED = numTurnsToBreed;
         animalTurnTracker = new HashMap<>();

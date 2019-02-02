@@ -48,8 +48,9 @@ public class CardGridGenerator {
         int y = Integer.parseInt(simulation.getAttribute("gridY"));
         String imagePath = simulation.getAttribute("background");
         String label = simulation.getAttribute("label");
+        String configFolder = simulation.getAttribute("configFolder");
         String className = simulation.getAttribute("class");
-        Card card = new Card(new Image(CardGridGenerator.class.getResourceAsStream(imagePath)), label, className);
+        Card card = new Card(new Image(CardGridGenerator.class.getResourceAsStream(imagePath)), label, className, configFolder);
         cardGrid[y][x] = card;
     }
 

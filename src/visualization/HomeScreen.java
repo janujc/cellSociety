@@ -51,7 +51,7 @@ public class HomeScreen {
                         @Override
                         public void handle(MouseEvent event) {
                             //System.out.println(card.getClassName()+" needs to be called");
-                            startSimulation(card.getClassName(), myScene);
+                            startSimulation(card.getClassName(), myScene, card.getLabel());
                         }
                     });
                     grid.getChildren().add(cardView);
@@ -67,10 +67,11 @@ public class HomeScreen {
         myContainer = container;
     }
 
-    private void startSimulation(String className, Scene myScene) {
+    private void startSimulation(String className, Scene myScene, String label) {
         // Just use an arbitrary simulation class for test
         SimulationScreen simulationScreen = new SimulationScreen(myScene, context,
-                new PredatorPrey(2, new double[]{.3, .4, .3}, new Color[]{Color.RED, Color.BLUE, Color.GREEN},4));
+                new PredatorPrey(2, new double[]{.3, .4, .3}, new Color[]{Color.RED, Color.BLUE, Color.GREEN},4),
+                label);
         context.setSimulationScreen(simulationScreen);
         ((Group)myScene.getRoot()).getChildren().add(simulationScreen.getContainer());
         Animator.animate(myScene, simulationScreen.getContainer(), ScreenType.SIMULATION_SCREEN, myScene.getWidth(),

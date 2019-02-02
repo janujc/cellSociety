@@ -14,10 +14,13 @@ import visualization.Controller;
 public class Card {
     private Group cardView;
     private String className; // Name of class to handle this particular simulation
+    private String label, configFolder;
 
 
-    public Card(Image background, String label, String className) {
+    public Card(Image background, String label, String className, String configFolder) {
         this.className = className;
+        this.label = label;
+        this.configFolder = configFolder;
         cardView = new Group();
         ImageView mainCard = new ImageView(background);
 
@@ -37,5 +40,11 @@ public class Card {
     }
     public String getClassName() {
         return className;
+    }
+    public String getLabel() {
+        return label;
+    }
+    public  String getConfigFolder() {
+        return configFolder;
     }
 }

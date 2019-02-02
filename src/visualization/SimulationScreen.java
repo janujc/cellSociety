@@ -31,7 +31,9 @@ public class SimulationScreen {
 
         myContainer = container;
 
-        Text pressEscape = makeText("Press Escape To Exit", bebasKai, Color.SLATEGREY, scene.getWidth()/2, scene.getHeight()-15);
+        Text pressEscape = makeText("Press Escape To Exit", bebasKai, Color.SLATEGREY,
+                scene.getWidth()/2, scene.getHeight()-5);
+
         speedUpControl = new SpeedUpControl(this);
         speedUpControl.getView().setLayoutX(25);
         speedUpControl.getView().setLayoutY(scene.getHeight()-70);

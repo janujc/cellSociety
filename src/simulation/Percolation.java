@@ -2,6 +2,8 @@ package simulation;
 
 import javafx.scene.paint.Color;
 import utils.Cell;
+
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -22,18 +24,6 @@ public class Percolation extends Simulation {
         super(sideSize, states, populationFreqs, colors, null);
         Cell startPerc = determineStartLocation();
         grid[startPerc.getXCoord()][startPerc.getYCoord()] = startPerc;
-    }
-
-    /**
-     * The initial grid will contain mostly blocked and open cells, and one percolated cell.
-     *
-     * The simulation will end when a cell on the opposite side of the initial cell is percolated.
-     *
-     * If a cell is open and one of its neighbors is percolated, it will too become percolated.
-     */
-    @Override
-    protected void calculateNextStates() {
-        // TODO: Change a cell's state if one of its neighbors is percolated and it is open
     }
 
     private Cell determineStartLocation() {
@@ -57,5 +47,41 @@ public class Percolation extends Simulation {
             coord2 = gridSideSize - 1;
         }
         return new Cell(PERCOLATED, coord1, coord2, colors[PERCOLATED]);
+    }
+
+    /**
+     * The initial grid will contain mostly blocked and open cells, and one percolated cell.
+     *
+     * The simulation will end when a cell on the opposite side of the initial cell is percolated.
+     *
+     * If a cell is open and one of its neighbors is percolated, it will too become percolated.
+     */
+    @Override
+    protected void calculateNextStates() {
+        for (Cell[] xCells : grid) {
+            for (Cell cell : xCells) {
+                List<Cell> neighbors = getNeighborsOfType(cell, PERCOLATED, false);
+                int numPercolatedNeighbors = neighbors.size();
+                calculateNextStateOfOneCell(cell, numPercolatedNeighbors);
+            }
+        }
+    }
+
+    private void calculateNextStateOfOneCell(Cell cell, int numPercolatedNeighbors) {
+        if (cell.getCurrState() == BLOCKED) {
+            cell.setNextState(BLOCKED, colors[BLOCKED]);
+            return;
+        }
+        if (cell.getCurrState() == OPEN && numPercolatedNeighbors != 0) {
+            cell.setNextState(PERCOLATED, colors[PERCOLATED]);
+            return;
+        }
+        if (cell.getCurrState() == OPEN && numPercolatedNeighbors == 0) {
+            cell.setNextState(OPEN, colors[OPEN]);
+            return;
+        }
+        if (cell.getCurrState() == PERCOLATED) {
+            cell.setNextState(PERCOLATED, colors[PERCOLATED]);
+        }
     }
 }

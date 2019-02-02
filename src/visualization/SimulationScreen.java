@@ -7,9 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import simulation.PredatorPrey;
 import simulation.Simulation;
-import uitools.Control;
-import uitools.SpeedDownControl;
-import uitools.SpeedUpControl;
+import uitools.*;
 
 import static uitools.TextGenerator.makeText;
 import static visualization.Controller.*;
@@ -20,7 +18,7 @@ public class SimulationScreen {
     private Simulation simulation;
     private int rate = 1; // Frequency in Hertz
     private Text rateText;
-    private Control speedUpControl, speedDownControl;
+    private Control speedUpControl, speedDownControl, nextStateControl, prevStateControl;
     public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label) {
         this.simulation = simulation;
 
@@ -48,12 +46,24 @@ public class SimulationScreen {
         speedDownControl.getView().setLayoutY(scene.getHeight()-70);
         speedDownControl.getView().setTooltip(new Tooltip("Speed down"));
 
+        nextStateControl = new NextStateControl(this);
+        nextStateControl.getView().setLayoutX(scene.getWidth() - 30 - 25);
+        nextStateControl.getView().setLayoutY(scene.getHeight()-70);
+        nextStateControl.getView().setTooltip(new Tooltip("Step forwards"));
+
+        prevStateControl = new PrevStateControl(this);
+        prevStateControl.getView().setLayoutX(scene.getWidth() - 3*30 - 25 -15*2);
+        prevStateControl.getView().setLayoutY(scene.getHeight()-70);
+        prevStateControl.getView().setTooltip(new Tooltip("Step backwards"));
+
         container.getChildren().addAll(titleText, pressEscape, speedUpControl.getView(),
-                rateText, speedDownControl.getView());
+                rateText, speedDownControl.getView(), nextStateControl.getView(), prevStateControl.getView());
     }
+
     public Group getContainer() {
         return myContainer;
     }
+
     public void setRate(int rate) {
         if (rate > 0) { // rate can't go below 1 (that's just pause)
             this.rate = rate;
@@ -61,7 +71,16 @@ public class SimulationScreen {
             speedDownControl.getView().setLayoutX(rateText.getX() + rateText.getLayoutBounds().getWidth()); // recalc pos
         }
     }
+
     public int getRate() {
         return rate;
+    }
+
+    public void stepBack() {
+        // TODO
+    }
+
+    public void stepForward() {
+        // TODO
     }
 }

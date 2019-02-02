@@ -12,9 +12,9 @@ import javafx.scene.paint.Color;
 public class Segregation extends Simulation {
     private final int PERCENT_SATISFIED;
 
-    public Segregation(int sideSize, int[] states, double[] populationFreqs, Color[] colors, Integer percentSatsfied) {
-        super(sideSize, states, populationFreqs, colors, percentSatsfied);
-        PERCENT_SATISFIED = percentSatsfied;
+    public Segregation(int sideSize, int[] states, double[] populationFreqs, Color[] colors, String percentSatsfied) {
+        super(sideSize, states, populationFreqs, colors, Integer.valueOf(percentSatsfied));
+        PERCENT_SATISFIED = Integer.valueOf(percentSatsfied);
     }
 
     @Override

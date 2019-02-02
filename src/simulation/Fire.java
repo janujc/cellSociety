@@ -43,12 +43,12 @@ public class Fire extends Simulation {
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      * @param probCatch the probability that a tree next to a burning tree catches on fire, read from the XML file
      */
-    public Fire(int sideSize, int[] states, double[] populationFreqs, Color[] stateColors, Double probCatch) {
-        super(sideSize, states, populationFreqs, stateColors, probCatch);
+    public Fire(int sideSize, int[] states, double[] populationFreqs, Color[] stateColors, String probCatch) {
+        super(sideSize, states, populationFreqs, stateColors, Double.valueOf(probCatch));
         COLOR_EMPTY = colors[EMPTY];
         COLOR_TREE = colors[TREE];
         COLOR_BURNING = colors[BURNING];
-        PROB_CATCH = probCatch;
+        PROB_CATCH = Double.valueOf(probCatch);
     }
 
     /**

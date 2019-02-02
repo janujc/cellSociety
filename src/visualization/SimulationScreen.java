@@ -4,6 +4,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import simulation.PredatorPrey;
 import simulation.Simulation;
 
 import static uitools.TextGenerator.makeText;
@@ -15,7 +16,7 @@ public class SimulationScreen {
     private Simulation simulation;
     public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label) {
         this.simulation = simulation;
-
+        System.out.println(simulation instanceof PredatorPrey);
 
 
         var container = new Group();

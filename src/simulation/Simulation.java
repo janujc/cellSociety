@@ -50,7 +50,7 @@ public abstract class Simulation {
      * @param states the possible states of the cells in the simulation grid
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      */
-    protected Simulation(int sideSize, int[] states, double[] populationFreqs, Color[] stateColors) {
+    protected Simulation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, Object metadata) {
         gridSideSize = sideSize;
         grid = new Cell[gridSideSize][gridSideSize];
         colors = stateColors;
@@ -63,7 +63,7 @@ public abstract class Simulation {
      * @param states the possible states
      * @param populationFreqs the populations frequencies of each state the same order as the states parameter
      */
-    private void populateGrid(int[] states, double[] populationFreqs) {
+    private void populateGrid(Integer[] states, Double[] populationFreqs) {
         Random rand = new Random();
 
         for (int x = 0; x < gridSideSize; x++) {

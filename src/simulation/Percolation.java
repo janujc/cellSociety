@@ -12,8 +12,8 @@ import javafx.scene.paint.Color;
  */
 public class Percolation extends Simulation {
 
-    public Percolation(int sideSize, int[] states, double[] populationFreqs, Color[] colors) {
-        super(sideSize, new int[]{0, 1, 2}, populationFreqs, colors);
+    public Percolation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, Object metadata) {
+        super(sideSize, states, populationFreqs, colors, null);
     }
 
     /**

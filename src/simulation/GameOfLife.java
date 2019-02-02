@@ -21,8 +21,8 @@ public class GameOfLife extends Simulation {
     private final Integer DEAD = 0;
     private final Integer ALIVE = 1;
 
-    public GameOfLife(int sideSize, int[] states, double[] populationFreqs, Color[] colors) {
-        super(sideSize, new int[]{0, 1}, populationFreqs, colors);
+    public GameOfLife(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, Object metadata) {
+        super(sideSize, states, populationFreqs, colors, null);
     }
 
     @Override

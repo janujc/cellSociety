@@ -17,6 +17,7 @@ import simulation.Simulation;
 import uitools.Animator;
 import uitools.Card;
 import uitools.CardGridGenerator;
+import utils.ConfigParser;
 import utils.ScreenType;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -75,7 +76,7 @@ public class HomeScreen {
     private void startSimulation(String className, Scene myScene, String label, String configFolder) {
         // Just use an arbitrary simulation class for test
         SimulationScreen simulationScreen = new SimulationScreen(myScene, context,
-                new PredatorPrey(2, new int[]{0, 1, 2}, new double[]{.3, .4, .3}, new Color[]{Color.RED, Color.BLUE, Color.GREEN},4),
+                ConfigParser.parseConfigFile(configFolder+"default.xml", className),
                 label);
         context.setSimulationScreen(simulationScreen);
         ((Group)myScene.getRoot()).getChildren().add(simulationScreen.getContainer());

@@ -84,11 +84,7 @@ public class SimulationScreen {
                 pausedFor = 0;
                 continueIn = 1000.0/rate;
 
-                history.push(new Snapshot(simulation.getGrid())); // Save current grid in history
-                simulation.step(); // Compute next grid
-                Cell[][] newGrid = simulation.getGrid(); // Get next grid
-
-                renderGrid(newGrid);
+                stepForward();
             } else {
                 pausedFor += elapsedTime * 1000; // We continue to pause the animation
             }
@@ -116,11 +112,15 @@ public class SimulationScreen {
     }
 
     public void stepBack() {
-        // TODO
+        renderGrid(history.pop().getGrid());
     }
 
     public void stepForward() {
-        // TODO
+        history.push(new Snapshot(simulation.getGrid())); // Save current grid in history
+        simulation.step(); // Compute next grid
+        Cell[][] newGrid = simulation.getGrid(); // Get next grid
+
+        renderGrid(newGrid);
     }
 
     public boolean getIsPaused() {

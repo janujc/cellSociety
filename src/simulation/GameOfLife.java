@@ -21,7 +21,7 @@ public class GameOfLife extends Simulation {
     private final Integer DEAD = 0;
     private final Integer ALIVE = 1;
 
-    public GameOfLife(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, Object metadata) {
+    public GameOfLife(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String metadata) {
         super(sideSize, states, populationFreqs, colors, null);
     }
 

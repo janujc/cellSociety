@@ -3,6 +3,10 @@ package uitools;
 import javafx.scene.image.Image;
 import visualization.SimulationScreen;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Control to speed up simulation.
+ */
 public class SpeedDownControl extends Control {
     SimulationScreen context;
     public SpeedDownControl(SimulationScreen context) {

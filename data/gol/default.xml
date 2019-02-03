@@ -4,9 +4,9 @@
     <Data type="frequencies">
         <Item popFreq="0.5"
               state="0"
-              color="#000000"/>
+              color="#DDDDDD"/>
         <Item popFreq="0.5"
               state="1"
-              color="#DDDDDD"/>
+              color="#000000"/>
     </Data>
 </Root>

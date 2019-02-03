@@ -8,35 +8,35 @@
                 gridX="0"
                 gridY="0"
                 label="Fire"
-                background="/img/default_card_bg.png"
+                background="/img/firebg.png"
                 configFolder="data/fire/"
                 class="simulation.Fire"/>
         <Simulation
                 gridX="1"
                 gridY="0"
                 label="Game of Life"
-                background="/img/default_card_bg.png"
+                background="/img/golbg.png"
                 configFolder="data/gol/"
                 class="simulation.GameOfLife"/>
         <Simulation
                 gridX="2"
                 gridY="0"
                 label="Percolation"
-                background="/img/default_card_bg.png"
+                background="/img/percbg.png"
                 configFolder="data/perc/"
                 class="simulation.Percolation"/>
         <Simulation
                 gridX="0"
                 gridY="1"
                 label="Predator Prey"
-                background="/img/default_card_bg.png"
+                background="/img/predpreybg.png"
                 configFolder="data/predprey/"
                 class="simulation.PredatorPrey"/>
         <Simulation
                 gridX="1"
                 gridY="1"
                 label="Segregation"
-                background="/img/default_card_bg.png"
+                background="/img/segregbg.png"
                 configFolder="data/segreg/"
                 class="simulation.Segregation"/>
     </Simulations>

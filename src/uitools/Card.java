@@ -39,15 +39,35 @@ public class Card {
 
         cardView.getChildren().addAll(mainCard, labelView);
     }
+
+    /**
+     * Get current view that defines this card
+     * @return Group that defines this card
+     */
     public Group getCardView() {
         return cardView;
     }
+
+    /**
+     * Get class name of simulation class that defines this simulation
+     * @return class name of simulation class
+     */
     public String getClassName() {
         return className;
     }
+
+    /**
+     * Get human-readable name of simulation
+     * @return string defining simulation name
+     */
     public String getLabel() {
         return label;
     }
+
+    /**
+     * Get path to folder that contains config files for this simulation
+     * @return string containing path to folder containing config files
+     */
     public  String getConfigFolder() {
         return configFolder;
     }

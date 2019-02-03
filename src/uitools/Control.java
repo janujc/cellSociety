@@ -23,6 +23,10 @@ public abstract class Control {
 
     protected abstract void onClick();
 
+    /**
+     * Returns view associated with this control
+     * @return Button associated with this control
+     */
     public Button getView() {
         return icon;
     }

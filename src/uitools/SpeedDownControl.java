@@ -5,7 +5,7 @@ import visualization.SimulationScreen;
 
 /**
  * Author: Anshu Dwibhashi
- * Control to speed up simulation.
+ * Control to speed down simulation.
  */
 public class SpeedDownControl extends Control {
     SimulationScreen context;
@@ -14,6 +14,9 @@ public class SpeedDownControl extends Control {
         this.context = context;
     }
 
+    /**
+     * Method executed when this control is clicked
+     */
     @Override
     protected void onClick() {
         context.setRate(context.getRate()-1);

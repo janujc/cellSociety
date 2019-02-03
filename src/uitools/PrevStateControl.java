@@ -15,6 +15,9 @@ public class PrevStateControl extends Control {
         this.context = context;
     }
 
+    /**
+     * Method executed when this control is clicked
+     */
     @Override
     public void onClick() {
         context.stepBack();

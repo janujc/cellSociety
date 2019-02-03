@@ -51,6 +51,10 @@ public class CardGridGenerator {
         cardGrid[y][x] = card;
     }
 
+    /**
+     * Method to read config file and return grid of cards
+     * @return 2D array of cards
+     */
     public static Card[][] makeGrid() {
         parseXML();
         return cardGrid;

@@ -251,7 +251,7 @@ public class SimulationScreen {
         Cell[][] b = new Cell[a.length][a[0].length];
         for (int i = 0; i < a.length; i++) {
             for (int j = 0; j < a[0].length; j++) {
-                b[i][j] = new Cell(a[i][j].getCurrState(), a[i][j].getXCoord(), a[i][j].getYCoord(), a[i][j].getCurrColor());
+                b[i][j] = new Cell(a[i][j].getCurrState(), a[i][j].getCol(), a[i][j].getRow(), a[i][j].getCurrColor());
             }
         }
         return b;

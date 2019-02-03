@@ -136,8 +136,8 @@ public abstract class Simulation {
          * neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
          */
         List<int[]> neighborCoords = new ArrayList<>();
-        int centerX = center.getXCoord();
-        int centerY = center.getYCoord();
+        int centerX = center.getCol();
+        int centerY = center.getRow();
 
         neighborCoords.add(new int[]{centerX, centerY - 1});    // North
         neighborCoords.add(new int[]{centerX + 1, centerY});    // East
@@ -159,8 +159,8 @@ public abstract class Simulation {
          * neighbor's x-coordinate and the 1st index is the neighbor's y-coordinate
          */
         List<int[]> neighborCoords = new ArrayList<>();
-        int centerX = center.getXCoord();
-        int centerY = center.getYCoord();
+        int centerX = center.getCol();
+        int centerY = center.getRow();
 
         neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
         neighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast

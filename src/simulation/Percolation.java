@@ -44,7 +44,7 @@ public class Percolation extends Simulation {
     public Percolation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String metadata) {
         super(sideSize, states, populationFreqs, colors, null);
         Cell startPerc = determineStartLocation();
-        grid[startPerc.getXCoord()][startPerc.getYCoord()] = startPerc;
+        grid[startPerc.getCol()][startPerc.getRow()] = startPerc;
     }
 
     /**

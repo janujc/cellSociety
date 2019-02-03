@@ -1,5 +1,6 @@
 package utils;
 
+import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

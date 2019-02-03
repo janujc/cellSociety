@@ -1,9 +1,12 @@
 package visualization;
 
+import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import simulation.PredatorPrey;
 import simulation.Simulation;
@@ -26,12 +29,18 @@ public class SimulationScreen {
     private boolean isPaused = true; // Paused by default
     private double continueIn = 1000.0/rate; // How many milliseconds we'll continue the animation in
     private double pausedFor = 0; // How many milliseconds we've been paused for before animating
+    private Rectangle[][] gridViews;
+    private double currentCellSize;
 
     private Stack<Snapshot> history;
 
     public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label) {
         this.simulation = simulation;
         this.history = new Stack<>();
+        gridViews = new Rectangle[simulation.getGrid().length][simulation.getGrid()[0].length];
+
+        int numCells = simulation.getGrid().length;
+        currentCellSize = (400 - (numCells-1)*1)/(numCells*1.0);
 
         var container = new Group();
         Text titleText = makeText(label, sofiaPro, Color.SLATEGREY,
@@ -41,7 +50,12 @@ public class SimulationScreen {
         myContainer = container;
 
         Text pressEscape = makeText("Press Escape To Exit", bebasKai, Color.SLATEGREY,
-                scene.getWidth()/2, scene.getHeight()-5);
+                scene.getWidth()/2, scene.getHeight()-15-2.5);
+
+        Text loadConfig = makeText("Load new config file", bebasKaiMedium, Color.SLATEGREY,
+                scene.getWidth()/2, scene.getHeight()-30-5);
+        loadConfig.setCursor(Cursor.HAND);
+        loadConfig.setOnMouseClicked(mouseEvent -> loadNewConfigFile());
 
         speedUpControl = new SpeedUpControl(this);
         speedUpControl.getView().setLayoutX(25);
@@ -72,9 +86,34 @@ public class SimulationScreen {
         playPauseToggle.getView().setLayoutY(scene.getHeight()-70);
         playPauseToggle.getView().setTooltip(new Tooltip("Toggle play or pause"));
 
-        container.getChildren().addAll(titleText, pressEscape, speedUpControl.getView(),
+        Rectangle header = new Rectangle(0, 0, scene.getWidth(), 75);
+        header.setEffect(new DropShadow(10, Color.DARKGREY));
+        header.setFill(Color.WHITE);
+
+        Rectangle footer = new Rectangle(0, scene.getHeight()-100, scene.getWidth(), 100);
+        footer.setEffect(new DropShadow(10, Color.DARKGREY));
+        footer.setFill(Color.WHITE);
+
+        container.getChildren().addAll(header, footer, titleText, loadConfig, pressEscape, speedUpControl.getView(),
                 rateText, speedDownControl.getView(), nextStateControl.getView(), prevStateControl.getView(),
                 playPauseToggle.getView());
+
+        // render initial state
+        initialiseGridViews(simulation.getGrid());
+        renderGrid(simulation.getGrid());
+    }
+
+    private double getCellXLocation(int column) {
+        return 100.0 + column*1.0 + currentCellSize * column;
+    }
+
+    private double getCellYLocation(int row) {
+        return 87.0 + row*1.0 + currentCellSize * row;
+    }
+
+    public void loadNewConfigFile() {
+        // TODO
+        System.out.println("Called loadNewConfigFile()");
     }
 
     public void step(double elapsedTime) {
@@ -93,6 +132,17 @@ public class SimulationScreen {
 
     private void renderGrid(Cell[][] grid) {
         // TODO
+    }
+
+    private void initialiseGridViews(Cell[][] grid) {
+        for(int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                gridViews[i][j] = new Rectangle(getCellXLocation(j), getCellYLocation(i), currentCellSize, currentCellSize);
+                // gridViews[i][j].setFill(Color.RED);
+                gridViews[i][j].setFill(grid[i][j].getCurrColor());
+                myContainer.getChildren().add(gridViews[i][j]);
+            }
+        }
     }
 
     public Group getContainer() {

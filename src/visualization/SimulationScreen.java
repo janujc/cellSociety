@@ -143,7 +143,9 @@ public class SimulationScreen {
      * Method to load new config file for this simulation
      */
     public void loadNewConfigFile() {
-        ((PlayPauseToggleControl)playPauseToggle).onClick();
+        if (!isPaused) {
+            ((PlayPauseToggleControl) playPauseToggle).onClick();
+        }
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(configFolder));
         File chosenFile = fileChooser.showOpenDialog(context.getStage());

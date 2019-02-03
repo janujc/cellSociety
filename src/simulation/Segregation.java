@@ -2,7 +2,6 @@ package simulation;
 
 import javafx.scene.paint.Color;
 import utils.Cell;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +14,7 @@ import java.util.List;
  * @author Januario Carreiro
  */
 public class Segregation extends Simulation {
+
     /**
      * Possible states of each cell in the Segregation simulation
      */
@@ -23,8 +23,8 @@ public class Segregation extends Simulation {
     private final int RED_AGENT = 2;
 
     /**
-     * If a cell does not have minPercentSatisfaction percent of similar neighbors, it will move in the next step. Note that
-     * empty cells do not count as neighbors.
+     * If a cell does not have minPercentSatisfaction percent of similar neighbors, it will move in the next step.
+     * Note that empty cells do not count as neighbors.
      */
     private final double minPercentSatisfaction;
 
@@ -41,10 +41,29 @@ public class Segregation extends Simulation {
     /**
      * The list of cells that agents can move to.
      * <p>
-     * This is used to prevent conflicts where agents "overwrite" each other after moving into the same cell
+     * This is used to prevent conflicts where agents "overwrite" each other after moving into the same cell.
      */
     private List<Cell> emptyCell;
 
+    /**
+     * Creates the simulation by calling super and using the constructor in simulation.Simulation
+     * <p>
+     * In order to create a 50x50 simulation where chance of generating EMPTY Cell is 0.2, chance of generating
+     * BLUE_AGENT Cell is 0.4, Chance of generating RED_AGENT Cell is 0.4, and the Cell colors are white, blue, and
+     * red, respectively, we would use:
+     * Simulation Perc = new Percolation(50, new Integer[] {0, 1, 2}, new Double[] {0.2, 0.4, 0.4}, new Color[]
+     *                  {Color.WHITE, Color.BLUE, Color.RED}, null);
+     * <p>
+     * For the Segregation simulation, errors may occur if there are not enough empty spaces for a cell to go. There
+     * should be at least a 0.1 chance that each Cell in the simulation is EMPTY. When creating a grid, it is
+     * recommended that the side length be between 25 and 100.
+     *
+     * @param sideSize length of one side of grid
+     * @param states an array of the possible states of each cell
+     * @param populationFreqs an array of the frequencies corresponding to the states
+     * @param colors an array of the colors corresponding to the states
+     * @param percentSatsfied percentage of neighbors of same state threshold
+     */
     public Segregation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String percentSatsfied) {
         super(sideSize, states, populationFreqs, colors, Integer.valueOf(percentSatsfied));
         minPercentSatisfaction = Integer.valueOf(percentSatsfied);
@@ -61,6 +80,9 @@ public class Segregation extends Simulation {
         updateEmpty();
     }
 
+    /**
+     * Determines which list a cell should be added to, calling determineAgentBehavior() as necessary.
+     */
     private void determineCellBehavior() {
         satisfiedAgents = new ArrayList<>();
         dissatisfiedAgents = new ArrayList<>();
@@ -85,8 +107,6 @@ public class Segregation extends Simulation {
      *
      * e.g.
      * oppositeAgent(1) returns 2.
-     *
-     * e.g.
      * oppositeAgent(0) returns 0.
      *
      * @param currState the state of the Cell object.
@@ -98,6 +118,14 @@ public class Segregation extends Simulation {
         return EMPTY;
     }
 
+    /**
+     * Determines whether an agent is satisfied or dissatisfied with its current location and adds the agent to the
+     * corresponding list.
+     *
+     * @param cell current Cell object
+     * @param numSimNeighbors number of neighbors of the same state
+     * @param numDifNeighbors number of neighbors of a different state
+     */
     private void determineAgentBehavior(Cell cell, int numSimNeighbors, int numDifNeighbors) {
         double totAgentNeighbors = numSimNeighbors + numDifNeighbors;
         if (totAgentNeighbors == 0) {
@@ -113,12 +141,9 @@ public class Segregation extends Simulation {
     }
 
     /**
-     * Shuffles emptyCell, then for each dissatisfied agent, sets their next state to empty; for each satisfied agent,
-     * sets their next state to the same state.
-     *
-     * TODO: SHOULD I ADD DISSATISFIED AGENTS TO emptyCell?
-     *
-     * TODO: POSSIBLE BUG OCCURS IF THERE ARE NOT ENOUGH Cell OBJECTS FOR EACH Cell OBJECT IN dissatisfiedAgents. ABOVE.
+     * For each dissatisfied agent, shuffles emptyCell, removes a Cell from emptyCell, sets the next state of the cell
+     * whose current state is EMPTY to its current state, then sets the dissatisfied agent's next state to EMPTY; for
+     * each satisfied agent, sets their next state to the current state.
      */
     private void moveAgents() {
         for (Cell agent : dissatisfiedAgents) {
@@ -134,6 +159,9 @@ public class Segregation extends Simulation {
         }
     }
 
+    /**
+     * For all remaining cells in emptyCell, sets their next state to empty.
+     */
     private void updateEmpty() {
         for (Cell empty : emptyCell) {
             empty.setNextState(EMPTY, colors[EMPTY]);

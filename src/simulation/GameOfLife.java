@@ -39,15 +39,14 @@ public class GameOfLife extends Simulation {
     protected void calculateNextStateOfOneCell(Cell cell, int numOfAliveNeighbors) {
         if (cell.getCurrState() == ALIVE && numOfAliveNeighbors < 2) {
             cell.setNextState(DEAD, colors[DEAD]);
-        }
-        if (cell.getCurrState() == ALIVE && (numOfAliveNeighbors == 2 || numOfAliveNeighbors == 3)) {
+        } else if (cell.getCurrState() == ALIVE && (numOfAliveNeighbors == 2 || numOfAliveNeighbors == 3)) {
             cell.setNextState(ALIVE, colors[ALIVE]);
-        }
-        if (cell.getCurrState() == ALIVE && numOfAliveNeighbors > 3) {
+        } else if (cell.getCurrState() == ALIVE && numOfAliveNeighbors > 3) {
             cell.setNextState(DEAD, colors[DEAD]);
-        }
-        if (cell.getCurrState() == DEAD && numOfAliveNeighbors == 3) {
+        } else if (cell.getCurrState() == DEAD && numOfAliveNeighbors == 3) {
             cell.setNextState(ALIVE, colors[ALIVE]);
+        } else {
+            cell.setNextState(cell.getCurrState(), cell.getCurrColor());
         }
     }
 }

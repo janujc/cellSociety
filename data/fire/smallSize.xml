@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Root doctype="simulation_config">
+    <SideSize count="25" />
+    <Metadata name="probCatch"
+              value="0.7"/>
+    <Data type="frequencies">
+        <Item popFreq="0.1"
+              state="0"
+              color="#000000"/>
+        <Item popFreq="0.5"
+              state="1"
+              color="#228b22"/>
+        <Item popFreq="0.4"
+              state="2"
+              color="#FFA500"/>
+    </Data>
+</Root>

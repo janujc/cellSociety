@@ -9,7 +9,23 @@ import javafx.util.Duration;
 import utils.ScreenType;
 import visualization.Controller;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Purpose: Class with helper function for transitions between screens
+ */
 public class Animator {
+    /**
+     * Sliding animation between screens
+     * @param myScene Scene containing both screens
+     * @param container Container for target screen
+     * @param finalScreen Type of the screen that will be in display after animation
+     * @param startX1 Screen 1's starting X pos
+     * @param startX2 Screen 2's starting X pos
+     * @param finishX1 Screen 1's ending X pos
+     * @param finishX2 Screen 2's ending X pos
+     * @param remove Whether or not to remove original screen from tree
+     * @param context Controller instance to access methods
+     */
     public static void animate(Scene myScene, Group container, ScreenType finalScreen, double startX1, double startX2,
                                double finishX1, double finishX2, boolean remove, Controller context) {
         KeyFrame start = new KeyFrame(Duration.ZERO,

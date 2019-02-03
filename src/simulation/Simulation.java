@@ -36,7 +36,7 @@ public abstract class Simulation {
      * <p>
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize
      */
-    private final int gridSideSize;
+    final int gridSideSize;
 
     /**
      * The array of colors for each possible state where the index is the corresponding state

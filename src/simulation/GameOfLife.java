@@ -2,8 +2,6 @@ package simulation;
 
 import javafx.scene.paint.Color;
 import utils.Cell;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Class that represents the GameOfLife simulation
@@ -27,7 +25,7 @@ public class GameOfLife extends Simulation {
      * In order to create a 50x50 simulation where dead cells are green and make up half of the cells, and alive cells
      * are pink and make up the other half of the cells, we would use:
      * Simulation GOL = new GameOfLife(50, new Integer[] {0, 1}, new Double[] {0.5, 0.5}, new Color[] {Color.GREEN,
-     *                  Color.PINK}, null)
+     *                  Color.PINK}, null);
      * <p>
      * For the Game of Life simulation, there are only two possible states, dead and alive. When choosing a grid length,
      * it is recommended that the number be between 25 and 100 so that it is easier to follow each step.

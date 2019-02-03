@@ -40,13 +40,13 @@ public class GameOfLife extends Simulation {
         if (cell.getCurrState() == ALIVE && numOfAliveNeighbors < 2) {
             cell.setNextState(DEAD, colors[DEAD]);
         }
-        else if (cell.getCurrState() == ALIVE && (numOfAliveNeighbors == 2 || numOfAliveNeighbors == 3)) {
+        if (cell.getCurrState() == ALIVE && (numOfAliveNeighbors == 2 || numOfAliveNeighbors == 3)) {
             cell.setNextState(ALIVE, colors[ALIVE]);
         }
-        else if (cell.getCurrState() == ALIVE && numOfAliveNeighbors > 3) {
+        if (cell.getCurrState() == ALIVE && numOfAliveNeighbors > 3) {
             cell.setNextState(DEAD, colors[DEAD]);
         }
-        else if (cell.getCurrState() == DEAD && numOfAliveNeighbors > 3) {
+        if (cell.getCurrState() == DEAD && numOfAliveNeighbors == 3) {
             cell.setNextState(ALIVE, colors[ALIVE]);
         }
     }

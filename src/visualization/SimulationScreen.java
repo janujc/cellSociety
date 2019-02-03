@@ -136,7 +136,7 @@ public class SimulationScreen {
     }
 
     public void loadNewConfigFile() {
-        // TODO: Pause simulation on loadnewconfig and reset history counter
+        ((PlayPauseToggleControl)playPauseToggle).onClick();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(configFolder));
         File chosenFile = fileChooser.showOpenDialog(context.getStage());

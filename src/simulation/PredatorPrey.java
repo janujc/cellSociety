@@ -1,8 +1,12 @@
 package simulation;
 
-import utils.Cell;
-import java.util.*;
 import javafx.scene.paint.Color;
+import utils.Cell;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 // TODO Should I use Cell objects (current) or Fish/Shark objects?
 // TODO Does this class even make sense?

@@ -2,6 +2,7 @@ package simulation;
 
 import javafx.scene.paint.Color;
 import utils.Cell;
+
 import java.util.Random;
 
 /**

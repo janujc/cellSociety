@@ -1,10 +1,10 @@
 package simulation;
 
+import javafx.scene.paint.Color;
 import utils.Cell;
 
 import java.util.List;
 import java.util.Random;
-import javafx.scene.paint.Color;
 
 /**
  * Class that represents the Spreading of Fire simulation

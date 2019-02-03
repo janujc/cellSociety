@@ -1,9 +1,11 @@
 package simulation;
 
+import javafx.scene.paint.Color;
 import utils.Cell;
 
-import java.util.*;
-import javafx.scene.paint.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 // TODO Make interface for helper functions in this class.
 // TODO Find a way to hide grid data structure.

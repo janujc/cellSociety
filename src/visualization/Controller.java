@@ -1,24 +1,18 @@
 package visualization;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Application;
-import javafx.application.ConditionalFeature;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import uitools.Animator;
 import utils.ScreenType;
-
-import static uitools.TextGenerator.makeText;
 
 /**
  * Author: Anshu Dwibhashi

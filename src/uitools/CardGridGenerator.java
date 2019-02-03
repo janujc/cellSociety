@@ -1,17 +1,9 @@
 package uitools;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import utils.Cell;
 import utils.ParserTools;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
 /**

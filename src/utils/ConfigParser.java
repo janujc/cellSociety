@@ -1,15 +1,9 @@
 package utils;
 
-import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
-import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import simulation.Simulation;
-import uitools.Card;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;

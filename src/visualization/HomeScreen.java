@@ -4,26 +4,14 @@ import javafx.event.EventHandler;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import simulation.Fire;
-import simulation.PredatorPrey;
-import simulation.Simulation;
 import uitools.Animator;
 import uitools.Card;
 import uitools.CardGridGenerator;
 import utils.ConfigParser;
 import utils.ScreenType;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.util.ArrayList;
 
 import static uitools.TextGenerator.makeText;
 import static visualization.Controller.bebasKai;

@@ -14,7 +14,18 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Class to read config file associated with a particular initial configuration
+ * of a simulation and generate a Simulation instance.
+ */
 public class ConfigParser {
+    /**
+     * Generates an instance of Simulation from given config file
+     * @param fileName File name of config file.
+     * @param className Class name of subclass of Simulation to instantiate
+     * @return Simulation instance that was generated
+     */
     public static Simulation parseConfigFile (String fileName, String className) {
         try {
             File inputFile = new File(fileName);

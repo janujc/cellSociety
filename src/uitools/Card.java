@@ -11,6 +11,10 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import visualization.Controller;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Class to contain a card and relevant views.
+ */
 public class Card {
     private Group cardView;
     private String className; // Name of class to handle this particular simulation

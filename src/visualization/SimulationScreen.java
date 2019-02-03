@@ -9,16 +9,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import simulation.PredatorPrey;
 import simulation.Simulation;
 import uitools.*;
 import utils.Cell;
 import utils.ConfigParser;
-import utils.Snapshot;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Stack;
 
 import static uitools.TextGenerator.makeText;
 import static visualization.Controller.*;

@@ -120,13 +120,13 @@ public class Segregation extends Simulation {
      * TODO: POSSIBLE BUG OCCURS IF THERE ARE NOT ENOUGH Cell OBJECTS FOR EACH Cell OBJECT IN dissatisfiedAgents. ABOVE.
      */
     private void moveAgents() {
-        Collections.shuffle(emptyCell);
         for (Cell agent : dissatisfiedAgents) {
-            dissatisfiedAgents.remove(agent);
+            Collections.shuffle(emptyCell);
             Cell empty = emptyCell.get(0);
             emptyCell.remove(empty);
             empty.setNextState(agent.getCurrState(), colors[agent.getCurrState()]);
             agent.setNextState(EMPTY, colors[EMPTY]);
+            emptyCell.add(agent);
         }
         for (Cell agent : satisfiedAgents) {
             agent.setNextState(agent.getCurrState(), colors[agent.getCurrState()]);

@@ -20,7 +20,7 @@ public class Percolation extends Simulation {
     private int PERCOLATED = 2;
 
 
-    public Percolation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, Object metadata) {
+    public Percolation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String metadata) {
         super(sideSize, states, populationFreqs, colors, null);
         Cell startPerc = determineStartLocation();
         grid[startPerc.getXCoord()][startPerc.getYCoord()] = startPerc;

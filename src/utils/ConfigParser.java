@@ -22,8 +22,13 @@ public class ConfigParser {
             int sideSize = Integer.parseInt(
                     ((Element) rootNode.getElementsByTagName("SideSize").item(0))
                             .getAttribute("count"));
-            String metadata = ((Element) rootNode.getElementsByTagName("Metadata").item(0))
-                    .getAttribute("value");
+            String metadata;
+            if (rootNode.getElementsByTagName("Metadata").getLength() > 0) {
+                metadata = ((Element) rootNode.getElementsByTagName("Metadata").item(0))
+                        .getAttribute("value");
+            } else {
+                metadata = null;
+            }
 
             Element data = ((Element) rootNode.getElementsByTagName("Data").item(0));
             if (data.getAttribute("type").equals("frequencies")) {

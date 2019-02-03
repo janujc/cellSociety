@@ -8,6 +8,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import utils.ConfigParser;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Abstract superclass for all types of controls
+ */
 public abstract class Control {
     private Button icon;
     protected Control (Image image) {

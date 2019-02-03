@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Root doctype="simulation_config">
+    <SideSize count="25" />
+    <Metadata name="numTurnsToBreed"
+              value="4"/>
+    <Data type="frequencies">
+        <Item popFreq="0.3"
+              state="0"
+              color="#FF0000"/>
+        <Item popFreq="0.4"
+              state="1"
+              color="#00FF00"/>
+        <Item popFreq="0.3"
+              state="2"
+              color="#0000FF"/>
+    </Data>
+</Root>

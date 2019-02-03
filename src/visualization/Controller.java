@@ -49,6 +49,10 @@ public class Controller extends Application {
      * @throws Exception
      */
 
+    public Stage getStage() {
+        return mainStage;
+    }
+
     @Override
     public void start (Stage stage) {
         // attach scene to the stage and display it

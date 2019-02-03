@@ -8,12 +8,16 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import simulation.PredatorPrey;
 import simulation.Simulation;
 import uitools.*;
 import utils.Cell;
+import utils.ConfigParser;
 import utils.Snapshot;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.Stack;
 
 import static uitools.TextGenerator.makeText;
@@ -32,15 +36,41 @@ public class SimulationScreen {
     private Rectangle[][] gridViews;
     private double currentCellSize;
 
-    private Stack<Snapshot> history;
+    private ArrayList<Cell[][]> history;
+    private int historyPos = 0;
+    private String configFolder;
 
-    public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label) {
-        this.simulation = simulation;
-        this.history = new Stack<>();
+    private String className;
+
+    private void processSimulation(Simulation simulation) {
+        // First clear any existing stuff.
+        if (gridViews != null) {
+            for (Rectangle[] row : gridViews) {
+                if (row != null) {
+                    for (Rectangle r : row) {
+                        ((Group) r.getParent()).getChildren().remove(r);
+                    }
+                }
+            }
+        }
         gridViews = new Rectangle[simulation.getGrid().length][simulation.getGrid()[0].length];
+        this.simulation = simulation;
+        history.clear();
+        historyPos = 0;
 
         int numCells = simulation.getGrid().length;
         currentCellSize = (400 - (numCells-1)*1)/(numCells*1.0);
+
+        // render initial state
+        initialiseGridViews(simulation.getGrid());
+        renderGrid(simulation.getGrid());
+    }
+
+    public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label, String configFolder, String className) {
+        this.context = context;
+        this.history = new ArrayList<>();
+        this.configFolder = configFolder;
+        this.className = className;
 
         var container = new Group();
         Text titleText = makeText(label, sofiaPro, Color.SLATEGREY,
@@ -97,10 +127,7 @@ public class SimulationScreen {
         container.getChildren().addAll(header, footer, titleText, loadConfig, pressEscape, speedUpControl.getView(),
                 rateText, speedDownControl.getView(), nextStateControl.getView(), prevStateControl.getView(),
                 playPauseToggle.getView());
-
-        // render initial state
-        initialiseGridViews(simulation.getGrid());
-        renderGrid(simulation.getGrid());
+        processSimulation(simulation);
     }
 
     private double getCellXLocation(int column) {
@@ -112,8 +139,13 @@ public class SimulationScreen {
     }
 
     public void loadNewConfigFile() {
-        // TODO
-        System.out.println("Called loadNewConfigFile()");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(configFolder));
+        File chosenFile = fileChooser.showOpenDialog(context.getStage());
+        if (chosenFile != null) {
+            Simulation newSim = ConfigParser.parseConfigFile(chosenFile.getAbsolutePath(), className);
+            processSimulation(newSim);
+        }
     }
 
     public void step(double elapsedTime) {
@@ -131,14 +163,17 @@ public class SimulationScreen {
     }
 
     private void renderGrid(Cell[][] grid) {
-        // TODO
+        for(int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[0].length; j++) {
+                gridViews[i][j].setFill(grid[i][j].getCurrColor());
+            }
+        }
     }
 
     private void initialiseGridViews(Cell[][] grid) {
         for(int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 gridViews[i][j] = new Rectangle(getCellXLocation(j), getCellYLocation(i), currentCellSize, currentCellSize);
-                // gridViews[i][j].setFill(Color.RED);
                 gridViews[i][j].setFill(grid[i][j].getCurrColor());
                 myContainer.getChildren().add(gridViews[i][j]);
             }
@@ -162,15 +197,35 @@ public class SimulationScreen {
     }
 
     public void stepBack() {
-        renderGrid(history.pop().getGrid());
+        if (historyPos > 0) {
+            renderGrid(history.get(historyPos - 1));
+            historyPos--;
+        }
     }
 
     public void stepForward() {
-        history.push(new Snapshot(simulation.getGrid())); // Save current grid in history
-        simulation.step(); // Compute next grid
-        Cell[][] newGrid = simulation.getGrid(); // Get next grid
+        if (historyPos < history.size() - 1) {
+            renderGrid(history.get(historyPos + 1));
+            historyPos++;
+        } else {
+            Cell[][] oldGrid = makeDeepCopy(simulation.getGrid());
 
-        renderGrid(newGrid);
+            history.add(oldGrid); // Save current grid in history
+            historyPos++;
+            simulation.step(); // Compute next grid
+            Cell[][] newGrid = simulation.getGrid(); // Get next grid
+            renderGrid(newGrid);
+        }
+    }
+
+    private Cell[][] makeDeepCopy(Cell[][] a) {
+        Cell[][] b = new Cell[a.length][a[0].length];
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a[0].length; j++) {
+                b[i][j] = new Cell(a[i][j].getCurrState(), a[i][j].getXCoord(), a[i][j].getYCoord(), a[i][j].getCurrColor());
+            }
+        }
+        return b;
     }
 
     public boolean getIsPaused() {

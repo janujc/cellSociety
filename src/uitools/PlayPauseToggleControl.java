@@ -4,6 +4,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import visualization.SimulationScreen;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Control to toggle between play and pause states
+ */
 public class PlayPauseToggleControl extends Control {
     private SimulationScreen context;
 

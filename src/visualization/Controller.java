@@ -20,6 +20,11 @@ import utils.ScreenType;
 
 import static uitools.TextGenerator.makeText;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Main controller for this program.
+ * Controls screens, animations and event handling, as well as setup
+ */
 public class Controller extends Application {
 
     // some things we need to remember during our game
@@ -39,6 +44,10 @@ public class Controller extends Application {
     private boolean inTransition = false;
     private SimulationScreen simulationScreen;
 
+    /**
+     * Method to set pointer to simulation screen that's currently active
+     * @param ss Currently active simulation screen
+     */
     public void setSimulationScreen(SimulationScreen ss) {
         this.simulationScreen = ss;
     }
@@ -48,11 +57,15 @@ public class Controller extends Application {
      * @param stage provided to us by the library
      * @throws Exception
      */
-
     public Stage getStage() {
         return mainStage;
     }
 
+    /**
+     * Method that initialises it all. Takes in a stage obtained from the main method and attaches
+     * an animation loop
+     * @param stage
+     */
     @Override
     public void start (Stage stage) {
         // attach scene to the stage and display it
@@ -69,7 +82,6 @@ public class Controller extends Application {
         mainStage = stage;
     }
 
-    // Create the game's "scene": what shapes will be in the game and their starting properties
     private Scene setupProg (int width, int height, Paint background) {
         // create one top level collection to organize the things in the scene
         var root = new Group();
@@ -98,10 +110,18 @@ public class Controller extends Application {
         }
     }
 
+    /**
+     * Sets variable indicating whether or not the program is transitioning between screens
+     * @param transition
+     */
     public void setInTransition(boolean transition) {
         this.inTransition = transition;
     }
 
+    /**
+     * Sets variable indicating what type of a screen is currently active
+     * @param currentScreen
+     */
     public void setCurrentScreen(ScreenType currentScreen) {
         this.currentScreen = currentScreen;
     }

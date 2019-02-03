@@ -20,6 +20,10 @@ import java.util.ArrayList;
 import static uitools.TextGenerator.makeText;
 import static visualization.Controller.*;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Class defining the screen that displays a simulation
+ */
 public class SimulationScreen {
     private Group myContainer;
     private Controller context;
@@ -135,6 +139,9 @@ public class SimulationScreen {
         return 87.0 + row*1.0 + currentCellSize * row;
     }
 
+    /**
+     * Method to load new config file for this simulation
+     */
     public void loadNewConfigFile() {
         ((PlayPauseToggleControl)playPauseToggle).onClick();
         FileChooser fileChooser = new FileChooser();
@@ -146,6 +153,10 @@ public class SimulationScreen {
         }
     }
 
+    /**
+     * Method that changes state of the current simulation each frame
+     * @param elapsedTime
+     */
     public void step(double elapsedTime) {
         if (!isPaused) {
             if (pausedFor >= continueIn) {
@@ -178,10 +189,18 @@ public class SimulationScreen {
         }
     }
 
+    /**
+     * Fetch group containing all children of this screen.
+     * @return Group object containing all elements of this screen.
+     */
     public Group getContainer() {
         return myContainer;
     }
 
+    /**
+     * Set the rate at which the simulation is taking place
+     * @param rate Rate of simulation in Hertz
+     */
     public void setRate(int rate) {
         if (rate > 0 && rate <= 10) { // rate can't go below 1 (that's just pause), and can't see clearly above 10
             this.rate = rate;
@@ -190,10 +209,17 @@ public class SimulationScreen {
         }
     }
 
+    /**
+     * Method to obtain the current rate of simulation
+     * @return Rate of simulation in Hertz
+     */
     public int getRate() {
         return rate;
     }
 
+    /**
+     * Method to reset the grid to how it was one cycle ago
+     */
     public void stepBack() {
         if (historyPos > 0) {
             renderGrid(history.get(historyPos - 1));
@@ -201,6 +227,9 @@ public class SimulationScreen {
         }
     }
 
+    /**
+     * Method to set the grid to how it'll be one cycle from now
+     */
     public void stepForward() {
         if (historyPos < history.size() - 1) {
             renderGrid(history.get(historyPos + 1));
@@ -226,10 +255,18 @@ public class SimulationScreen {
         return b;
     }
 
+    /**
+     * Get whether the simulation is paused right now
+     * @return
+     */
     public boolean getIsPaused() {
         return isPaused;
     }
 
+    /**
+     * Set whether the simulation is paused right now
+     * @param isPaused Whether the simulation is paused right now
+     */
     public void setIsPaused(boolean isPaused) {
         this.isPaused = isPaused;
     }

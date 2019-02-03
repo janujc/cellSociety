@@ -29,6 +29,10 @@ import static uitools.TextGenerator.makeText;
 import static visualization.Controller.bebasKai;
 import static visualization.Controller.sofiaPro;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Class defining the Home Screen that's displayed to users upon app open
+ */
 public class HomeScreen {
     private Group myContainer;
     private Controller context;
@@ -84,6 +88,10 @@ public class HomeScreen {
                 0, 0, -myScene.getWidth(), false, context);
     }
 
+    /**
+     * Fetch group containing all children of this screen.
+     * @return Group object containing all elements of this screen.
+     */
     public Group getContainer() {
         return myContainer;
     }

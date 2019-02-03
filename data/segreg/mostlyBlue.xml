@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Root doctype="simulation_config">
+    <SideSize count="75" />
+    <Metadata name="percentSatsfied"
+              value="60" />
+    <Data type="frequencies">
+        <Item popFreq="0.2"
+              state="0"
+              color="#000000"/>
+        <Item popFreq="0.7"
+              state="1"
+              color="#0000FF"/>
+        <Item popFreq="0.1"
+              state="2"
+              color="#FF0000"/>
+    </Data>
+</Root>

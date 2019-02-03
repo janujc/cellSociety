@@ -14,6 +14,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Class to parse XML config file and generate a grid of cards for each
+ * type of simulation.
+ */
 public class CardGridGenerator {
     private static Card[][] cardGrid;
     private static void parseXML () {

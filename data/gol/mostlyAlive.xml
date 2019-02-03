@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Root doctype="simulation_config">
+    <SideSize count="100" />
+    <Data type="frequencies">
+        <Item popFreq="0.2"
+              state="0"
+              color="#000000"/>
+        <Item popFreq="0.8"
+              state="1"
+              color="#DDDDDD"/>
+    </Data>
+</Root>

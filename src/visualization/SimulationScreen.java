@@ -150,8 +150,12 @@ public class SimulationScreen {
         fileChooser.setInitialDirectory(new File(configFolder));
         File chosenFile = fileChooser.showOpenDialog(context.getStage());
         if (chosenFile != null) {
-            Simulation newSim = ConfigParser.parseConfigFile(chosenFile.getAbsolutePath(), className);
-            processSimulation(newSim);
+            try {
+                Simulation newSim = ConfigParser.parseConfigFile(chosenFile.getAbsolutePath(), className);
+                processSimulation(newSim);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -11,6 +11,7 @@ import uitools.Animator;
 import uitools.Card;
 import uitools.CardGridGenerator;
 import utils.ConfigParser;
+import utils.Dialogs;
 import utils.ScreenType;
 
 import static uitools.TextGenerator.makeText;
@@ -67,13 +68,17 @@ public class HomeScreen {
 
     private void startSimulation(String className, Scene myScene, String label, String configFolder) {
         // Just use an arbitrary simulation class for test
-        SimulationScreen simulationScreen = new SimulationScreen(myScene, context,
-                ConfigParser.parseConfigFile(configFolder+"default.xml", className),
-                label, configFolder, className);
-        context.setSimulationScreen(simulationScreen);
-        ((Group)myScene.getRoot()).getChildren().add(simulationScreen.getContainer());
-        Animator.animate(myScene, simulationScreen.getContainer(), ScreenType.SIMULATION_SCREEN, myScene.getWidth(),
-                0, 0, -myScene.getWidth(), false, context);
+        try {
+            SimulationScreen simulationScreen = new SimulationScreen(myScene, context,
+                    ConfigParser.parseConfigFile(configFolder + "default.xml", className),
+                    label, configFolder, className);
+            context.setSimulationScreen(simulationScreen);
+            ((Group) myScene.getRoot()).getChildren().add(simulationScreen.getContainer());
+            Animator.animate(myScene, simulationScreen.getContainer(), ScreenType.SIMULATION_SCREEN, myScene.getWidth(),
+                    0, 0, -myScene.getWidth(), false, context);
+        } catch (Exception e) {
+            Dialogs.showAlert("The config file you chose isnn't for this simulation.");
+        }
     }
 
     /**

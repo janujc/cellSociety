@@ -19,8 +19,10 @@ public class ConfigParser {
      * @param fileName File name of config file.
      * @param className Class name of subclass of Simulation to instantiate
      * @return Simulation instance that was generated
+     * @throws Exception if a config file is chosen that is corrupt or doesn't define this type
+     * of a simulation
      */
-    public static Simulation parseConfigFile (String fileName, String className) {
+    public static Simulation parseConfigFile (String fileName, String className) throws Exception {
         try {
             File inputFile = new File(fileName);
             Element rootNode = ParserTools.getRootNode(inputFile);
@@ -54,8 +56,7 @@ public class ConfigParser {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw(e);
         }
     }
 }

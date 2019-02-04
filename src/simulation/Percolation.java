@@ -21,6 +21,10 @@ public class Percolation extends Simulation {
     private int BLOCKED = 0;
     private int OPEN = 1;
     private int PERCOLATED = 2;
+
+    /**
+     * Instance variables to detect when to end Percolation
+     */
     private Integer oppositeCol;
     private Integer oppositeRow;
     private boolean stopSim;
@@ -141,9 +145,5 @@ public class Percolation extends Simulation {
             return (cell.getCurrState() == PERCOLATED && cell.getCol() == oppositeCol);
         }
         return false;
-    }
-
-    public boolean simulationEnded() {
-        return stopSim;
     }
 }

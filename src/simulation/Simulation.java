@@ -42,7 +42,7 @@ public abstract class Simulation {
      * <p>
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize
      */
-    public final int gridSideSize;
+    private final int gridSideSize;
 
     /**
      * The array of colors for each possible state where the index is the corresponding state
@@ -224,6 +224,15 @@ public abstract class Simulation {
     }
 
     /**
+     * Randomly chooses a cell from a given list
+     * @param lst the list of cells
+     * @return the randomly chosen cell
+     */
+    protected Cell chooseRandomCellFromList(List<Cell> lst) {
+        return lst.get(rand.nextInt(lst.size()));
+    }
+
+    /**
      * Returns the grid for Visualizer to access
      * @return the simulation grid
      */
@@ -232,11 +241,10 @@ public abstract class Simulation {
     }
 
     /**
-     * Randomly chooses a cell from a given list
-     * @param lst the list of cells
-     * @return the randomly chosen cell
+     * Returns the side size of the grid for use by the Visualizer
+     * @return the grid side size
      */
-    protected Cell chooseRandomCellFromList(List<Cell> lst) {
-        return lst.get(rand.nextInt(lst.size()));
+    public int getGridSideSize() {
+        return gridSideSize;
     }
 }

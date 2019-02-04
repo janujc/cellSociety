@@ -61,6 +61,7 @@ public class Percolation extends Simulation {
      */
     private Cell determineStartLocation() {
         Random rand = new Random();
+        int gridSideSize = getGridSideSize();
         int side = rand.nextInt(4);
         int coord1, coord2;
         if (side == 0) {

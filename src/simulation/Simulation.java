@@ -12,6 +12,7 @@ import java.util.Random;
 // TODO Implement way to display the color key to the user.
 // TODO Delete unnecessary comments.
 // TODO Stop passing in metadata to Simulation superclass constructor.
+// TODO Clean up parameter unboxing.
 
 // TODO Should we add simulation-specific cell and grid classes?
 // TODO Are there too many javadoc comments?

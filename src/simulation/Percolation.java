@@ -21,6 +21,9 @@ public class Percolation extends Simulation {
     private int BLOCKED = 0;
     private int OPEN = 1;
     private int PERCOLATED = 2;
+    private Integer oppositeCol;
+    private Integer oppositeRow;
+    private boolean stopSim;
 
     /**
      * Creates the simulation by calling super and using the constructor in simulation.Simulation
@@ -59,18 +62,22 @@ public class Percolation extends Simulation {
         if (side == 0) {
             coord1 = 0;
             coord2 = rand.nextInt(gridSideSize);
+            oppositeCol = gridSideSize - 1;
         }
         else if (side == 1) {
             coord1 = gridSideSize - 1;
             coord2 = rand.nextInt(gridSideSize);
+            oppositeCol = 0;
         }
         else if (side == 2) {
             coord1 = rand.nextInt(gridSideSize);
             coord2 = 0;
+            oppositeRow = gridSideSize - 1;
         }
         else {
             coord1 = rand.nextInt(gridSideSize);
             coord2 = gridSideSize - 1;
+            oppositeRow = 0;
         }
         return new Cell(PERCOLATED, coord1, coord2, colors[PERCOLATED]);
     }
@@ -83,8 +90,20 @@ public class Percolation extends Simulation {
     protected void calculateNextStates() {
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
-                Boolean hasPercolatedNeighbors = !(getNeighborsOfType(cell, PERCOLATED, false).isEmpty());
-                calculateNextStateOfOneCell(cell, hasPercolatedNeighbors);
+                if (stopSim(cell)) {
+                    stopSim = true;
+                }
+            }
+        }
+        for (Cell[] xCells : grid) {
+            for (Cell cell : xCells) {
+                if (stopSim) {
+                    cell.setNextState(cell.getCurrState(), colors[cell.getCurrState()]);
+                }
+                else {
+                    Boolean hasPercolatedNeighbors = !(getNeighborsOfType(cell, PERCOLATED, false).isEmpty());
+                    calculateNextStateOfOneCell(cell, hasPercolatedNeighbors);
+                }
             }
         }
     }
@@ -112,5 +131,19 @@ public class Percolation extends Simulation {
         if (cell.getCurrState() == PERCOLATED) {
             cell.setNextState(PERCOLATED, colors[PERCOLATED]);
         }
+    }
+
+    private boolean stopSim(Cell cell) {
+        if(oppositeRow != null) {
+            return (cell.getCurrState() == PERCOLATED && cell.getRow() == oppositeRow);
+        }
+        if(oppositeCol != null) {
+            return (cell.getCurrState() == PERCOLATED && cell.getCol() == oppositeCol);
+        }
+        return false;
+    }
+
+    public boolean simulationEnded() {
+        return stopSim;
     }
 }

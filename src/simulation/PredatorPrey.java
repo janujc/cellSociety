@@ -206,7 +206,7 @@ public class PredatorPrey extends Simulation {
      */
     private void moveAbleAnimals() {
         for (Cell mover : willMove) {
-            List<Cell> canMoveTo = getNeighborsOfType(mover, EMPTY, true);
+            List<Cell> canMoveTo = getCardinalNeighbors(mover);
             canMoveTo = removeNewEmptyCells(canMoveTo);
             canMoveTo = removeCellsWithAnimalsAlreadyThere(canMoveTo);
 
@@ -234,6 +234,7 @@ public class PredatorPrey extends Simulation {
 
         // make animal's original location empty
         source.setNextState(EMPTY, COLOR_EMPTY);
+        willStayEmpty.add(source);
 
         animalTurnTracker.put(dest, animalTurnTracker.get(source));
         animalTurnTracker.remove(source);
@@ -302,6 +303,7 @@ public class PredatorPrey extends Simulation {
     private Cell killSharkIfStarved(Cell shark, int turnsSinceLastEating) {
         if (turnsSinceLastEating >= NUM_TURNS_TO_STARVE) {
             shark.setNextState(EMPTY, COLOR_EMPTY);
+            willStayEmpty.add(shark);
             return shark;
         }
         return null;
@@ -329,7 +331,7 @@ public class PredatorPrey extends Simulation {
         }
 
         if (willBreed) {
-            List<Cell> canBreedInto = getNeighborsOfType(animal, EMPTY, true);
+            List<Cell> canBreedInto = getCardinalNeighbors(animal);
             canBreedInto = removeNewEmptyCells(canBreedInto);
             canBreedInto = removeCellsWithAnimalsAlreadyThere(canBreedInto);
 
@@ -364,7 +366,7 @@ public class PredatorPrey extends Simulation {
         }
     }
 
-    // TODO Is this way of ensuring lock-step synchronization when it comes to moving/breeding into empty cells ok?
+    // TODO Change this method name to reflect that it is giving all cells that will be empty.
     /**
      * Takes a list of empty neighbor cells and returns a copy of the list with only cells that were empty prior to the
      * current simulation step.

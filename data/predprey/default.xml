@@ -2,15 +2,15 @@
 <Root doctype="simulation_config">
     <SideSize count="100" />
     <Metadata name="numTurnsToBreed"
-              value="4"/>
+              value="4,5,20"/>
     <Data type="frequencies">
-        <Item popFreq="0.3"
+        <Item popFreq="0.2"
               state="0"
               color="#FF0000"/>
-        <Item popFreq="0.4"
+        <Item popFreq="0.7"
               state="1"
               color="#00FF00"/>
-        <Item popFreq="0.3"
+        <Item popFreq="0.1"
               state="2"
               color="#0000FF"/>
     </Data>

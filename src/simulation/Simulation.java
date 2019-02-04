@@ -11,7 +11,7 @@ import java.util.Random;
 // TODO Find a way to hide grid data structure.
 // TODO Implement way to display the color key to the user.
 // TODO Delete unnecessary comments.
-// TODO Clean up parameter unboxing.
+// TODO Clean up metadata passing.
 
 // TODO Should we add simulation-specific cell and grid classes?
 // TODO Are there too many javadoc comments?

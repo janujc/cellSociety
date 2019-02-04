@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 // TODO Clean up this class.
-// TODO Figure out why fish clusters aren't homogeneous.
+// TODO Figure out why empty cells tend to show up on the right side.
 
 // TODO Should animals be able to move into cells other animals just moved from (breaks lock-step synchronization)?
 // TODO Should I use Cell objects (current) or Fish/Shark objects?

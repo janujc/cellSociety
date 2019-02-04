@@ -34,17 +34,15 @@ public class PredatorPrey extends Simulation {
      */
     private final Color COLOR_EMPTY;
 
-
-
-    /**
-     *
-     */
-
     /**
      * If a fish survives for this number of turns, it will breed.
      */
     private final int NUM_TURNS_TO_BREED_FISH;
 
+    /**
+     * If a shark goes this number of turns without eating a fish, it starves and dies.
+     */
+    private final int NUM_TURNS_TO_STARVE;
 
     /**
      * If a shark survives for this number of turns, it will breed.
@@ -54,9 +52,16 @@ public class PredatorPrey extends Simulation {
     /**
      * Tracks the number of turns each fish and shark has survived since being born or breeding
      * <p>
-     * Key is the cell that currently holds the fish (prior to step). Values are the number of turns survived.
+     * Key is the cell that currently holds the fish. Values are the number of turns survived.
      */
     private final Map<Cell, Integer> animalTurnTracker;
+
+    /**
+     * Tracks the number of turns each shark has gone since last eating a fish
+     * <p>
+     * Key is the cell that currently holds the shark. Values are the number of turns since last eating.
+     */
+    private final Map<Cell, Integer> sharkHungerTracker;
 
     // TODO How to justify these lists being instance variables? They allow the step() method to be broken up into multiple, more readable ones.
     /**
@@ -92,26 +97,33 @@ public class PredatorPrey extends Simulation {
      * @param sideSize the length of one side of the grid
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      * @param metadata the string containing the PredatorPrey-specific parameters (NUM_TURNS_TO_BREED_FISH,
-     *                 NUM_TURNS_TO_BREED_SHARK) separated by a comma (",")
+     *                 NUM_TURNS_TO_STARVE, NUM_TURNS_TO_BREED_SHARK) separated by a comma (",")
      */
     public PredatorPrey(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, String metadata) {
         super(sideSize, states, populationFreqs, stateColors, metadata);    // hard-coded b/c states are pre-determined
         COLOR_EMPTY = colors[EMPTY];
         String[] data = metadata.split(",");
         NUM_TURNS_TO_BREED_FISH = Integer.valueOf(data[0]);
-        NUM_TURNS_TO_BREED_SHARK = Integer.valueOf(data[1]);
+        NUM_TURNS_TO_STARVE = Integer.valueOf(data[1]);
+        NUM_TURNS_TO_BREED_SHARK = Integer.valueOf(data[2]);
         animalTurnTracker = new HashMap<>();
-        initializeAnimalTurnTracker();
+        sharkHungerTracker = new HashMap<>();
+        initializeTrackers();
     }
 
     /**
-     * Finds all of the fish and sharks in the initial grid and adds them to the turn tracker
+     * Adds all of the animals to the turn tracker and adds all of the sharks to the hunger tracker
      */
-    private void initializeAnimalTurnTracker() {
+    private void initializeTrackers() {
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
                 if (cell.getCurrState() != EMPTY) {
-                    animalTurnTracker.put(cell, 0);    // grid population doesn't count as a turn
+
+                    // grid population does not count as a turn survived
+                    animalTurnTracker.put(cell, 0);
+                    if (cell.getCurrState() == SHARK) {
+                        sharkHungerTracker.put(cell, 0);
+                    }
                 }
             }
         }
@@ -128,7 +140,7 @@ public class PredatorPrey extends Simulation {
         determineCellBehaviors();
         makeSharksEat();
         moveAbleAnimals();
-        breedAbleAnimalsAndUpdateTracker();
+        breedAbleAnimalsAndKillStarvedSharksAndUpdateTracker();
         stayEmpty();
     }
 
@@ -230,32 +242,63 @@ public class PredatorPrey extends Simulation {
 
     /**
      * Have all animals that can breed (survived enough turns, have empty cardinal neighbor cell to breed into) breed.
-     * Also, update the animalTurnTracker.
+     * Also, kill sharks that have starved. Finally, update the animalTurnTracker.
      * <p>
-     * The tracker is updated here to save having to iterate through the map another time.
+     * All of these operations are done here to save having to iterate through the map another time.
      */
-    private void breedAbleAnimalsAndUpdateTracker() {
+    private void breedAbleAnimalsAndKillStarvedSharksAndUpdateTracker() {
 
         // the map of new animals that are bred, used to add them to the tracker without affecting iteration
         Map<Cell, Integer> bredAnimals = new HashMap<>();
 
+        // the map of sharks that have starved and died
+        List<Cell> starved = new ArrayList<>();
+
         for (Map.Entry<Cell, Integer> animalTracked : animalTurnTracker.entrySet()) {
             Cell animal = animalTracked.getKey();
-            int turnsSurvived = animalTracked.getValue();
+            animalTurnTracker.put(animal, animalTurnTracker.get(animal) + 1);
 
+            // check if shark has starved starved and kills it if so
+            if (animal.getCurrState() == SHARK) {
+                int turnsSinceLastEating = sharkHungerTracker.get(animal);
+                Cell shark = killSharkIfStarved(animal, turnsSinceLastEating);
+                if (shark != null) {
+                    starved.add(shark);
+                    continue;
+                }
+            }
+
+            int turnsSurvived = animalTracked.getValue();
             Cell bred = breedAnimalIfAble(animal, turnsSurvived);
             if (bred != null) {
                 bredAnimals.put(bred, 0);    // being bred does not count as having survived a turn
             }
+        }
 
-            animalTurnTracker.put(animal, animalTurnTracker.get(animal) + 1);
+        for (Cell dead : starved) {
+            animalTurnTracker.remove(dead);
         }
 
         animalTurnTracker.putAll(bredAnimals);
     }
 
     /**
-     * Breed animal into empty cardinal neighbor cell if it has survived enough turns after being born or last breeding.
+     * Kills shark if it has gone too many turns without eating
+     * @param shark the shark that is being checked for starvation
+     * @param turnsSinceLastEating the number of turns the shark has gone without eating
+     * @return the cell of the shark if it has starved and died, null otherwise
+     */
+    private Cell killSharkIfStarved(Cell shark, int turnsSinceLastEating) {
+        if (turnsSinceLastEating >= NUM_TURNS_TO_STARVE) {
+            shark.setNextState(EMPTY, COLOR_EMPTY);
+            return shark;
+        }
+        return null;
+    }
+
+    // TODO Is this method too long?
+    /**
+     * Breeds animal into empty cardinal neighbor cell if it has survived enough turns after being born or last breeding.
      * If no such neighbor exists, don't breed.
      * @param animal the animal to potentially breed, represented by its current cell
      * @param turnsSurvived the number of turns survived by that animal since being born or last breeding (whichever was

@@ -34,10 +34,22 @@ public class PredatorPrey extends Simulation {
      */
     private final Color COLOR_EMPTY;
 
+
+
     /**
-     * If a fish or shark survives for this number of turns, it will breed.
+     *
      */
-    private final int NUM_TURNS_TO_BREED;
+
+    /**
+     * If a fish survives for this number of turns, it will breed.
+     */
+    private final int NUM_TURNS_TO_BREED_FISH;
+
+
+    /**
+     * If a shark survives for this number of turns, it will breed.
+     */
+    private final int NUM_TURNS_TO_BREED_SHARK;
 
     /**
      * Tracks the number of turns each fish and shark has survived since being born or breeding
@@ -79,12 +91,15 @@ public class PredatorPrey extends Simulation {
      * Creates the simulation and calls the super constructor to create the grid
      * @param sideSize the length of one side of the grid
      * @param populationFreqs the population frequencies of the states (not exact percentages)
-     * @param numTurnsToBreed number of turns survived needed to breed
+     * @param metadata the string containing the PredatorPrey-specific parameters (NUM_TURNS_TO_BREED_FISH,
+     *                 NUM_TURNS_TO_BREED_SHARK) separated by a comma (",")
      */
-    public PredatorPrey(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, String numTurnsToBreed) {
-        super(sideSize, states, populationFreqs, stateColors, Integer.valueOf(numTurnsToBreed));    // hard-coded b/c states are pre-determined
+    public PredatorPrey(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, String metadata) {
+        super(sideSize, states, populationFreqs, stateColors, metadata);    // hard-coded b/c states are pre-determined
         COLOR_EMPTY = colors[EMPTY];
-        NUM_TURNS_TO_BREED = Integer.valueOf(numTurnsToBreed);
+        String[] data = metadata.split(",");
+        NUM_TURNS_TO_BREED_FISH = Integer.valueOf(data[0]);
+        NUM_TURNS_TO_BREED_SHARK = Integer.valueOf(data[1]);
         animalTurnTracker = new HashMap<>();
         initializeAnimalTurnTracker();
     }
@@ -220,21 +235,23 @@ public class PredatorPrey extends Simulation {
      * The tracker is updated here to save having to iterate through the map another time.
      */
     private void breedAbleAnimalsAndUpdateTracker() {
+
+        // the map of new animals that are bred, used to add them to the tracker without affecting iteration
+        Map<Cell, Integer> bredAnimals = new HashMap<>();
+
         for (Map.Entry<Cell, Integer> animalTracked : animalTurnTracker.entrySet()) {
             Cell animal = animalTracked.getKey();
             int turnsSurvived = animalTracked.getValue();
 
             Cell bred = breedAnimalIfAble(animal, turnsSurvived);
-            // TODO Are these if statements ok?
-            if (bred == null) {
-                continue;
+            if (bred != null) {
+                bredAnimals.put(bred, 0);    // being bred does not count as having survived a turn
             }
 
-            if (!animalTurnTracker.containsKey(bred)) {
-                animalTurnTracker.put(bred, -1);    // being bred does not count as having survived a turn
-            }
             animalTurnTracker.put(animal, animalTurnTracker.get(animal) + 1);
         }
+
+        animalTurnTracker.putAll(bredAnimals);
     }
 
     /**
@@ -246,14 +263,24 @@ public class PredatorPrey extends Simulation {
      * @return the cell that is bred into, null if no breeding occurs
      */
     private Cell breedAnimalIfAble(Cell animal, int turnsSurvived) {
-        if (turnsSurvived >= NUM_TURNS_TO_BREED) {
+        int curr = animal.getCurrState();
+
+        boolean willBreed = false;
+
+        if (curr == FISH && turnsSurvived >= NUM_TURNS_TO_BREED_FISH) {
+            willBreed = true;
+        }
+        else if (curr == SHARK && turnsSurvived >= NUM_TURNS_TO_BREED_SHARK) {
+            willBreed = true;
+        }
+
+        if (willBreed) {
             List<Cell> canBreedInto = getNeighborsOfType(animal, EMPTY, true);
             canBreedInto = removeNewEmptyCells(canBreedInto);
             canBreedInto = removeCellsWithAnimalsAlreadyThere(canBreedInto);
 
             if (!canBreedInto.isEmpty()) {
                 Cell willBreedInto = chooseRandomCellFromList(canBreedInto);
-                int curr = animal.getCurrState();
                 willBreedInto.setNextState(curr, colors[curr]);
 
                 // as this empty cell has been bred into, it will no longer stay empty

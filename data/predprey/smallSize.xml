@@ -6,12 +6,12 @@
 <Data type="frequencies">
     <Item popFreq="0.3"
           state="0"
-          color="#FF0000"/>
+          color="#0000FF"/>
     <Item popFreq="0.4"
           state="1"
           color="#00FF00"/>
     <Item popFreq="0.3"
           state="2"
-          color="#0000FF"/>
+          color="#FF0000"/>
 </Data>
 </Root>

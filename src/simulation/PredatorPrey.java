@@ -264,11 +264,11 @@ public class PredatorPrey extends Simulation {
             animalTurnTracker.put(animal, animalTurnTracker.get(animal) + 1);
 
             // kill starved sharks
-            if (animal.getCurrState() == SHARK) {
+            if (animal.getNextState() == SHARK) {
                 int turnsSinceLastEating = sharkHungerTracker.get(animal);
-                Cell shark = killSharkIfStarved(animal, turnsSinceLastEating);
-                if (shark != null) {
-                    starved.add(shark);
+                Cell starvedShark = killSharkIfStarved(animal, turnsSinceLastEating);
+                if (starvedShark != null) {
+                    starved.add(starvedShark);
                     continue;
                 }
                 sharkHungerTracker.put(animal, sharkHungerTracker.get(animal) + 1);
@@ -313,7 +313,7 @@ public class PredatorPrey extends Simulation {
      * @return the cell that is bred into, null if no breeding occurs
      */
     private Cell breedAnimalIfAble(Cell animal, int turnsSurvived) {
-        int curr = animal.getCurrState();
+        int curr = animal.getNextState();
 
         boolean willBreed = false;
 
@@ -332,6 +332,8 @@ public class PredatorPrey extends Simulation {
             if (!canBreedInto.isEmpty()) {
                 Cell willBreedInto = chooseRandomCellFromList(canBreedInto);
                 willBreedInto.setNextState(curr, colors[curr]);
+
+                animalTurnTracker.put(animal, 0);
 
                 if (curr == SHARK) {
                     sharkHungerTracker.put(willBreedInto, 0);

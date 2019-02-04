@@ -93,6 +93,14 @@ public class Cell {
     }
 
     /**
+     * Getter method for next state of cell
+     * @return next state
+     */
+    public int getNextState() {
+        return myNextState;
+    }
+
+    /**
      * Getter method for current color of Cell
      * @return current color
      */

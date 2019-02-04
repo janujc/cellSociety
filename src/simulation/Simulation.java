@@ -45,6 +45,8 @@ public abstract class Simulation {
      */
     protected final Color[] colors;
 
+    private final Random rand;
+
     // TODO Should constructor parameters be lists or arrays?
     /**
      * Creates and populates the simulation grid
@@ -57,6 +59,7 @@ public abstract class Simulation {
         grid = new Cell[gridSideSize][gridSideSize];
         colors = stateColors;
         populateGrid(states, populationFreqs);
+        rand = new Random();
     }
 
     // TODO Is the implementation of frequencies and randomness ok? Or should it be exact percentages?
@@ -230,8 +233,6 @@ public abstract class Simulation {
      * @return the randomly chosen cell
      */
     protected Cell chooseRandomCellFromList(List<Cell> lst) {
-        Random rand = new Random();
-
         return lst.get(rand.nextInt(lst.size()));
     }
 }

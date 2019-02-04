@@ -135,8 +135,6 @@ public class PredatorPrey extends Simulation {
      */
     @Override
     protected void calculateNextStates() {
-        animalAlreadyHere = new ArrayList<>();
-
         determineCellBehaviors();
         makeSharksEat();
         moveAbleAnimals();
@@ -151,6 +149,7 @@ public class PredatorPrey extends Simulation {
         willEat = new ArrayList<>();
         willMove = new ArrayList<>();
         willStayEmpty = new ArrayList<>();
+        animalAlreadyHere = new ArrayList<>();
 
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
@@ -184,9 +183,11 @@ public class PredatorPrey extends Simulation {
             if (!fishEdible.isEmpty()) {
                 Cell fishEaten = chooseRandomCellFromList(fishEdible);
 
-                // remove the eaten fish from the simulation data
+                // remove the eaten fish from the simulation
                 willMove.remove(fishEaten);
                 animalTurnTracker.remove(fishEaten);
+
+                sharkHungerTracker.put(shark, 0);
 
                 moveAnimal(shark, fishEaten);
             }
@@ -213,15 +214,12 @@ public class PredatorPrey extends Simulation {
             else {
                 Cell willMoveTo = chooseRandomCellFromList(canMoveTo);
                 moveAnimal(mover, willMoveTo);
-
-                // as this empty cell has had an animal move into it, it will no longer stay empty
-                willStayEmpty.remove(willMoveTo);
             }
         }
     }
 
     /**
-     * Moves animal from one cell to another and updates animalTurnTracker and animalAlreadyHere accordingly
+     * Moves animal from one cell to another empty cell and updates animalTurnTracker and animalAlreadyHere accordingly
      * @param source the original cell of the animal being moved
      * @param dest the cell where the animal is being moved to
      */
@@ -237,7 +235,15 @@ public class PredatorPrey extends Simulation {
         animalTurnTracker.put(dest, animalTurnTracker.get(source));
         animalTurnTracker.remove(source);
 
+        if (source.getCurrState() == SHARK) {
+            sharkHungerTracker.put(dest, sharkHungerTracker.get(source));
+            sharkHungerTracker.remove(source);
+        }
+
         animalAlreadyHere.add(dest);
+
+        // as this empty cell has had an animal move into it, it will no longer stay empty
+        willStayEmpty.remove(dest);
     }
 
     /**
@@ -247,7 +253,6 @@ public class PredatorPrey extends Simulation {
      * All of these operations are done here to save having to iterate through the map another time.
      */
     private void breedAbleAnimalsAndKillStarvedSharksAndUpdateTracker() {
-
         // the map of new animals that are bred, used to add them to the tracker without affecting iteration
         Map<Cell, Integer> bredAnimals = new HashMap<>();
 
@@ -258,7 +263,7 @@ public class PredatorPrey extends Simulation {
             Cell animal = animalTracked.getKey();
             animalTurnTracker.put(animal, animalTurnTracker.get(animal) + 1);
 
-            // check if shark has starved starved and kills it if so
+            // kill starved sharks
             if (animal.getCurrState() == SHARK) {
                 int turnsSinceLastEating = sharkHungerTracker.get(animal);
                 Cell shark = killSharkIfStarved(animal, turnsSinceLastEating);
@@ -266,6 +271,7 @@ public class PredatorPrey extends Simulation {
                     starved.add(shark);
                     continue;
                 }
+                sharkHungerTracker.put(animal, sharkHungerTracker.get(animal) + 1);
             }
 
             int turnsSurvived = animalTracked.getValue();
@@ -277,6 +283,7 @@ public class PredatorPrey extends Simulation {
 
         for (Cell dead : starved) {
             animalTurnTracker.remove(dead);
+            sharkHungerTracker.remove(dead);
         }
 
         animalTurnTracker.putAll(bredAnimals);
@@ -325,6 +332,10 @@ public class PredatorPrey extends Simulation {
             if (!canBreedInto.isEmpty()) {
                 Cell willBreedInto = chooseRandomCellFromList(canBreedInto);
                 willBreedInto.setNextState(curr, colors[curr]);
+
+                if (curr == SHARK) {
+                    sharkHungerTracker.put(willBreedInto, 0);
+                }
 
                 // as this empty cell has been bred into, it will no longer stay empty
                 willStayEmpty.remove(willBreedInto);

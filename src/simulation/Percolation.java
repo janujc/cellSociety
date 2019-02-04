@@ -49,7 +49,7 @@ public class Percolation extends Simulation {
      * @param metadata any other information that might be needed for the simulation. In this case, null.
      */
     public Percolation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String metadata) {
-        super(sideSize, states, populationFreqs, colors, null);
+        super(sideSize, states, populationFreqs, colors);
         Cell startPerc = determineStartLocation();
         grid[startPerc.getCol()][startPerc.getRow()] = startPerc;
     }

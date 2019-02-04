@@ -103,7 +103,7 @@ public class PredatorPrey extends Simulation {
      *                 NUM_TURNS_TO_STARVE, NUM_TURNS_TO_BREED_SHARK) separated by a comma (",")
      */
     public PredatorPrey(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, String metadata) {
-        super(sideSize, states, populationFreqs, stateColors, metadata);    // hard-coded b/c states are pre-determined
+        super(sideSize, states, populationFreqs, stateColors);    // hard-coded b/c states are pre-determined
         COLOR_EMPTY = colors[EMPTY];
         String[] data = metadata.split(",");
         NUM_TURNS_TO_BREED_FISH = Integer.valueOf(data[0]);

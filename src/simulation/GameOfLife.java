@@ -37,7 +37,7 @@ public class GameOfLife extends Simulation {
      * @param metadata any other information that might be needed for the simulation. In this case, null.
      */
     public GameOfLife(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String metadata) {
-        super(sideSize, states, populationFreqs, colors, null);
+        super(sideSize, states, populationFreqs, colors);
     }
 
     /**

@@ -36,7 +36,6 @@ public abstract class Simulation {
      */
     protected final Cell[][] grid;
 
-    // TODO Make this private and add getter method.
     /**
      * The length of one side of the grid
      * <p>
@@ -59,7 +58,7 @@ public abstract class Simulation {
      * @param states the possible states of the cells in the simulation grid
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      */
-    protected Simulation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, Object metadata) {
+    protected Simulation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors) {
         gridSideSize = sideSize;
         grid = new Cell[gridSideSize][gridSideSize];
         colors = stateColors;

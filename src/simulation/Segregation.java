@@ -65,7 +65,7 @@ public class Segregation extends Simulation {
      * @param percentSatsfied percentage of neighbors of same state threshold
      */
     public Segregation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String percentSatsfied) {
-        super(sideSize, states, populationFreqs, colors, Integer.valueOf(percentSatsfied));
+        super(sideSize, states, populationFreqs, colors);
         minPercentSatisfaction = Integer.valueOf(percentSatsfied);
     }
 

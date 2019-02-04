@@ -8,6 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// TODO Clean up this class.
+// TODO Figure out why fish clusters aren't homogeneous.
+
+// TODO Should animals be able to move into cells other animals just moved from (breaks lock-step synchronization)?
 // TODO Should I use Cell objects (current) or Fish/Shark objects?
 // TODO Does this class even make sense?
 /**
@@ -91,7 +95,6 @@ public class PredatorPrey extends Simulation {
      */
     private List<Cell> animalAlreadyHere;
 
-    // TODO Do we need to pass in states since it's hard-coded for each simulation?
     /**
      * Creates the simulation and calls the super constructor to create the grid
      * @param sideSize the length of one side of the grid
@@ -246,6 +249,7 @@ public class PredatorPrey extends Simulation {
         willStayEmpty.remove(dest);
     }
 
+    // TODO Refactor this into multiple methods.
     /**
      * Have all animals that can breed (survived enough turns, have empty cardinal neighbor cell to breed into) breed.
      * Also, kill sharks that have starved. Finally, update the animalTurnTracker.
@@ -263,7 +267,7 @@ public class PredatorPrey extends Simulation {
             Cell animal = animalTracked.getKey();
             animalTurnTracker.put(animal, animalTurnTracker.get(animal) + 1);
 
-            // kill starved sharks
+            // kill starved shark
             if (animal.getNextState() == SHARK) {
                 int turnsSinceLastEating = sharkHungerTracker.get(animal);
                 Cell starvedShark = killSharkIfStarved(animal, turnsSinceLastEating);
@@ -303,7 +307,7 @@ public class PredatorPrey extends Simulation {
         return null;
     }
 
-    // TODO Is this method too long?
+    // TODO Refactor this method into multiple methods (see above).
     /**
      * Breeds animal into empty cardinal neighbor cell if it has survived enough turns after being born or last breeding.
      * If no such neighbor exists, don't breed.

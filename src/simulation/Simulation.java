@@ -11,10 +11,12 @@ import java.util.Random;
 // TODO Find a way to hide grid data structure.
 // TODO Implement way to display the color key to the user.
 // TODO Delete unnecessary comments.
+// TODO Stop passing in metadata to Simulation superclass constructor.
 
+// TODO Should we add simulation-specific cell and grid classes?
+// TODO Are there too many javadoc comments?
+// TODO Do we need to pass in states since they're hard-coded?
 // TODO What's the best data structure to save data read from the config file?
-// TODO Is it okay to use array instead of map for colors?
-// TODO Are the color constants necessary?
 // TODO Do I need to write the simulation rules in the comments?
 /**
  * Superclass for all simulations
@@ -33,18 +35,20 @@ public abstract class Simulation {
      */
     protected final Cell[][] grid;
 
+    // TODO Make this private and add getter method.
     /**
      * The length of one side of the grid
      * <p>
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize
      */
-    final int gridSideSize;
+    public final int gridSideSize;
 
     /**
      * The array of colors for each possible state where the index is the corresponding state
      */
     protected final Color[] colors;
 
+    // TODO Is having an instance Random object ok?
     private final Random rand;
 
     // TODO Should constructor parameters be lists or arrays?
@@ -62,7 +66,6 @@ public abstract class Simulation {
         rand = new Random();
     }
 
-    // TODO Is the implementation of frequencies and randomness ok? Or should it be exact percentages?
     /**
      * Fills the grid with cells, with states based off of their population frequencies (not exact percentages)
      * @param states the possible states

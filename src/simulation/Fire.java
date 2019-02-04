@@ -15,7 +15,6 @@ import java.util.Random;
  */
 public class Fire extends Simulation {
 
-    // TODO EMPTY and TREE can be local, but it's more readable to initialize here. Is that ok?
     /**
      * The possible states of each cell in the Fire simulation
      */
@@ -73,7 +72,7 @@ public class Fire extends Simulation {
      * @param cell the cell whose next state is being calculated
      * @param hasBurningNeighbor whether the cell has a burning tree as a neighbor or not
      */
-    protected void calculateNextStateOfOneCell(Cell cell, boolean hasBurningNeighbor) {
+    private void calculateNextStateOfOneCell(Cell cell, boolean hasBurningNeighbor) {
         Random rand = new Random();
 
         // if a tree neighbors a burning tree, it will catch fire with a probability of PROB_CATCH

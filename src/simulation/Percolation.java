@@ -27,7 +27,7 @@ public class Percolation extends Simulation {
      */
     private Integer oppositeCol;
     private Integer oppositeRow;
-    private boolean stopSim;
+    private boolean simComplete;
 
     /**
      * Creates the simulation by calling super and using the constructor in simulation.Simulation
@@ -52,6 +52,7 @@ public class Percolation extends Simulation {
         super(sideSize, states, populationFreqs, colors);
         Cell startPerc = determineStartLocation();
         grid[startPerc.getCol()][startPerc.getRow()] = startPerc;
+        simComplete = false;
     }
 
     /**
@@ -93,16 +94,12 @@ public class Percolation extends Simulation {
      */
     @Override
     protected void calculateNextStates() {
-        for (Cell[] xCells : grid) {
-            for (Cell cell : xCells) {
-                if (stopSim(cell)) {
-                    stopSim = true;
-                }
-            }
+        if (!simComplete) {
+            isSimComplete();
         }
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
-                if (stopSim) {
+                if (simComplete) {
                     cell.setNextState(cell.getCurrState(), colors[cell.getCurrState()]);
                 }
                 else {
@@ -138,13 +135,18 @@ public class Percolation extends Simulation {
         }
     }
 
-    private boolean stopSim(Cell cell) {
-        if(oppositeRow != null) {
-            return (cell.getCurrState() == PERCOLATED && cell.getRow() == oppositeRow);
+    private void isSimComplete() {
+        for (Cell[] xCells : grid) {
+            for (Cell cell : xCells) {
+                if(oppositeRow != null) {
+                    simComplete = (cell.getCurrState() == PERCOLATED && cell.getRow() == oppositeRow);
+                    if(simComplete) return;
+                }
+                if(oppositeCol != null) {
+                    simComplete = (cell.getCurrState() == PERCOLATED && cell.getCol() == oppositeCol);
+                    if(simComplete) return;
+                }
+            }
         }
-        if(oppositeCol != null) {
-            return (cell.getCurrState() == PERCOLATED && cell.getCol() == oppositeCol);
-        }
-        return false;
     }
 }

@@ -1,7 +1,7 @@
 TODO
 
 General
-    Clean up metadata passing
+    Flip grid visualization on the NW-SW axis
 	Decide on implementing simulation-specific cell and grid classes
 	Find way to hide grid structure
 	Pick better colors for GameOfLife, Percolation, and Segregation (check Fire contrast)
@@ -15,13 +15,13 @@ Cell
 	Determine best value for undetermined next state (currently -1)
 
 Fire
-    Implement end state
     Determine if I need to always start with only trees and one burning tree in the center
     Determine if I need to implement extra rules
 
 PredatorPrey
     Determine which breeding behavior I should use (assignment or wiki)
-	Determine why empty cells tend to show up on the right side
+	Determine whether I should use the willEat instance variable or call makeSharkEat() from determineCellBehaviors()
+	Determine if iterating through animalTurnTracker is random enough
 
 GameOfLife
     Implement end state

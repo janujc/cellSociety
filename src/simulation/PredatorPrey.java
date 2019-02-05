@@ -164,6 +164,9 @@ public class PredatorPrey extends Simulation {
      * eat a fish that another shark has already eaten.
      */
     private void makeSharksEat() {
+
+        // sharks eat in random order as opposed to the order they appear in the grid
+        Collections.shuffle(willEat);
         for (Cell shark : willEat) {
             List<Cell> fishEdible = getNeighborsOfType(shark, FISH, true);
             fishEdible = removeCellsWithAnimalsAlreadyThere(fishEdible);
@@ -189,6 +192,9 @@ public class PredatorPrey extends Simulation {
      * empty cardinal neighbor cell. If no such cells exist, leave it in the current cell.
      */
     private void moveAbleAnimals() {
+
+        // animals move in random order
+        Collections.shuffle(willMove);
         for (Cell mover : willMove) {
             List<Cell> canMoveTo = getCardinalNeighbors(mover);
             canMoveTo = removeCellsThatWillNotBeEmpty(canMoveTo);

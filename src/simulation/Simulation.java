@@ -7,15 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// TODO Find a way to hide grid data structure.
-// TODO Implement way to display the color key to the user.
-// TODO Delete unnecessary comments.
-// TODO Clean up metadata passing.
-
-// TODO Should we add simulation-specific cell and grid classes?
-// TODO Are there too many javadoc comments?
-// TODO Do I need to write the simulation rules in the comments?
-
 /**
  * Superclass for all simulations
  * <p>

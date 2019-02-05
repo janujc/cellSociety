@@ -3,10 +3,7 @@ package simulation;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // TODO Clean up this class.
 // TODO Figure out why empty cells tend to show up on the right side.
@@ -96,6 +93,12 @@ public class PredatorPrey extends Simulation {
     private List<Cell> animalAlreadyHere;
 
     /**
+     * Used for chooseRandomCellFromList(). Implemented as an instance variable to avoid initializing multiple times in
+     * a short time period, resulting in similar seeds.
+     */
+    private final Random rand;
+
+    /**
      * Creates the simulation and calls the super constructor to create the grid
      * @param sideSize the length of one side of the grid
      * @param populationFreqs the population frequencies of the states (not exact percentages)
@@ -112,6 +115,7 @@ public class PredatorPrey extends Simulation {
         animalTurnTracker = new HashMap<>();
         sharkHungerTracker = new HashMap<>();
         initializeTrackers();
+        rand = new Random();
     }
 
     /**
@@ -184,7 +188,8 @@ public class PredatorPrey extends Simulation {
             fishEdible = removeCellsWithAnimalsAlreadyThere(fishEdible);
 
             if (!fishEdible.isEmpty()) {
-                Cell fishEaten = chooseRandomCellFromList(fishEdible);
+                Collections.shuffle(fishEdible);
+                Cell fishEaten = fishEdible.get(0);
 
                 // remove the eaten fish from the simulation
                 willMove.remove(fishEaten);
@@ -215,6 +220,7 @@ public class PredatorPrey extends Simulation {
                 mover.setNextState(curr, colors[curr]);
             }
             else {
+                Collections.shuffle(canMoveTo);
                 Cell willMoveTo = chooseRandomCellFromList(canMoveTo);
                 moveAnimal(mover, willMoveTo);
             }
@@ -405,5 +411,14 @@ public class PredatorPrey extends Simulation {
             }
         }
         return noAnimalsAlreadyThere;
+    }
+
+    /**
+     * Randomly chooses a cell from a given list
+     * @param lst the list of cells to be choose from
+     * @return the randomly chosen cell
+     */
+    private Cell chooseRandomCellFromList(List<Cell> lst) {
+        return lst.get(rand.nextInt(lst.size()));
     }
 }

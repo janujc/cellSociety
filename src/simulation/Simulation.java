@@ -21,7 +21,7 @@ import java.util.Random;
 /**
  * Superclass for all simulations
  * <p>
- * This class provides methods to create a simulation grid and functionality to update the grid.
+ * This class provides methods to create a simulation grid and update it.
  *
  * @author Jonathan Yu
  */
@@ -46,9 +46,6 @@ public abstract class Simulation {
      * The array of colors for each possible state where the index is the corresponding state
      */
     protected final Color[] colors;
-
-    // TODO Is having an instance Random object ok?
-    private final Random rand;
 
     // TODO Should constructor parameters be lists or arrays?
     /**
@@ -219,15 +216,6 @@ public abstract class Simulation {
             }
         }
         return neighborsOfType;
-    }
-
-    /**
-     * Randomly chooses a cell from a given list
-     * @param lst the list of cells
-     * @return the randomly chosen cell
-     */
-    protected Cell chooseRandomCellFromList(List<Cell> lst) {
-        return lst.get(rand.nextInt(lst.size()));
     }
 
     /**

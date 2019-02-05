@@ -8,18 +8,19 @@ General
 	Implement way to display color key
 	Add UI input for simulation parameters
 	Make simulation completely stop if it has reaches its end state (no more steps)
-	Remove unnecessary javadoc comments
+	Fix double-click glitches
+1    Remove unnecessary javadoc comments
 	Determine if we need to write simulation rules in the comments
 
 Cell
 	Determine best value for undetermined next state (currently -1)
 
 Fire
-    Determine if I need to always start with only trees and one burning tree in the center
-    Determine if I need to implement extra rules
+2    Determine if I need to implement extra rules
+3    Determine if I need to always start with only trees and one burning tree in the center
 
 PredatorPrey
-    Determine which breeding behavior I should use (assignment or wiki)
+    Determine if
 	Determine whether I should use the willEat instance variable or call makeSharkEat() from determineCellBehaviors()
 	Determine if iterating through animalTurnTracker is random enough
 	Check performance

@@ -18,6 +18,7 @@ import java.util.Random;
 // TODO Do we need to pass in states since they're hard-coded?
 // TODO What's the best data structure to save data read from the config file?
 // TODO Do I need to write the simulation rules in the comments?
+
 /**
  * Superclass for all simulations
  * <p>
@@ -40,32 +41,33 @@ public abstract class Simulation {
      * <p>
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize
      */
-    private final int gridSideSize;
+    protected final int gridSideSize;
 
     /**
      * The array of colors for each possible state where the index is the corresponding state
      */
     protected final Color[] colors;
 
-    // TODO Should constructor parameters be lists or arrays?
     /**
      * Creates and populates the simulation grid
-     * @param sideSize the length of one side of the grid
-     * @param states the possible states of the cells in the simulation grid
-     * @param populationFreqs the population frequencies of the states (not exact percentages)
+     *
+     * @param sideSize        the length of one side of the grid
+     * @param states          the possible states of the cells in the simulation grid
+     * @param populationFreqs the population frequencies of the states (probabilities, not proportions)
+     * @param stateColors     the cell colors of each state in the simulation
      */
     protected Simulation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors) {
         gridSideSize = sideSize;
         grid = new Cell[gridSideSize][gridSideSize];
         colors = stateColors;
         populateGrid(states, populationFreqs);
-        rand = new Random();
     }
 
     /**
-     * Fills the grid with cells, with states based off of their population frequencies (not exact percentages)
-     * @param states the possible states
-     * @param populationFreqs the populations frequencies of each state the same order as the states parameter
+     * Fills the grid with cells, with states based off of their population frequencies (probabilities, not proportions)
+     *
+     * @param states          the possible states
+     * @param populationFreqs the populations frequencies of each state in the same order as the states parameter
      */
     private void populateGrid(Integer[] states, Double[] populationFreqs) {
         Random rand = new Random();
@@ -110,10 +112,11 @@ public abstract class Simulation {
         }
     }
 
-    // TODO Is it better to leave getCornerNeighbors() separate or put it inside getAllNeighbors() since that's the only time it's needed?
-    // TODO Is it better to have getAllNeighbors() and getCardinalNeighbors() as separate methods or should I use an extra parameter to differentiate between the two implementations in one method?
     /**
-     * Gets the all neighbors (cardinal and corner) of a particular cell in the grid
+     * Gets all neighbors (cardinal and corner) of a particular cell in the grid
+     * <p>
+     * Access type is protected in case future simulations not currently implemented need all neighbors
+     *
      * @param center the cell whose neighbors are being retrieved
      * @return the list of cells that neighbor center
      */
@@ -128,6 +131,7 @@ public abstract class Simulation {
 
     /**
      * Gets the cardinal direction neighbors of a particular cell in the grid
+     *
      * @param center the cell whose neighbors are being retrieved
      * @return the list of cells that neighbor center in the cardinal directions
      */
@@ -148,13 +152,15 @@ public abstract class Simulation {
         return validateNeighbors(neighborCoords);
     }
 
-    // TODO Should this be protected in case some future simulation needs just the corners?
     /**
      * Gets the corner neighbors of a particular cell in the grid
+     * <p>
+     * Access type is protected in case future simulations not currently implemented need just the corner neighbors
+     *
      * @param center the cell whose neighbors are being retrieved
      * @return the list of cells that neighbor center at its corners
      */
-    private List<Cell> getCornerNeighbors(Cell center) {
+    protected List<Cell> getCornerNeighbors(Cell center) {
 
         /*
          * list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
@@ -173,10 +179,11 @@ public abstract class Simulation {
 
     /**
      * Takes a list possible neighbors and checks that they are in the grid (valid)
+     *
      * @param neighborCoords the list of the coordinates of the cell's possible neighbors, represented by an array,
      *                       where the 0th index is the neighbor's x-coordinate and the 1st index is the neighbor's
      *                       y-coordinate
-     * @return the list of cells that are valid neighbors
+     * @return the list of cells, with coordinates in neighborCoords, that are valid neighbors
      */
     private List<Cell> validateNeighbors(List<int[]> neighborCoords) {
         List<Cell> neighbors = new ArrayList<>();
@@ -191,11 +198,11 @@ public abstract class Simulation {
         return neighbors;
     }
 
-    // TODO Should this method be separate or built into the base getNeighbors method? The current implementation keeps the method parameters simple but adds another method and inefficiently gets neighbors of all type before checking the state.
     /**
      * Gets either all or just the cardinal neighbors of a cell that have a certain state
-     * @param center the cell whose neighbors are being retrieved
-     * @param type the desired state
+     *
+     * @param center       the cell whose neighbors are being retrieved
+     * @param type         the desired state
      * @param onlyCardinal whether only the cardinal neighbors or all neighbors are retrieved
      * @return the list of cells that neighbor center and have the desired state
      */
@@ -204,9 +211,8 @@ public abstract class Simulation {
         List<Cell> neighborsOfType = new ArrayList<>();
 
         if (onlyCardinal) {
-            neighbors =  getCardinalNeighbors(center);
-        }
-        else {
+            neighbors = getCardinalNeighbors(center);
+        } else {
             neighbors = getAllNeighbors(center);
         }
 
@@ -220,17 +226,10 @@ public abstract class Simulation {
 
     /**
      * Returns the grid for Visualizer to access
+     *
      * @return the simulation grid
      */
     public Cell[][] getGrid() {
         return grid;
-    }
-
-    /**
-     * Returns the side size of the grid for use by the Visualizer
-     * @return the grid side size
-     */
-    public int getGridSideSize() {
-        return gridSideSize;
     }
 }

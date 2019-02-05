@@ -87,17 +87,17 @@ public class Fire extends Simulation {
 
                 // if sim has reaches its end state, no need to calculate new states
                 if (simComplete) {
-                    int curr = cell.getCurrState();
-                    cell.setNextState(curr, colors[curr]);
+                    int cellState = cell.getCurrState();
+                    cell.setNextState(cellState, colors[cellState]);
                     continue;
                 }
 
                 // Fire only looks at cardinal neighbors, so pass in true
                 List<Cell> neighbors = getNeighborsOfType(cell, BURNING, true);
 
-                // determine this here to make calculateNextStateOfOneCell() simpler
+                // determine this here to make calculateNextStateOfCurrCell() simpler
                 boolean hasBurningNeighbor = !neighbors.isEmpty();
-                calculateNextStateOfOneCell(cell, hasBurningNeighbor);
+                calculateNextStateOfCurrCell(cell, hasBurningNeighbor);
             }
         }
 
@@ -112,35 +112,35 @@ public class Fire extends Simulation {
      * Also, if the simulation is set to end after the current step but a tree is calculated to catch fire, make it so
      * the simulation will not end
      *
-     * @param cell               the cell whose next state is being calculated
+     * @param currCell           the cell whose next state is being calculated
      * @param hasBurningNeighbor whether the cell has a burning tree as a neighbor or not
      */
-    private void calculateNextStateOfOneCell(Cell cell, boolean hasBurningNeighbor) {
+    private void calculateNextStateOfCurrCell(Cell currCell, boolean hasBurningNeighbor) {
+        int cellState = currCell.getCurrState();
 
         // if a tree neighbors a burning tree, it will catch fire with a probability of PROB_CATCH
-        if (cell.getCurrState() == TREE && hasBurningNeighbor) {
+        if (cellState == TREE && hasBurningNeighbor) {
             int randNum = rand.nextInt(100);
             if (randNum < PROB_CATCH * 100) {
-                cell.setNextState(BURNING, COLOR_BURNING);
+                currCell.setNextState(BURNING, COLOR_BURNING);
 
                 // only need one tree to catch fire for the simulation to not end after the current step
                 if (simWillEndAfterStep) {
                     simWillEndAfterStep = false;
                 }
             } else {
-                cell.setNextState(TREE, COLOR_TREE);
+                currCell.setNextState(TREE, COLOR_TREE);
             }
         }
 
         // if a tree is burning, it will burn down (become empty cell)
-        else if (cell.getCurrState() == BURNING) {
-            cell.setNextState(EMPTY, COLOR_EMPTY);
+        else if (cellState == BURNING) {
+            currCell.setNextState(EMPTY, COLOR_EMPTY);
         }
 
         // otherwise, the cell remains the same (tree with no burning neighbors, empty cell)
         else {
-            int curr = cell.getCurrState();
-            cell.setNextState(curr, colors[curr]);
+            currCell.setNextState(cellState, colors[cellState]);
         }
     }
 }

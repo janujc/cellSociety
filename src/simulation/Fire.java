@@ -43,14 +43,24 @@ public class Fire extends Simulation {
     private final Random rand;
 
     /**
+     * Describes whether the sim has reached its end state (no burning trees left). True if it has, false otherwise.
+     */
+    private boolean simComplete;
+
+    /**
+     * Describes whether the sim will reach its end states after the current step. True if it will, false otherwise.
+     */
+    private boolean simWillEndAfterStep;
+
+    /**
      * Creates the simulation and calls the super constructor to create the grid
      *
      * @param sideSize        the length of one side of the grid
      * @param states          the possible states of the cells in the simulation grid
      * @param populationFreqs the population frequencies of the states (probabilities, not proportions)
      * @param stateColors     the cell colors of each state in the simulation
-     * @param probCatch       the probability that a tree next to a burning tree catches on fire, read from the config file
-     *                        (passed in a String, so need to parse)
+     * @param probCatch       the probability that a tree next to a burning tree catches on fire, read from the config
+     *                        file (passed in a String, so need to parse)
      */
     public Fire(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, String probCatch) {
         super(sideSize, states, populationFreqs, stateColors);
@@ -59,26 +69,48 @@ public class Fire extends Simulation {
         COLOR_BURNING = colors[BURNING];
         PROB_CATCH = Double.valueOf(probCatch);
         rand = new Random();
+        simComplete = false;
     }
 
     /**
-     * Calculates the next state for each cell in the grid based off this simulation's rules and the PROB_CATCH value
+     * Calculates the next state for each cell in the grid based off this simulation's rules and the PROB_CATCH value.
+     * Afterwards, mark simulation as complete if it has been determined that the simulation will end after the current
+     * step.
      */
     @Override
     protected void calculateNextStates() {
+
+        // assume this is true at first and only determine if it's false while calculating (simplest implementation)
+        simWillEndAfterStep = true;
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
 
+                // if sim has reaches its end state, no need to calculate new states
+                if (simComplete) {
+                    int curr = cell.getCurrState();
+                    cell.setNextState(curr, colors[curr]);
+                    continue;
+                }
+
                 // Fire only looks at cardinal neighbors, so pass in true
                 List<Cell> neighbors = getNeighborsOfType(cell, BURNING, true);
+
+                // determine this here to make calculateNextStateOfOneCell() simpler
                 boolean hasBurningNeighbor = !neighbors.isEmpty();
                 calculateNextStateOfOneCell(cell, hasBurningNeighbor);
             }
+        }
+
+        if (simWillEndAfterStep) {
+            simComplete = true;
         }
     }
 
     /**
      * Calculates the next state for one cell in the grid
+     * <p>
+     * Also, if the simulation is set to end after the current step but a tree is calculated to catch fire, make it so
+     * the simulation will not end
      *
      * @param cell               the cell whose next state is being calculated
      * @param hasBurningNeighbor whether the cell has a burning tree as a neighbor or not
@@ -90,6 +122,11 @@ public class Fire extends Simulation {
             int randNum = rand.nextInt(100);
             if (randNum < PROB_CATCH * 100) {
                 cell.setNextState(BURNING, COLOR_BURNING);
+
+                // only need one tree to catch fire for the simulation to not end after the current step
+                if (simWillEndAfterStep) {
+                    simWillEndAfterStep = false;
+                }
             } else {
                 cell.setNextState(TREE, COLOR_TREE);
             }

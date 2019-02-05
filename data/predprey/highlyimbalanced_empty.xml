@@ -6,7 +6,7 @@
     <Data type="frequencies">
         <Item popFreq="0.8"
               state="0"
-              color="#0000FF"/>
+              color="#0000ff"/>
         <Item popFreq="0.1"
               state="1"
               color="#00FF00"/>

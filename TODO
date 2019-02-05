@@ -3,8 +3,9 @@ TODO
 General
 	Decide on implementing simulation-specific cell and grid classes
 	Find way to hide grid structure
-	Pick better colors for all simulations
+	Pick better colors for GameOfLife, Percolation, and Segregation (check Fire contrast)
 	Implement way to display color key
+	Add UI input for simulation parameters
 	Clean up metadata passing
 	Remove unnecessary javadoc comments
 	Determine if we need to write simulation rules in the comments

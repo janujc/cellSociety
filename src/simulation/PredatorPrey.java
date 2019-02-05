@@ -307,6 +307,8 @@ public class PredatorPrey extends Simulation {
 
     /**
      * Breed animal into a randomly-chosen empty cardinal neighbor cell. If none such cells exist, do nothing.
+     * <p>
+     * This is the breeding behavior as specified by the Wa-Tor World Assignment, not the wiki.
      *
      * @param animal the animal to potentially breed, represented by its current cell
      * @return the cell that is bred into, null if no breeding occurs

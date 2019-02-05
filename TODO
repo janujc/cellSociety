@@ -14,12 +14,14 @@ Cell
 	Determine best value for undetermined next state (currently -1)
 
 Fire
+    Determine if I need to always start with only trees and one burning tree in the center
+    Determine if I need to implement extra rules
 	Implement end state
 
 PredatorPrey
+    Determine which breeding behavior I should use (assignment or wiki)
 	Implement correct functionality if NUM_TURNS_TO_BREED and NUM_TURNS_TO_STARVE are 0
 	Determine why empty cells tend to show up on the right side
-	Decide if breeding should occur into the cell that was moved from
 
 Segregation
 	Implement end state

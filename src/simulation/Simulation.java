@@ -29,12 +29,12 @@ public abstract class Simulation {
      * <p>
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize
      */
-    protected final int gridSideSize;
+    final int gridSideSize;
 
     /**
      * The array of colors for each possible state where the index is the corresponding state
      */
-    protected final Color[] colors;
+    final Color[] colors;
 
     /**
      * Creates and populates the simulation grid
@@ -123,7 +123,7 @@ public abstract class Simulation {
      * @param center the cell whose neighbors are being retrieved
      * @return the list of cells that neighbor center in the cardinal directions
      */
-    protected List<Cell> getCardinalNeighbors(Cell center) {
+    List<Cell> getCardinalNeighbors(Cell center) {
 
         /*
          * list of the coordinates of the cell's neighbors, represented by an array, where the 0th index is the
@@ -194,7 +194,7 @@ public abstract class Simulation {
      * @param onlyCardinal whether only the cardinal neighbors or all neighbors are retrieved
      * @return the list of cells that neighbor center and have the desired state
      */
-    protected List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
+    List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
         List<Cell> neighbors;
         List<Cell> neighborsOfType = new ArrayList<>();
 

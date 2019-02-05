@@ -22,6 +22,7 @@ PredatorPrey
     Determine which breeding behavior I should use (assignment or wiki)
 	Determine whether I should use the willEat instance variable or call makeSharkEat() from determineCellBehaviors()
 	Determine if iterating through animalTurnTracker is random enough
+	Check performance
 
 GameOfLife
     Implement end state

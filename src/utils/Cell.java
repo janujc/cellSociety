@@ -30,6 +30,7 @@ public class Cell {
      */
     public Cell(int state, int col, int row) {
         myCurrState = state;
+        myNextState = -1;   // undetermined at this point
         myCol = col;
         myRow = row;
         myCurrColor = Color.GHOSTWHITE;
@@ -37,17 +38,20 @@ public class Cell {
 
     public Cell(int state, int xCoord, int yCoord, Color color) {
         myCurrState = state;
+        myNextState = -1;
         myCol = xCoord;
         myRow = yCoord;
         myCurrColor = color;
     }
 
     /**
-     * Sets myCurrentState to myNextState and also updates the color.
+     * Sets myCurrentState to myNextState and also updates the color. Sets next state to undetermined (-1).
      */
     public void updateState() {
         myCurrState = myNextState;
         myCurrColor = myNextColor;
+
+        myNextState = -1;
     }
 
     /**

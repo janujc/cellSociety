@@ -32,15 +32,25 @@ public class Fire extends Simulation {
     private final Color COLOR_BURNING;
 
     /**
-     * The probability that a tree next to a burning tree catches on fire, which is read from the XML file
+     * The probability that a tree next to a burning tree catches on fire, which is read from the config file
      */
     private final double PROB_CATCH;
 
     /**
+     * Used for applying PROB_CATCH. Implemented as an instance variable to avoid initializing multiple times in a short
+     * time period, resulting in similar seeds.
+     */
+    private final Random rand;
+
+    /**
      * Creates the simulation and calls the super constructor to create the grid
-     * @param sideSize the length of one side of the grid
-     * @param populationFreqs the population frequencies of the states (not exact percentages)
-     * @param probCatch the probability that a tree next to a burning tree catches on fire, read from the XML file
+     *
+     * @param sideSize        the length of one side of the grid
+     * @param states          the possible states of the cells in the simulation grid
+     * @param populationFreqs the population frequencies of the states (probabilities, not proportions)
+     * @param stateColors     the cell colors of each state in the simulation
+     * @param probCatch       the probability that a tree next to a burning tree catches on fire, read from the config file
+     *                        (passed in a String, so need to parse)
      */
     public Fire(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, String probCatch) {
         super(sideSize, states, populationFreqs, stateColors);
@@ -48,6 +58,7 @@ public class Fire extends Simulation {
         COLOR_TREE = colors[TREE];
         COLOR_BURNING = colors[BURNING];
         PROB_CATCH = Double.valueOf(probCatch);
+        rand = new Random();
     }
 
     /**
@@ -56,7 +67,6 @@ public class Fire extends Simulation {
     @Override
     protected void calculateNextStates() {
         for (Cell[] xCells : grid) {
-            // TODO Is naming a variable after its type ok?
             for (Cell cell : xCells) {
 
                 // Fire only looks at cardinal neighbors, so pass in true
@@ -69,19 +79,18 @@ public class Fire extends Simulation {
 
     /**
      * Calculates the next state for one cell in the grid
-     * @param cell the cell whose next state is being calculated
+     *
+     * @param cell               the cell whose next state is being calculated
      * @param hasBurningNeighbor whether the cell has a burning tree as a neighbor or not
      */
     private void calculateNextStateOfOneCell(Cell cell, boolean hasBurningNeighbor) {
-        Random rand = new Random();
 
         // if a tree neighbors a burning tree, it will catch fire with a probability of PROB_CATCH
         if (cell.getCurrState() == TREE && hasBurningNeighbor) {
             int randNum = rand.nextInt(100);
             if (randNum < PROB_CATCH * 100) {
                 cell.setNextState(BURNING, COLOR_BURNING);
-            }
-            else {
+            } else {
                 cell.setNextState(TREE, COLOR_TREE);
             }
         }

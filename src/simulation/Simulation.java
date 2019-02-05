@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// TODO Make interface for helper functions in this class.
 // TODO Find a way to hide grid data structure.
 // TODO Implement way to display the color key to the user.
 // TODO Delete unnecessary comments.
@@ -15,8 +14,6 @@ import java.util.Random;
 
 // TODO Should we add simulation-specific cell and grid classes?
 // TODO Are there too many javadoc comments?
-// TODO Do we need to pass in states since they're hard-coded?
-// TODO What's the best data structure to save data read from the config file?
 // TODO Do I need to write the simulation rules in the comments?
 
 /**

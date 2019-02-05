@@ -1,0 +1,24 @@
+TODO
+
+General
+	Decide on implementing simulation-specific cell and grid classes
+	Find way to hide grid structure
+	Pick better colors for all simulations
+	Implement way to display color key
+	Clean up metadata passing
+	Remove unnecessary javadoc comments
+	Determine if we need to write simulation rules in the comments
+
+Cell
+	Determine best value for undetermined next state (currently -1)
+
+Fire
+	Implement end state
+
+PredatorPrey
+	Implement correct functionality if NUM_TURNS_TO_BREED and NUM_TURNS_TO_STARVE are 0
+	Determine why empty cells tend to show up on the right side
+	Decide if breeding should occur into the cell that was moved from
+
+Segregation
+	Implement end state

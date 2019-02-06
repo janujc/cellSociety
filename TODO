@@ -2,28 +2,28 @@ TODO
 
 General
     Flip grid visualization on the NW-SW axis
-	Decide on implementing simulation-specific cell and grid classes
-	Find way to hide grid structure
+!	Decide on implementing simulation-specific cell and grid classes
+	Find way to hide grid data structure
 	Pick better colors for GameOfLife, Percolation, and Segregation (check Fire contrast)
 	Implement way to display color key
 	Add UI input for simulation parameters
-	Make simulation completely stop if it has reaches its end state (no more steps)
+	Make simulation completely stop if it has reached its end state (no more steps)
+	Make it so simulation can run indefinitely without crashing
 	Fix double-click glitches
-1    Remove unnecessary javadoc comments
+?    Remove unnecessary javadoc comments
+    Check line breaks in javadoc comments
 	Determine if we need to write simulation rules in the comments
 
 Cell
 	Determine best value for undetermined next state (currently -1)
 
 Fire
-2    Determine if I need to implement extra rules
-3    Determine if I need to always start with only trees and one burning tree in the center
+?    Determine if I need to implement extra rules
+?    Determine if I need to always start with only trees and one burning tree in the center
 
 PredatorPrey
-    Determine if
+    Make it so moving and eating occur in random order (currently eating first)
 	Determine whether I should use the willEat instance variable or call makeSharkEat() from determineCellBehaviors()
-	Determine if iterating through animalTurnTracker is random enough
-	Check performance
 
 GameOfLife
     Implement end state

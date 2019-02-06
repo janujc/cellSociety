@@ -296,10 +296,12 @@ public class PredatorPrey extends Simulation {
      *
      * @param animal    the animal to potentially breed, represented by its current cell (after moving)
      * @param breedInto the cell that the animal would breed into (the cell the animal just moved from)
-     * @return true if the animal breeded, false otherwise
+     * @return true if the animal bred, false otherwise
      */
     private boolean breedAnimalIfSurvivedLongEnough(Cell animal, Cell breedInto) {
-        int animalState = animal.getCurrState();
+
+        // as the animal just moved, need to get the cell's next state
+        int animalState = animal.getNextState();
         int turnsSurvived = animalTurnTracker.get(animal);
 
         if (animalState == FISH && turnsSurvived >= NUM_TURNS_TO_BREED_FISH) {

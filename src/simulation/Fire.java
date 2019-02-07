@@ -82,8 +82,8 @@ public class Fire extends Simulation {
 
         // assume this is true at first and only determine if it's false while calculating (simplest implementation)
         simWillEndAfterStep = true;
-        for (Cell[] xCells : grid) {
-            for (Cell cell : xCells) {
+        for (Cell[] column : grid) {
+            for (Cell cell : column) {
 
                 // if sim has reaches its end state, no need to calculate new states
                 if (simComplete) {

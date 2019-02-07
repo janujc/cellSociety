@@ -93,8 +93,8 @@ public abstract class Simulation {
      * Updates the state of each cell in the grid
      */
     private void updateStates() {
-        for (Cell[] xCells : grid) {
-            for (Cell cell : xCells) {
+        for (Cell[] column : grid) {
+            for (Cell cell : column) {
                 cell.updateState();
             }
         }

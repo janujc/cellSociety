@@ -1,5 +1,6 @@
 package uitools;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -15,6 +16,7 @@ public class HexagonalGridGenerator {
             points[i] = Math.cos(angle);
             points[i + 1] = Math.sin(angle);
         }
+
         Polygon polygon = new Polygon(points);
 
         GridPane result = new GridPane();
@@ -41,9 +43,12 @@ public class HexagonalGridGenerator {
                 b.setShape(polygon);
                 b.setDisable(true);
                 b.setStyle("-fx-background-color: #00ff00");
+                b.setOpacity(1);
                 result.add(b, 2 * c + offset, 2 * r, 2, 3);
             }
         }
+        result.setHgap(size/20); //horizontal gap in pixels => that's what you are asking for
+        result.setVgap(size/20); //vertical gap in pixels
         result.getRowConstraints().add(rc1);
         return result;
     }

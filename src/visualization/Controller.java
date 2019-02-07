@@ -90,6 +90,11 @@ public class Controller extends Application {
     }
 
 
+    public boolean getInTransition() {
+        return inTransition;
+    }
+
+
     private void step(double elapsedTime){
         if (currentScreen == ScreenType.SIMULATION_SCREEN) {
             simulationScreen.step(elapsedTime);

@@ -180,7 +180,7 @@ public class SimulationScreen {
     private void renderGrid(Cell[][] grid) {
         for(int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
-                gridViews[i][j].setFill(grid[i][j].getCurrColor());
+                gridViews[i][j].setFill(grid[j][i].getCurrColor());
             }
         }
     }

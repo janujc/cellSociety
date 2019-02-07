@@ -59,8 +59,8 @@ public class PredatorPrey extends Simulation {
     private final Map<Cell, Integer> sharkHungerTracker;
 
     /**
-     * Used for chooseRandomCellFromList(). Implemented as an instance variable to avoid initializing multiple times in
-     * a short time period, resulting in similar seeds.
+     * Used for getCellsInRandomOrder() and chooseRandomCellFromList(). Implemented as an instance variable to avoid
+     * initializing multiple times in a short time period, resulting in similar seeds.
      */
     private final Random rand;
 
@@ -112,24 +112,41 @@ public class PredatorPrey extends Simulation {
      */
     @Override
     protected void calculateNextStates() {
-        for (Cell[] xCells : grid) {
-            for (Cell cell : xCells) {
+        for (Cell cell : getCellsInRandomOrder()) {
 
-                // if an animal has already moved or eaten into this cell, don't calculate next state
-                if (cell.getNextState() != UNDETERMINED) {
-                    continue;
-                }
+            // if an animal has already moved or eaten into this cell, don't calculate next state
+            if (cell.getNextState() != UNDETERMINED) {
+                continue;
+            }
 
-                int currState = cell.getCurrState();
-                if (currState == EMPTY) {
-                    cell.setNextState(EMPTY, EMPTY_COLOR);
-                } else if (currState == FISH) {
-                    moveIfAble(cell);
-                } else {
-                    eatOrMove(cell);
-                }
+            int currState = cell.getCurrState();
+            if (currState == EMPTY) {
+                cell.setNextState(EMPTY, EMPTY_COLOR);
+            } else if (currState == FISH) {
+                moveIfAble(cell);
+            } else {
+                eatOrMove(cell);
             }
         }
+    }
+
+    /**
+     * Helper method that gets all of the cells in the grid in random order
+     * <p>
+     * Used to create less predictable simulations as animals can affect each others' behavior within the same step
+     *
+     * @return the list of cells in random order
+     */
+    private List<Cell> getCellsInRandomOrder() {
+        List<Cell> allCells = new ArrayList<>();
+
+        for (Cell[] column : grid) {
+            for (Cell cell : column) {
+                allCells.add(cell);
+            }
+        }
+        Collections.shuffle(allCells, rand);
+        return allCells;
     }
 
     /**
@@ -157,7 +174,7 @@ public class PredatorPrey extends Simulation {
     }
 
     /**
-     * Takes a list of cells and returns the cells with a certain state
+     * Helper method that takes a list of cells and returns the cells with a certain state
      *
      * @param cells the list of cells to consider
      * @param type  the desired state
@@ -175,8 +192,8 @@ public class PredatorPrey extends Simulation {
     }
 
     /**
-     * Gets the most recently set state of a cell. If the cell's next state has already been set, returns that.
-     * Otherwise, returns the current state.
+     * Helper method that gets the most recently set state of a cell. If the cell's next state has already been set,
+     * returns that. Otherwise, returns the current state.
      *
      * @param cell the cell whose state is desired
      * @return the most recently set state of the cell
@@ -285,8 +302,8 @@ public class PredatorPrey extends Simulation {
      */
     private void eatOrMove(Cell shark) {
         List<Cell> fishEdible = getCardinalNeighbors(shark);
-        fishEdible = getCellsOfType(fishEdible, FISH);
 
+        fishEdible = getCellsOfType(fishEdible, FISH);
         if (!fishEdible.isEmpty()) {
             Cell fishEaten = chooseRandomCellFromList(fishEdible);
 

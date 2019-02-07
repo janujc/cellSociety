@@ -46,15 +46,9 @@ public class HomeScreen {
                     cardView.setLayoutX(150*j + 25*j);
                     cardView.setCursor(Cursor.HAND);
                     final var card = cardGrid[i][j];
-                    cardView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) {
-                            if (!context.getInTransition()) {
-                                //System.out.println(card.getClassName()+" needs to be called");
-                                startSimulation(card.getClassName(), myScene, card.getLabel(), card.getConfigFolder());
-                            }
-                        }
-                    });
+                    cardView.setOnMouseClicked((event) -> {if (!context.getInTransition()) {
+                        startSimulation(card.getClassName(), myScene, card.getLabel(), card.getConfigFolder());
+                    }});
                     grid.getChildren().add(cardView);
                 }
             }

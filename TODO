@@ -11,7 +11,6 @@ General
 	Make it so simulation can run indefinitely without crashing
 	Fix double-click glitches
 ?    Remove unnecessary javadoc comments
-    Check line breaks in javadoc comments
 	Determine if we need to write simulation rules in the comments
 
 Cell
@@ -22,8 +21,7 @@ Fire
 ?    Determine if I need to always start with only trees and one burning tree in the center
 
 PredatorPrey
-    Make it so moving and eating occur in random order (currently eating first)
-	Determine whether I should use the willEat instance variable or call makeSharkEat() from determineCellBehaviors()
+?    Determine if it's ok that updates are not lock-step synchronized
 
 GameOfLife
     Implement end state

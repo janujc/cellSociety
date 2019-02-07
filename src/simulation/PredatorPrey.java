@@ -20,6 +20,14 @@ public class PredatorPrey extends Simulation {
     private final int EMPTY = 0;
     private final int FISH = 1;
     private final int SHARK = 2;
+    private final int UNDETERMINED = -1;    // only possible for next states
+
+    /**
+     * The color of an empty cell
+     * <p>
+     * Used to minimize array accesses
+     */
+    private final Color EMPTY_COLOR = colors[EMPTY];
 
     /**
      * If a fish survives for this number of turns, it will breed.
@@ -49,23 +57,12 @@ public class PredatorPrey extends Simulation {
      * Key is the cell that currently holds the shark. Values are the number of turns since last eating.
      */
     private final Map<Cell, Integer> sharkHungerTracker;
+
     /**
      * Used for chooseRandomCellFromList(). Implemented as an instance variable to avoid initializing multiple times in
      * a short time period, resulting in similar seeds.
      */
     private final Random rand;
-    /**
-     * The list of sharks in the grid on each step, represented by their current cells
-     */
-    private List<Cell> willEat;
-    /**
-     * The list of animals that are set to move on each step, represented by their current cells
-     */
-    private List<Cell> willMove;
-    /**
-     * The list of cell that are set to be empty after each step, represented by their current cells
-     */
-    private List<Cell> willBeEmpty;
 
     /**
      * Creates the simulation and calls the super constructor to create the grid
@@ -115,88 +112,79 @@ public class PredatorPrey extends Simulation {
      */
     @Override
     protected void calculateNextStates() {
-        determineCellBehaviors();
-        makeSharksEat();
-        moveAbleAnimals();
-        stayEmpty();
-    }
-
-    /**
-     * Determine the type of behavior for each cell (stay empty, move, or eat)
-     */
-    private void determineCellBehaviors() {
-        willEat = new ArrayList<>();
-        willMove = new ArrayList<>();
-        willBeEmpty = new ArrayList<>();
-
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
 
-                // empty cells stay empty unless they are moved/bred into
-                if (cell.getCurrState() == EMPTY) {
-                    willBeEmpty.add(cell);
+                // if an animal has already moved or eaten into this cell, don't calculate next state
+                if (cell.getNextState() != UNDETERMINED) {
+                    continue;
                 }
 
-                // fish attempt to move every turn
-                else if (cell.getCurrState() == FISH) {
-                    willMove.add(cell);
-                }
-
-                // sharks attempt to eat every turn
-                else {
-                    willEat.add(cell);
+                int currState = cell.getCurrState();
+                if (currState == EMPTY) {
+                    cell.setNextState(EMPTY, EMPTY_COLOR);
+                } else if (currState == FISH) {
+                    moveIfAble(cell);
+                } else {
+                    eatOrMove(cell);
                 }
             }
         }
     }
 
     /**
-     * Make each shark randomly choose a fish in a cardinal neighbor cell to eat or move if no such fish exists. Do not
-     * eat a fish that another shark has already eaten.
-     */
-    private void makeSharksEat() {
-
-        // sharks eat in random order as opposed to the order they appear in the grid
-        Collections.shuffle(willEat);
-        for (Cell shark : willEat) {
-            List<Cell> fishEdible = getNeighborsOfType(shark, FISH, true);
-            fishEdible = removeAlreadyEatenFish(fishEdible);
-
-            if (!fishEdible.isEmpty()) {
-                Cell fishEaten = chooseRandomCellFromList(fishEdible);
-
-                // remove the eaten fish from the simulation
-                animalTurnTracker.remove(fishEaten);
-                willMove.remove(fishEaten);
-
-                // shark has not moved yet, so update hunger tracker based off of the current cell
-                sharkHungerTracker.put(shark, 0);
-                moveAnimal(shark, fishEaten);
-            } else {
-                willMove.add(shark);
-            }
-        }
-    }
-
-    /**
-     * Helper method that takes a list of fish and removes all fish that have already been eaten by a shark
-     * <p>
-     * This ensures no conflicts occur where sharks "overwrite" each other after eating the same fish
+     * Moves animal to a randomly-chosen empty cardinal neighbor cell. If no such cells exist, leaves it in the current
+     * cell. If a shark does not move, checks if it starves.
      *
-     * @param fish the list of fish to be modified
-     * @return the list of fish from the parameter list that have not already been eaten
+     * @param mover the animal that will move, represented by its current cell
      */
-    private List<Cell> removeAlreadyEatenFish(List<Cell> fish) {
-        List<Cell> noAlreadyEatenFish = new ArrayList<>();
+    private void moveIfAble(Cell mover) {
+        List<Cell> canMoveTo = getCardinalNeighbors(mover);
 
-        for (Cell potentialDest : fish) {
+        canMoveTo = getCellsOfType(canMoveTo, EMPTY);
+        if (canMoveTo.isEmpty()) {
+            int moverState = mover.getCurrState();
 
-            // no animal there if next state is -1 (undetermined) or 0 (empty)
-            if (potentialDest.getNextState() != SHARK) {
-                noAlreadyEatenFish.add(potentialDest);
+            // don't leave shark in its current cell if it is going to starve anyways
+            if (moverState == SHARK && killSharkIfStarved(mover)) {
+                return;
+            }
+            mover.setNextState(moverState, colors[moverState]);
+        } else {
+            Cell willMoveTo = chooseRandomCellFromList(canMoveTo);
+            moveAnimal(mover, willMoveTo);
+        }
+    }
+
+    /**
+     * Takes a list of cells and returns the cells with a certain state
+     *
+     * @param cells the list of cells to consider
+     * @param type  the desired state
+     * @return the list of cells with the desired state
+     */
+    private List<Cell> getCellsOfType(List<Cell> cells, int type) {
+        List<Cell> cellsOfType = new ArrayList<>();
+
+        for (Cell cell : cells) {
+            if (getMostRecentState(cell) == type) {
+                cellsOfType.add(cell);
             }
         }
-        return noAlreadyEatenFish;
+        return cellsOfType;
+    }
+
+    /**
+     * Gets the most recently set state of a cell. If the cell's next state has already been set, returns that.
+     * Otherwise, returns the current state.
+     *
+     * @param cell the cell whose state is desired
+     * @return the most recently set state of the cell
+     */
+    private int getMostRecentState(Cell cell) {
+        int nextState = cell.getNextState();
+
+        return (nextState == UNDETERMINED) ? cell.getCurrState() : nextState;
     }
 
     /**
@@ -207,34 +195,6 @@ public class PredatorPrey extends Simulation {
      */
     private Cell chooseRandomCellFromList(List<Cell> chooseFrom) {
         return chooseFrom.get(rand.nextInt(chooseFrom.size()));
-    }
-
-    /**
-     * Move each animal that is supposed to move (sharks that don't eat, fish that aren't eaten) to a randomly-chosen
-     * empty cardinal neighbor cell. If no such cells exist, leave it in the current cell. If a shark does not move,
-     * check if it starves.
-     */
-    private void moveAbleAnimals() {
-
-        // animals move in random order
-        Collections.shuffle(willMove);
-        for (Cell mover : willMove) {
-            List<Cell> canMoveTo = getCardinalNeighbors(mover);
-
-            // only consider neighbor cells that are currently set to be empty
-            canMoveTo.retainAll(willBeEmpty);
-
-            if (canMoveTo.isEmpty()) {
-                int moverState = mover.getCurrState();
-                mover.setNextState(moverState, colors[moverState]);
-                if (moverState == SHARK) {
-                    killSharkIfStarved(mover);
-                }
-            } else {
-                Cell willMoveTo = chooseRandomCellFromList(canMoveTo);
-                moveAnimal(mover, willMoveTo);
-            }
-        }
     }
 
     /**
@@ -262,20 +222,19 @@ public class PredatorPrey extends Simulation {
 
         // update here to avoid needing separate put calls to move the animal and increment the number of turns
         animalTurnTracker.put(dest, animalTurnTracker.get(source) + 1);
-        willBeEmpty.remove(dest);
 
         if (!breedAnimalIfSurvivedLongEnough(dest, source)) {
             animalTurnTracker.remove(source);
-            willBeEmpty.add(source);
+            source.setNextState(EMPTY, EMPTY_COLOR);
         }
     }
 
     /**
-     * Update hunger tracker to account for a turn passing. Kill shark if it has gone too many turns without eating.
-     * If the shark does starve, remove it from the trackers.
+     * Updates hunger tracker to account for a turn passing. Kills shark if it has gone too many turns without eating.
+     * If the shark does starve, removes it from the trackers.
      *
      * @param shark the shark that is being checked for starvation
-     * @return true if the shark starved and died, false otherwise
+     * @return true if the shark starves and dies, false otherwise
      */
     private boolean killSharkIfStarved(Cell shark) {
         sharkHungerTracker.put(shark, sharkHungerTracker.get(shark) + 1);
@@ -284,19 +243,19 @@ public class PredatorPrey extends Simulation {
         if (turnsSinceLastEating >= NUM_TURNS_TO_STARVE) {
             animalTurnTracker.remove(shark);
             sharkHungerTracker.remove(shark);
-            willBeEmpty.add(shark);
+            shark.setNextState(EMPTY, EMPTY_COLOR);
             return true;
         }
         return false;
     }
 
     /**
-     * Breed animal into cell that it moved from if it has survived enough turns. If the animal does breed, update the
-     * turn tracker and add the newly bred animal to the appropriate trackers.
+     * Breeds animal into cell that it moved from if it has survived enough turns. If the animal does breed, updates the
+     * turn tracker and adds the newly bred animal to the appropriate trackers.
      *
      * @param animal    the animal to potentially breed, represented by its current cell (after moving)
      * @param breedInto the cell that the animal would breed into (the cell the animal just moved from)
-     * @return true if the animal bred, false otherwise
+     * @return true if the animal breeds, false otherwise
      */
     private boolean breedAnimalIfSurvivedLongEnough(Cell animal, Cell breedInto) {
 
@@ -319,11 +278,25 @@ public class PredatorPrey extends Simulation {
     }
 
     /**
-     * Have each cell that does not contain an animal stay empty
+     * Makes shark randomly choose a fish in a cardinal neighbor cell to eat. If no such fish exists, makes the shark
+     * move.
+     *
+     * @param shark the shark that will eat or move, represented by its current cell
      */
-    private void stayEmpty() {
-        for (Cell empty : willBeEmpty) {
-            empty.setNextState(EMPTY, colors[EMPTY]);
+    private void eatOrMove(Cell shark) {
+        List<Cell> fishEdible = getCardinalNeighbors(shark);
+        fishEdible = getCellsOfType(fishEdible, FISH);
+
+        if (!fishEdible.isEmpty()) {
+            Cell fishEaten = chooseRandomCellFromList(fishEdible);
+
+            animalTurnTracker.remove(fishEaten);
+
+            // shark has not moved yet, so update hunger tracker based off of the current cell
+            sharkHungerTracker.put(shark, 0);
+            moveAnimal(shark, fishEaten);
+        } else {
+            moveIfAble(shark);
         }
     }
 }

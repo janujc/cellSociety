@@ -61,14 +61,6 @@ public class Cell {
      */
     public void setNextState(int state, Color color) {
         myNextState = state;
-        setNextColor(color);
-    }
-
-    /**
-     * Helper method for setNextState, sets the next Color of the Cell object.
-     * @param color the color the object should be in the next step.
-     */
-    public void setNextColor(Color color) {
         myNextColor = color;
     }
 

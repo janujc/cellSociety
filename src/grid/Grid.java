@@ -1,42 +1,56 @@
 package grid;
 
+import javafx.scene.paint.Color;
 import utils.Cell;
-
-import java.util.Random;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Grid {
-    // TODO: grid is 2-d array
-    // TODO: populateGrid() to create a grid ->
-    // TODO:
 
-    private Cell[][] myGrid;
-    private final int mySize;
+    protected Cell[][] myGrid;
+    public final int mySize;
+    public final Color[] myColors;
 
-    public Grid(int size) {
+    public Grid(int size, Color[] colors) {
         mySize = size;
+        myColors = colors;
     }
 
-    public populateGrid() {} // each state equally likely
+    public abstract void populateGrid(); // each state equally likely
 
-    public populateGrid(Integer[] states, Double[] populationFreqs) {
-        Random rand = new Random();
+    public abstract void populateGrid(Integer[] states, Double[] populationFreqs);
 
-        for (int x = 0; x < gridSideSize; x++) {
-            for (int y = 0; y < gridSideSize; y++) {
-                int randNum = rand.nextInt(100);
-                double cumulativeFreqs = 0;
-                for (int k = 0; k < states.length; k++) {
-                    cumulativeFreqs += populationFreqs[k];
-                    if (randNum < 100 * (cumulativeFreqs)) {
-                        myGrid[x][y] = new Cell(states[k], x, y, colors[k]);
-                        break;
-                    }
-                }
+    public abstract void populateGrid(Integer[][] states); // Given 2-d array
+
+    public abstract List<Cell> getNeighbors(Cell center, int arrangement);
+
+    public List<Cell> getNeighborsOfType(Cell center, int arrangement, int type) {
+        List<Cell> neighbors;
+        List<Cell> neighborsOfType = new ArrayList<>();
+        neighbors = getNeighbors(center, arrangement);
+
+        for (Cell neighbor : neighbors) {
+            if (neighbor.getCurrState() == type) {
+                neighborsOfType.add(neighbor);
             }
         }
+        return neighborsOfType;
     }
 
-    public populteGrid(given 2-d array) {}
+    private List<Cell> validateNeighbors(List<int[]> neighborCoords) {
+        List<Cell> neighbors = new ArrayList<>();
 
-    public getNeighbors(Cell center) {}
+        for (int[] neighbor : neighborCoords) {
+            int neighborX = neighbor[0];
+            int neighborY = neighbor[1];
+            if (!(neighborX < 0 || neighborX >= mySize || neighborY < 0 || neighborY >= mySize)) {
+                neighbors.add(myGrid[neighborX][neighborY]);
+            }
+        }
+        return neighbors;
+    }
+
+    public Cell[][] getMyGrid() {
+        return myGrid;
+    }
 }

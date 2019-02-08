@@ -124,24 +124,25 @@ public class SimulationScreen {
         historyPos = 0;
 
         int numCells = simulation.getGrid().length;
-        currentCellSize = 400
-                // - (numCells - 1) * 1) // Account for padding
+        currentCellSize = (400
+                 - (numCells - 1) * 1) // Account for padding
                 / (numCells * 1.0); // Number of cells
 
         // render initial state
         initialiseGridViews(simulation.getGrid());
         renderGrid(simulation.getGrid());
+        //myContainer.getChildren().addAll(HexagonalGridGenerator.createHoneyComb(10, 40));
     }
 
     private double getCellXLocation(int column) {
         return 100.0 + // Margin
-                //column * 1.0 // Padding between cells
+                column * 1.0 // Padding between cells
                 + currentCellSize * column;
     }
 
     private double getCellYLocation(int row) {
         return 87.0 + // Margin
-                // row * 1.0 // Padding between cells
+                 row * 1.0 // Padding between cells
                 + currentCellSize * row;
     }
 

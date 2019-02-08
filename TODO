@@ -2,7 +2,6 @@ TODO
 
 General
     Flip grid visualization on the NW-SW axis
-!	Decide on implementing simulation-specific cell and grid classes
 	Find way to hide grid data structure
 	Pick better colors for GameOfLife, Percolation, and Segregation (check Fire contrast)
 	Implement way to display color key
@@ -11,6 +10,7 @@ General
 	Make it so simulation can run indefinitely without crashing
 	Fix double-click glitches
 ?    Remove unnecessary javadoc comments
+?    Determine if wildcard imports are ok
 	Determine if we need to write simulation rules in the comments
 
 Cell
@@ -18,10 +18,10 @@ Cell
 
 Fire
 ?    Determine if I need to implement extra rules
-?    Determine if I need to always start with only trees and one burning tree in the center
 
 PredatorPrey
 ?    Determine if it's ok that updates are not lock-step synchronized
+?    Determine if using maps instead of mobile objects to save states is ok
 
 GameOfLife
     Implement end state

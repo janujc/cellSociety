@@ -23,14 +23,17 @@ public abstract class Simulation {
      * the element of each row in a particular column
      */
     protected final Cell[][] grid;
-
+    /**
+     * Used for random number generation. Implemented as an instance variable to avoid initializing multiple times in a
+     * short time period, resulting in similar seeds.
+     */
+    final Random rand;
     /**
      * The length of one side of the grid
      * <p>
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize
      */
     final int gridSideSize;
-
     /**
      * The array of colors for each possible state where the index is the corresponding state
      */
@@ -48,6 +51,7 @@ public abstract class Simulation {
         gridSideSize = sideSize;
         grid = new Cell[gridSideSize][gridSideSize];
         colors = stateColors;
+        rand = new Random();
         populateGrid(states, populationFreqs);
     }
 
@@ -58,21 +62,33 @@ public abstract class Simulation {
      * @param populationFreqs the populations frequencies of each state in the same order as the states parameter
      */
     private void populateGrid(Integer[] states, Double[] populationFreqs) {
-        Random rand = new Random();
-
         for (int x = 0; x < gridSideSize; x++) {
             for (int y = 0; y < gridSideSize; y++) {
-                int randNum = rand.nextInt(100);
-                double cumulativeFreqs = 0;
-                for (int k = 0; k < states.length; k++) {
-                    cumulativeFreqs += populationFreqs[k];
-                    if (randNum < 100 * (cumulativeFreqs)) {
-                        grid[x][y] = new Cell(states[k], x, y, colors[k]);
-                        break;
-                    }
-                }
+                int initialState = applyPopulationFreqs(states, populationFreqs);
+                grid[x][y] = new Cell(states[initialState], x, y, colors[initialState]);
             }
         }
+    }
+
+    /**
+     * Determines the initial state of a cell based off of the population frequencies
+     *
+     * @param states          the possible states
+     * @param populationFreqs the population frequencies of each state in the same order as the states parameter
+     * @return the initial state of the cell
+     */
+    private int applyPopulationFreqs(Integer[] states, Double[] populationFreqs) {
+        int randNum = rand.nextInt(100);
+        double cumulativeFreqs = 0;
+
+        for (int i = 0; i < states.length; i++) {
+            cumulativeFreqs += populationFreqs[i];
+            if (randNum < 100 * cumulativeFreqs) {
+                return states[i];
+            }
+        }
+
+        return -1;    // will never get here as the population frequencies sum to 1.0
     }
 
     /**

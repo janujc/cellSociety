@@ -17,17 +17,17 @@ public class PredatorPrey extends Simulation {
     /**
      * The possible states of each cell in the PredatorPrey simulation
      */
-    private final int EMPTY = 0;
-    private final int FISH = 1;
-    private final int SHARK = 2;
-    private final int UNDETERMINED = -1;    // only possible for next states
+    private static final int EMPTY = 0;
+    private static final int FISH = 1;
+    private static final int SHARK = 2;
+    private static final int UNDETERMINED = -1;    // only possible for next states
 
     /**
      * The color of an empty cell
      * <p>
      * Used to minimize array accesses
      */
-    private final Color EMPTY_COLOR = colors[EMPTY];
+    private final Color EMPTY_COLOR;
 
     /**
      * If a fish survives for this number of turns, it will breed.
@@ -59,12 +59,6 @@ public class PredatorPrey extends Simulation {
     private final Map<Cell, Integer> sharkHungerTracker;
 
     /**
-     * Used for getCellsInRandomOrder() and chooseRandomCellFromList(). Implemented as an instance variable to avoid
-     * initializing multiple times in a short time period, resulting in similar seeds.
-     */
-    private final Random rand;
-
-    /**
      * Creates the simulation and calls the super constructor to create the grid
      *
      * @param sideSize        the length of one side of the grid
@@ -76,6 +70,7 @@ public class PredatorPrey extends Simulation {
      */
     public PredatorPrey(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, String simData) {
         super(sideSize, states, populationFreqs, stateColors);
+        EMPTY_COLOR = colors[EMPTY];
 
         String[] data = simData.split(",");
         NUM_TURNS_TO_BREED_FISH = Integer.valueOf(data[0]);
@@ -85,8 +80,6 @@ public class PredatorPrey extends Simulation {
         animalTurnTracker = new HashMap<>();
         sharkHungerTracker = new HashMap<>();
         initializeTrackers();
-
-        rand = new Random();
     }
 
     /**
@@ -95,14 +88,16 @@ public class PredatorPrey extends Simulation {
     private void initializeTrackers() {
         for (Cell[] column : grid) {
             for (Cell cell : column) {
-                if (cell.getCurrState() != EMPTY) {
-
-                    // grid population does not count as a turn survived
-                    animalTurnTracker.put(cell, 0);
-                    if (cell.getCurrState() == SHARK) {
-                        sharkHungerTracker.put(cell, 0);
-                    }
+                int currState = cell.getCurrState();
+                if (currState == EMPTY) {
+                    continue;
                 }
+
+                // grid population does not count as a turn survived
+                else if (currState == SHARK) {
+                    sharkHungerTracker.put(cell, 0);
+                }
+                animalTurnTracker.put(cell, 0);
             }
         }
     }

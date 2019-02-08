@@ -2,6 +2,7 @@ package simulation;
 
 import javafx.scene.paint.Color;
 import utils.Cell;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,9 +19,9 @@ public class Segregation extends Simulation {
     /**
      * Possible states of each cell in the Segregation simulation
      */
-    private final int EMPTY = 0;
-    private final int BLUE_AGENT = 1;
-    private final int RED_AGENT = 2;
+    private static final int EMPTY = 0;
+    private static final int BLUE_AGENT = 1;
+    private static final int RED_AGENT = 2;
 
     /**
      * If a cell does not have minPercentSatisfaction percent of similar neighbors, it will move in the next step.
@@ -52,16 +53,16 @@ public class Segregation extends Simulation {
      * BLUE_AGENT Cell is 0.4, Chance of generating RED_AGENT Cell is 0.4, and the Cell colors are white, blue, and
      * red, respectively, we would use:
      * Simulation Perc = new Percolation(50, new Integer[] {0, 1, 2}, new Double[] {0.2, 0.4, 0.4}, new Color[]
-     *                  {Color.WHITE, Color.BLUE, Color.RED}, null);
+     * {Color.WHITE, Color.BLUE, Color.RED}, null);
      * <p>
      * For the Segregation simulation, errors may occur if there are not enough empty spaces for a cell to go. There
      * should be at least a 0.1 chance that each Cell in the simulation is EMPTY. When creating a grid, it is
      * recommended that the side length be between 25 and 100.
      *
-     * @param sideSize length of one side of grid
-     * @param states an array of the possible states of each cell
+     * @param sideSize        length of one side of grid
+     * @param states          an array of the possible states of each cell
      * @param populationFreqs an array of the frequencies corresponding to the states
-     * @param colors an array of the colors corresponding to the states
+     * @param colors          an array of the colors corresponding to the states
      * @param percentSatsfied percentage of neighbors of same state threshold
      */
     public Segregation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String percentSatsfied) {
@@ -90,8 +91,9 @@ public class Segregation extends Simulation {
 
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
-                if (cell.getCurrState() == EMPTY) emptyCell.add(cell);
-                else {
+                if (cell.getCurrState() == EMPTY) {
+                    emptyCell.add(cell);
+                } else {
                     List<Cell> simNeighbors = getNeighborsOfType(cell, cell.getCurrState(), false);
                     List<Cell> difNeighbors = getNeighborsOfType(cell, oppositeAgent(cell.getCurrState()), false);
                     int numSimNeighbors = simNeighbors.size();
@@ -104,7 +106,7 @@ public class Segregation extends Simulation {
 
     /**
      * Returns an int representing the agent of opposite color. If the input is an empty cell, returns an empty cell.
-     *
+     * <p>
      * e.g.
      * oppositeAgent(1) returns 2.
      * oppositeAgent(0) returns 0.
@@ -113,8 +115,12 @@ public class Segregation extends Simulation {
      * @return an int corresponding to a different agent.
      */
     private int oppositeAgent(int currState) {
-        if (currState == BLUE_AGENT) return RED_AGENT;
-        if (currState == RED_AGENT) return BLUE_AGENT;
+        if (currState == BLUE_AGENT) {
+            return RED_AGENT;
+        }
+        if (currState == RED_AGENT) {
+            return BLUE_AGENT;
+        }
         return EMPTY;
     }
 
@@ -122,7 +128,7 @@ public class Segregation extends Simulation {
      * Determines whether an agent is satisfied or dissatisfied with its current location and adds the agent to the
      * corresponding list.
      *
-     * @param cell current Cell object
+     * @param cell            current Cell object
      * @param numSimNeighbors number of neighbors of the same state
      * @param numDifNeighbors number of neighbors of a different state
      */

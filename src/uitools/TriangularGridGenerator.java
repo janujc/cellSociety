@@ -9,34 +9,36 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public class HexagonalGridGenerator {
+public class TriangularGridGenerator {
     public static Group createGrid(int rows, int columns) {
         // TODO: Change to use dynamic cell sizes based on grid width
-        double[] points = new double[12];
-        for (int i = 0; i < 12; i += 2) {
-            double angle = Math.PI * (0.5 + i / 6d);
-            points[i] = Math.cos(angle);
-            points[i + 1] = Math.sin(angle);
+        double[] pointsDownwards = new double[6];
+        double[] pointsUpwards = new double[6];
+        for (int i = 0; i < 6; i += 2) {
+            double angle = Math.PI * (0.5 + i / 3d);
+            pointsDownwards[i] = Math.cos(angle);
+            pointsUpwards[i] = Math.cos(angle);
+            pointsDownwards[i + 1] = Math.sin(angle);
+            pointsUpwards[i + 1] = -Math.sin(angle);
         }
 
         Group myG = new Group();
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                double yOffset = i*20 +
+                double yOffset = i*10 + i*10/2 +
                         i*2; // padding
-                double xOffset = 0;
-                if (j%2 == 1) {
-                    yOffset += 10 +
-                            1; // padding
-                    xOffset += ((j/2)+1)*10/2 + (j/2)*10/2 +
-                            (j)*1; // padding
+                double xOffset = j*10
+                        + j*1; // padding
+                Polygon polygon;
+
+                if ((j%2 == 1 && i%2 == 0) || (j%2 != 1 && i%2 != 0)) {
+                    polygon = new Polygon(pointsUpwards);
+                    yOffset += 10/2;
                 } else {
-                    xOffset += (j/2)*10 +
-                            (j)*1; // padding
+                    polygon = new Polygon(pointsDownwards);
                 }
 
-                Polygon polygon = new Polygon(points);
                 polygon.setLayoutX(xOffset);
                 polygon.setLayoutY(yOffset);
                 polygon.setStroke(Color.BLACK);

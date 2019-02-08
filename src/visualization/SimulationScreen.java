@@ -1,5 +1,6 @@
 package visualization;
 
+import grid.Hexagonal;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -131,7 +132,8 @@ public class SimulationScreen {
         // render initial state
         initialiseGridViews(simulation.getGrid());
         renderGrid(simulation.getGrid());
-        //myContainer.getChildren().addAll(HexagonalGridGenerator.createHoneyComb(10, 40));
+        //myContainer.getChildren().addAll(TriangularGridGenerator.createGrid(20, 30));
+        //myContainer.getChildren().addAll(HexagonalGridGenerator.createGrid(20, 80));
     }
 
     private double getCellXLocation(int column) {

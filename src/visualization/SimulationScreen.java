@@ -132,11 +132,15 @@ public class SimulationScreen {
     }
 
     private double getCellXLocation(int column) {
-        return 100.0 + column * 1.0 + currentCellSize * column;
+        return 100.0 + // Margin
+                //column * 1.0 // Padding between cells
+                + currentCellSize * column;
     }
 
     private double getCellYLocation(int row) {
-        return 87.0 + row * 1.0 + currentCellSize * row;
+        return 87.0 + // Margin
+                // row * 1.0 // Padding between cells
+                + currentCellSize * row;
     }
 
     /**

@@ -16,13 +16,14 @@ import java.util.ArrayList;
 public class ConfigParser {
     /**
      * Generates an instance of Simulation from given config file
-     * @param fileName File name of config file.
+     *
+     * @param fileName  File name of config file.
      * @param className Class name of subclass of Simulation to instantiate
      * @return Simulation instance that was generated
      * @throws Exception if a config file is chosen that is corrupt or doesn't define this type
-     * of a simulation
+     *                   of a simulation
      */
-    public static Simulation parseConfigFile (String fileName, String className) throws Exception {
+    public static Simulation parseConfigFile(String fileName, String className) throws Exception {
         try {
             File inputFile = new File(fileName);
             Element rootNode = ParserTools.getRootNode(inputFile);
@@ -42,7 +43,7 @@ public class ConfigParser {
                 ArrayList<Double> popFreqs = new ArrayList<>();
                 ArrayList<Integer> states = new ArrayList<>();
                 ArrayList<Color> colors = new ArrayList<>();
-                for(int i = 0; i < data.getElementsByTagName("Item").getLength(); i++) {
+                for (int i = 0; i < data.getElementsByTagName("Item").getLength(); i++) {
                     Element item = (Element) data.getElementsByTagName("Item").item(i);
                     popFreqs.add(Double.valueOf(item.getAttribute("popFreq")));
                     states.add(Integer.valueOf(item.getAttribute("state")));
@@ -50,13 +51,12 @@ public class ConfigParser {
                 }
                 Class<?> clazz = Class.forName(className);
                 Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Double[].class, Color[].class, String.class);
-                Simulation instance = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), popFreqs.toArray(new Double[0]), colors.toArray(new Color[0]), metadata);
-                return instance;
+                return (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), popFreqs.toArray(new Double[0]), colors.toArray(new Color[0]), metadata);
             } else {
                 return null;
             }
         } catch (Exception e) {
-            throw(e);
+            throw (e);
         }
     }
 }

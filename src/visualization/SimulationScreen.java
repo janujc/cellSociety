@@ -32,7 +32,7 @@ public class SimulationScreen {
     private Text rateText;
     private Control speedUpControl, speedDownControl, nextStateControl, prevStateControl, playPauseToggle;
     private boolean isPaused = true; // Paused by default
-    private double continueIn = 1000.0/rate; // How many milliseconds we'll continue the animation in
+    private double continueIn = 1000.0 / rate; // How many milliseconds we'll continue the animation in
     private double pausedFor = 0; // How many milliseconds we've been paused for before animating
     private Rectangle[][] gridViews;
     private double currentCellSize;
@@ -42,6 +42,70 @@ public class SimulationScreen {
     private String configFolder;
 
     private String className;
+
+    SimulationScreen(Scene scene, Controller context, Simulation simulation, String label, String configFolder, String className) {
+        this.context = context;
+        this.history = new ArrayList<>();
+        this.configFolder = configFolder;
+        this.className = className;
+
+        var container = new Group();
+        Text titleText = makeText(label, sofiaPro, Color.SLATEGREY,
+                scene.getWidth() / 2,
+                scene.getHeight() / 10);
+
+        myContainer = container;
+
+        Text pressEscape = makeText("Press Escape To Exit", bebasKai, Color.SLATEGREY,
+                scene.getWidth() / 2, scene.getHeight() - 15 - 2.5);
+
+        Text loadConfig = makeText("Load new config file", bebasKaiMedium, Color.SLATEGREY,
+                scene.getWidth() / 2, scene.getHeight() - 30 - 5);
+        loadConfig.setCursor(Cursor.HAND);
+        loadConfig.setOnMouseClicked(mouseEvent -> loadNewConfigFile());
+
+        speedUpControl = new SpeedUpControl(this);
+        speedUpControl.getView().setLayoutX(25);
+        speedUpControl.getView().setLayoutY(scene.getHeight() - 70);
+        speedUpControl.getView().setTooltip(new Tooltip("Speed up"));
+
+        rateText = makeText("1", sofiaPro, Color.SLATEGREY,
+                50 + 30,
+                scene.getHeight() - 25);
+
+        speedDownControl = new SpeedDownControl(this);
+        speedDownControl.getView().setLayoutX(rateText.getX() + rateText.getLayoutBounds().getWidth());
+        speedDownControl.getView().setLayoutY(scene.getHeight() - 70);
+        speedDownControl.getView().setTooltip(new Tooltip("Speed down"));
+
+        nextStateControl = new NextStateControl(this);
+        nextStateControl.getView().setLayoutX(scene.getWidth() - 30 - 25);
+        nextStateControl.getView().setLayoutY(scene.getHeight() - 70);
+        nextStateControl.getView().setTooltip(new Tooltip("Step forwards"));
+
+        prevStateControl = new PrevStateControl(this);
+        prevStateControl.getView().setLayoutX(scene.getWidth() - 3 * 30 - 25 - 15 * 2);
+        prevStateControl.getView().setLayoutY(scene.getHeight() - 70);
+        prevStateControl.getView().setTooltip(new Tooltip("Step backwards"));
+
+        playPauseToggle = new PlayPauseToggleControl(this);
+        playPauseToggle.getView().setLayoutX(scene.getWidth() - 2 * 30 - 25 - 15);
+        playPauseToggle.getView().setLayoutY(scene.getHeight() - 70);
+        playPauseToggle.getView().setTooltip(new Tooltip("Toggle play or pause"));
+
+        Rectangle header = new Rectangle(0, 0, scene.getWidth(), 75);
+        header.setEffect(new DropShadow(10, Color.DARKGREY));
+        header.setFill(Color.WHITE);
+
+        Rectangle footer = new Rectangle(0, scene.getHeight() - 100, scene.getWidth(), 100);
+        footer.setEffect(new DropShadow(10, Color.DARKGREY));
+        footer.setFill(Color.WHITE);
+
+        container.getChildren().addAll(header, footer, titleText, loadConfig, pressEscape, speedUpControl.getView(),
+                rateText, speedDownControl.getView(), nextStateControl.getView(), prevStateControl.getView(),
+                playPauseToggle.getView());
+        processSimulation(simulation);
+    }
 
     private void processSimulation(Simulation simulation) {
         // First clear any existing stuff.
@@ -60,84 +124,19 @@ public class SimulationScreen {
         historyPos = 0;
 
         int numCells = simulation.getGrid().length;
-        currentCellSize = (400 - (numCells-1)*1)/(numCells*1.0);
+        currentCellSize = (400 - (numCells - 1) * 1) / (numCells * 1.0);
 
         // render initial state
         initialiseGridViews(simulation.getGrid());
         renderGrid(simulation.getGrid());
-        //myContainer.getChildren().add(HexagonalGridGenerator.createHoneyComb(1, 10, 50));
-    }
-
-    public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label, String configFolder, String className) {
-        this.context = context;
-        this.history = new ArrayList<>();
-        this.configFolder = configFolder;
-        this.className = className;
-
-        var container = new Group();
-        Text titleText = makeText(label, sofiaPro, Color.SLATEGREY,
-                scene.getWidth()/2,
-                scene.getHeight()/10);
-
-        myContainer = container;
-
-        Text pressEscape = makeText("Press Escape To Exit", bebasKai, Color.SLATEGREY,
-                scene.getWidth()/2, scene.getHeight()-15-2.5);
-
-        Text loadConfig = makeText("Load new config file", bebasKaiMedium, Color.SLATEGREY,
-                scene.getWidth()/2, scene.getHeight()-30-5);
-        loadConfig.setCursor(Cursor.HAND);
-        loadConfig.setOnMouseClicked(mouseEvent -> loadNewConfigFile());
-
-        speedUpControl = new SpeedUpControl(this);
-        speedUpControl.getView().setLayoutX(25);
-        speedUpControl.getView().setLayoutY(scene.getHeight()-70);
-        speedUpControl.getView().setTooltip(new Tooltip("Speed up"));
-
-        rateText = makeText("1", sofiaPro, Color.SLATEGREY,
-                50+30,
-                scene.getHeight()-25);
-
-        speedDownControl = new SpeedDownControl(this);
-        speedDownControl.getView().setLayoutX(rateText.getX()+rateText.getLayoutBounds().getWidth());
-        speedDownControl.getView().setLayoutY(scene.getHeight()-70);
-        speedDownControl.getView().setTooltip(new Tooltip("Speed down"));
-
-        nextStateControl = new NextStateControl(this);
-        nextStateControl.getView().setLayoutX(scene.getWidth() - 30 - 25);
-        nextStateControl.getView().setLayoutY(scene.getHeight()-70);
-        nextStateControl.getView().setTooltip(new Tooltip("Step forwards"));
-
-        prevStateControl = new PrevStateControl(this);
-        prevStateControl.getView().setLayoutX(scene.getWidth() - 3*30 - 25 -15*2);
-        prevStateControl.getView().setLayoutY(scene.getHeight()-70);
-        prevStateControl.getView().setTooltip(new Tooltip("Step backwards"));
-
-        playPauseToggle = new PlayPauseToggleControl(this);
-        playPauseToggle.getView().setLayoutX(scene.getWidth() - 2*30 - 25 -15);
-        playPauseToggle.getView().setLayoutY(scene.getHeight()-70);
-        playPauseToggle.getView().setTooltip(new Tooltip("Toggle play or pause"));
-
-        Rectangle header = new Rectangle(0, 0, scene.getWidth(), 75);
-        header.setEffect(new DropShadow(10, Color.DARKGREY));
-        header.setFill(Color.WHITE);
-
-        Rectangle footer = new Rectangle(0, scene.getHeight()-100, scene.getWidth(), 100);
-        footer.setEffect(new DropShadow(10, Color.DARKGREY));
-        footer.setFill(Color.WHITE);
-
-        container.getChildren().addAll(header, footer, titleText, loadConfig, pressEscape, speedUpControl.getView(),
-                rateText, speedDownControl.getView(), nextStateControl.getView(), prevStateControl.getView(),
-                playPauseToggle.getView());
-        processSimulation(simulation);
     }
 
     private double getCellXLocation(int column) {
-        return 100.0 + column*1.0 + currentCellSize * column;
+        return 100.0 + column * 1.0 + currentCellSize * column;
     }
 
     private double getCellYLocation(int row) {
-        return 87.0 + row*1.0 + currentCellSize * row;
+        return 87.0 + row * 1.0 + currentCellSize * row;
     }
 
     /**
@@ -162,6 +161,7 @@ public class SimulationScreen {
 
     /**
      * Method that changes state of the current simulation each frame
+     *
      * @param elapsedTime
      */
     public void step(double elapsedTime) {
@@ -169,7 +169,7 @@ public class SimulationScreen {
             if (pausedFor >= continueIn) {
                 // We've paused enough
                 pausedFor = 0;
-                continueIn = 1000.0/rate;
+                continueIn = 1000.0 / rate;
 
                 stepForward();
             } else {
@@ -179,7 +179,7 @@ public class SimulationScreen {
     }
 
     private void renderGrid(Cell[][] grid) {
-        for(int i = 0; i < grid.length; i++) {
+        for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 gridViews[i][j].setFill(grid[j][i].getCurrColor());
             }
@@ -187,7 +187,7 @@ public class SimulationScreen {
     }
 
     private void initialiseGridViews(Cell[][] grid) {
-        for(int i = 0; i < grid.length; i++) {
+        for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 gridViews[i][j] = new Rectangle(getCellXLocation(j), getCellYLocation(i), currentCellSize, currentCellSize);
                 gridViews[i][j].setFill(grid[i][j].getCurrColor());
@@ -198,6 +198,7 @@ public class SimulationScreen {
 
     /**
      * Fetch group containing all children of this screen.
+     *
      * @return Group object containing all elements of this screen.
      */
     public Group getContainer() {
@@ -205,7 +206,17 @@ public class SimulationScreen {
     }
 
     /**
+     * Method to obtain the current rate of simulation
+     *
+     * @return Rate of simulation in Hertz
+     */
+    public int getRate() {
+        return rate;
+    }
+
+    /**
      * Set the rate at which the simulation is taking place
+     *
      * @param rate Rate of simulation in Hertz
      */
     public void setRate(int rate) {
@@ -214,14 +225,6 @@ public class SimulationScreen {
             this.rateText.setText(String.valueOf(rate));
             speedDownControl.getView().setLayoutX(rateText.getX() + rateText.getLayoutBounds().getWidth()); // recalc pos
         }
-    }
-
-    /**
-     * Method to obtain the current rate of simulation
-     * @return Rate of simulation in Hertz
-     */
-    public int getRate() {
-        return rate;
     }
 
     /**
@@ -264,6 +267,7 @@ public class SimulationScreen {
 
     /**
      * Get whether the simulation is paused right now
+     *
      * @return
      */
     public boolean getIsPaused() {
@@ -272,6 +276,7 @@ public class SimulationScreen {
 
     /**
      * Set whether the simulation is paused right now
+     *
      * @param isPaused Whether the simulation is paused right now
      */
     public void setIsPaused(boolean isPaused) {

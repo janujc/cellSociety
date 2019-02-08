@@ -65,6 +65,7 @@ public class SimulationScreen {
         // render initial state
         initialiseGridViews(simulation.getGrid());
         renderGrid(simulation.getGrid());
+        //myContainer.getChildren().add(HexagonalGridGenerator.createHoneyComb(1, 10, 50));
     }
 
     public SimulationScreen(Scene scene, Controller context, Simulation simulation, String label, String configFolder, String className) {

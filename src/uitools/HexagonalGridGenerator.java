@@ -1,14 +1,16 @@
 package uitools;
 
 import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class HexagonalGridGenerator {
-    public static GridPane createHoneyComb(int rows, int columns, double size) {
+    public static Group createHoneyComb(int rows, int columns, double size) {
         // Source: https://stackoverflow.com/questions/40530899/honeycomb-layout-in-javafx-with-flowpane
         double[] points = new double[12];
         for (int i = 0; i < 12; i += 2) {
@@ -17,8 +19,28 @@ public class HexagonalGridGenerator {
             points[i + 1] = Math.sin(angle);
         }
 
+        Group myG = new Group();
         Polygon polygon = new Polygon(points);
+        polygon.setLayoutX(25);
+        polygon.setLayoutY(25);
+        polygon.setStroke(Color.BLACK);
+        polygon.setStrokeWidth(10);
 
+        Polygon polygon2 = new Polygon(points);
+        polygon2.setLayoutX(35);
+        polygon2.setLayoutY(25);
+        polygon2.setStroke(Color.BLACK);
+        polygon2.setStrokeWidth(10);
+
+        Polygon polygon3 = new Polygon(points);
+        polygon3.setLayoutX(25+10/2d);
+        polygon3.setLayoutY(35);
+        polygon3.setStroke(Color.BLACK);
+        polygon3.setStrokeWidth(10);
+
+        myG.getChildren().addAll(polygon, polygon2, polygon3);
+        return myG;
+/*
         GridPane result = new GridPane();
         RowConstraints rc1 = new RowConstraints(size / 4);
         rc1.setFillHeight(true);
@@ -51,5 +73,6 @@ public class HexagonalGridGenerator {
         result.setVgap(size/20); //vertical gap in pixels
         result.getRowConstraints().add(rc1);
         return result;
+        */
     }
 }

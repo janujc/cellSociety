@@ -8,6 +8,12 @@ import javafx.scene.paint.Color;
  * @author Januario Carreiro
  */
 public class Cell {
+
+    /**
+     * The value of the cell's next state prior to being set (after initialization and after each update)
+     */
+    private static final int UNDETERMINED = -1;
+
     private int myCurrState;
     private int myNextState;
     private int myCol;
@@ -30,7 +36,7 @@ public class Cell {
      */
     public Cell(int state, int col, int row) {
         myCurrState = state;
-        myNextState = -1;   // undetermined at this point
+        myNextState = UNDETERMINED;   // undetermined at this point
         myCol = col;
         myRow = row;
         myCurrColor = Color.GHOSTWHITE;
@@ -38,7 +44,7 @@ public class Cell {
 
     public Cell(int state, int xCoord, int yCoord, Color color) {
         myCurrState = state;
-        myNextState = -1;
+        myNextState = UNDETERMINED;
         myCol = xCoord;
         myRow = yCoord;
         myCurrColor = color;

@@ -124,7 +124,9 @@ public class SimulationScreen {
         historyPos = 0;
 
         int numCells = simulation.getGrid().length;
-        currentCellSize = (400 - (numCells - 1) * 1) / (numCells * 1.0);
+        currentCellSize = 400
+                // - (numCells - 1) * 1) // Account for padding
+                / (numCells * 1.0); // Number of cells
 
         // render initial state
         initialiseGridViews(simulation.getGrid());

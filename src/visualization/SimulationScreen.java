@@ -198,15 +198,7 @@ public class SimulationScreen {
 
         Scene scene  = new Scene(lineChart,800,600);
         for (Color color : populationStats.keySet()) {
-            lineChart.getData().add(populationStats.get(color));
-
-            Node line = populationStats.get(color).getNode().lookup(".chart-series-line");
-
-            String rgb = String.format("%d, %d, %d",
-                    (int) (color.getRed() * 255),
-                    (int) (color.getGreen() * 255),
-                    (int) (color.getBlue() * 255));
-            line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
+            addToLine(color);
         }
 
         lineChart.setLegendVisible(false);
@@ -399,13 +391,32 @@ public class SimulationScreen {
             }
         }
         for (Color color : popThisIteration.keySet()) {
+            boolean needToAddToLine = false;
             if (!populationStats.containsKey(color)) {
                 populationStats.put(color, new XYChart.Series<>());
+                if (lineChart != null) {
+                    needToAddToLine = true;
+                }
             }
 
             populationStats.get(color).getData().add(new XYChart.Data<>(historyPos, popThisIteration.get(color)));
+            if (needToAddToLine) {
+                addToLine(color);
+            }
             cleanUpGraph();
         }
+    }
+
+    private void addToLine(Color color) {
+        lineChart.getData().add(populationStats.get(color));
+
+        Node line = populationStats.get(color).getNode().lookup(".chart-series-line");
+
+        String rgb = String.format("%d, %d, %d",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
+        line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
     }
 
     private void cleanUpGraph() {

@@ -3,9 +3,14 @@ package visualization;
 import controls.*;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -44,7 +49,7 @@ public class SimulationScreen {
     private Rectangle[][] gridViews;
     private double currentCellSize;
     private Text titleText;
-    private Map<Color, Map<Integer, Integer>> populationStats; // Color -> {iteration: freq}
+    private Map<Color, XYChart.Series<Number, Number>> populationStats; // Color -> {iteration: freq}
 
     private ArrayList<Cell[][]> history;
     private int historyPos = 0;
@@ -145,7 +150,7 @@ public class SimulationScreen {
         dialogBox.getWidth()/2, 85);
         graphText.setCursor(Cursor.HAND);
         graphText.setOnMouseClicked((event)->{
-            System.out.println("Clicked graph button");
+            handleGraphClick();
         });
 
         Text settingsText = makeTextRelative("Parameter settings", bebasKaiMedium, Color.SLATEGREY,
@@ -175,6 +180,39 @@ public class SimulationScreen {
         menuGroup.setLayoutX(originX);
 
         myContainer.getChildren().add(menuGroup);
+    }
+
+    private LineChart<Number,Number> lineChart = null;
+    private void handleGraphClick() {
+        Stage stage = new Stage();
+        stage.setTitle("Populations over time");
+        //defining the axes
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("Time");
+        yAxis.setLabel("Population");
+
+        //creating the chart
+        lineChart =
+                new LineChart<Number,Number>(xAxis,yAxis);
+
+        Scene scene  = new Scene(lineChart,800,600);
+        for (Color color : populationStats.keySet()) {
+            lineChart.getData().add(populationStats.get(color));
+
+            Node line = populationStats.get(color).getNode().lookup(".chart-series-line");
+
+            String rgb = String.format("%d, %d, %d",
+                    (int) (color.getRed() * 255),
+                    (int) (color.getGreen() * 255),
+                    (int) (color.getBlue() * 255));
+            line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
+        }
+
+        lineChart.setLegendVisible(false);
+
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void closeMenu() {
@@ -350,17 +388,35 @@ public class SimulationScreen {
     }
 
     private void updatePopulationStats(Cell[][] grid, int historyPos) {
+        Map<Color, Integer> popThisIteration = new HashMap<>();
         for (Cell[] row : grid) {
             for (Cell cell : row) {
-                if (!populationStats.containsKey(cell.getCurrColor())) {
-                    populationStats.put(cell.getCurrColor(), new HashMap<>());
-                }
-
-                if (populationStats.get(cell.getCurrColor()).containsKey(historyPos)) {
-                    populationStats.get(cell.getCurrColor()).put(historyPos,
-                            populationStats.get(cell.getCurrColor()).get(historyPos) + 1);
+                if (!popThisIteration.containsKey(cell.getCurrColor())) {
+                    popThisIteration.put(cell.getCurrColor(), 1);
                 } else {
-                    populationStats.get(cell.getCurrColor()).put(historyPos, 1);
+                    popThisIteration.put(cell.getCurrColor(), popThisIteration.get(cell.getCurrColor()) + 1);
+                }
+            }
+        }
+        for (Color color : popThisIteration.keySet()) {
+            if (!populationStats.containsKey(color)) {
+                populationStats.put(color, new XYChart.Series<>());
+            }
+
+            populationStats.get(color).getData().add(new XYChart.Data<>(historyPos, popThisIteration.get(color)));
+            cleanUpGraph();
+        }
+    }
+
+    private void cleanUpGraph() {
+        if (lineChart != null) {
+            //in loop take all series
+            for (XYChart.Series<Number, Number> series : lineChart.getData()) {
+                //for all series, take date, each data has Node (symbol) for representing point
+                for (XYChart.Data<Number, Number> data : series.getData()) {
+                    // this node is StackPane
+                    StackPane stackPane = (StackPane) data.getNode();
+                    stackPane.setVisible(false);
                 }
             }
         }

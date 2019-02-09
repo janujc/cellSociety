@@ -66,7 +66,7 @@ public class HomeScreen {
     private void startSimulation(String className, Scene myScene, String label, String configFolder) {
         // Just use an arbitrary simulation class for test
         try {
-            SimulationScreen simulationScreen = new SimulationScreen(myScene, context,
+            SimulationScreen simulationScreen = new SimulationScreen(myScene, context.getStage(),
                     ConfigParser.parseConfigFile(configFolder + "default.xml", className),
                     label, configFolder, className);
             context.setSimulationScreen(simulationScreen);

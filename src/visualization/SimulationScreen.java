@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import simulation.Simulation;
 import uitools.*;
 import utils.Cell;
@@ -27,7 +28,7 @@ import static visualization.Controller.*;
  */
 public class SimulationScreen {
     private Group myContainer;
-    private Controller context;
+    private Stage myStage;
     private Simulation simulation;
     private int rate = 1; // Frequency in Hertz
     private Text rateText;
@@ -44,8 +45,8 @@ public class SimulationScreen {
 
     private String className;
 
-    SimulationScreen(Scene scene, Controller context, Simulation simulation, String label, String configFolder, String className) {
-        this.context = context;
+    SimulationScreen(Scene scene, Stage myStage, Simulation simulation, String label, String configFolder, String className) {
+        this.myStage = myStage;
         this.history = new ArrayList<>();
         this.configFolder = configFolder;
         this.className = className;
@@ -157,7 +158,7 @@ public class SimulationScreen {
         }
         FileChooser fileChooser = new FileChooser();
         fileChooser.setInitialDirectory(new File(configFolder));
-        File chosenFile = fileChooser.showOpenDialog(context.getStage());
+        File chosenFile = fileChooser.showOpenDialog(myStage);
         if (chosenFile != null) {
             try {
                 Simulation newSim = ConfigParser.parseConfigFile(chosenFile.getAbsolutePath(), className);

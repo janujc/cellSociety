@@ -6,14 +6,22 @@ import java.util.List;
 import java.util.Random;
 import utils.Cell;
 
-// TODO: ADD TXT WITH RULES FOR GETTING NEIGHBORS FOR SQUARE CELL
 public class Square extends Grid {
 
     public Square(int size, Color[] colors) {
         super(size, colors);
     }
 
-    public void populateGrid() {} // each state equally likely
+    public void populateGrid(Integer[] states) {
+        Random rand = new Random();
+
+        for (int x = 0; x < mySize; x++) {
+            for (int y = 0; y < mySize; y++) {
+                int randNum = rand.nextInt(states.length);
+                myGrid[x][y] = new Cell(states[randNum], x, y, myColors[randNum]);
+            }
+        }
+    }
 
     public void populateGrid(Integer[] states, Double[] populationFreqs) {
         Random rand = new Random();
@@ -34,7 +42,11 @@ public class Square extends Grid {
     }
 
     public void populateGrid(Integer[][] states) { // Given 2-d array
-
+        for (int x = 0; x < mySize; x++) {
+            for (int y = 0; y < mySize; y++) {
+                myGrid[x][y] = new Cell(states[x][y], x, y, myColors[states[x][y]]);
+            }
+        }
     }
 
     public List<Cell> getNeighbors(Cell center, int arrangement) {

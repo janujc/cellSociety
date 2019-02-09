@@ -157,6 +157,10 @@ public class SimulationScreen {
 
         Text compareText = makeTextRelative("Compare with another simulation", bebasKaiMedium, Color.SLATEGREY,
                 dialogBox.getWidth()/2, 85 + 120);
+        compareText.setCursor(Cursor.HAND);
+        compareText.setOnMouseClicked((event)->{
+            System.out.println("Clicked compare button");
+        });
 
         menuGroup.getChildren().addAll(dialogBox, closeControl.getView(), graphText, settingsText, saveText,
                 compareText);

@@ -1,17 +1,18 @@
-package uitools;
+package controls;
 
 import javafx.scene.image.Image;
+import uitools.CardGridGenerator;
 import visualization.SimulationScreen;
 
 /**
  * Author: Anshu Dwibhashi
- * Control to advance to next state of grid
+ * Control to open menu
  */
-public class NextStateControl extends Control {
+public class CloseControl extends Control {
     private SimulationScreen context;
 
-    public NextStateControl(SimulationScreen context) {
-        super(new Image(CardGridGenerator.class.getResourceAsStream("/img/stepright.png")));
+    public CloseControl(SimulationScreen context) {
+        super(new Image(CardGridGenerator.class.getResourceAsStream("/img/close.png")));
         this.context = context;
     }
 
@@ -20,6 +21,6 @@ public class NextStateControl extends Control {
      */
     @Override
     public void onClick() {
-        context.stepForward();
+        context.closeMenu();
     }
 }

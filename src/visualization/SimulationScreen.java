@@ -1,6 +1,6 @@
 package visualization;
 
-import grid.Hexagonal;
+import controls.*;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -13,7 +13,6 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import simulation.Simulation;
-import uitools.*;
 import utils.Cell;
 import utils.ConfigParser;
 
@@ -131,7 +130,13 @@ public class SimulationScreen {
         closeControl.getView().setCursor(Cursor.HAND);
         closeControl.getView().setTooltip(new Tooltip("Close Menu"));
 
-        menuGroup.getChildren().addAll(dialogBox, closeControl.getView());
+        Control graphControl = new GraphControl(this);
+        graphControl.getView().setLayoutX(dialogBox.getWidth()/3 - graphControl.getView().getMaxWidth()/2);
+        graphControl.getView().setLayoutY(10);
+        graphControl.getView().setCursor(Cursor.HAND);
+        graphControl.getView().setTooltip(new Tooltip("Show graph"));
+
+        menuGroup.getChildren().addAll(dialogBox, closeControl.getView(), graphControl.getView());
         menuGroup.setLayoutY(myStage.getScene().getHeight()/2 - dialogBox.getLayoutBounds().getHeight()/2 - 15);
         menuGroup.setLayoutX(myStage.getScene().getWidth()/2 - dialogBox.getLayoutBounds().getWidth()/2);
 

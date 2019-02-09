@@ -1,7 +1,8 @@
-package uitools;
+package controls;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import uitools.CardGridGenerator;
 import visualization.SimulationScreen;
 
 /**

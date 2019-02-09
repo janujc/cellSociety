@@ -1,17 +1,18 @@
-package uitools;
+package controls;
 
 import javafx.scene.image.Image;
+import uitools.CardGridGenerator;
 import visualization.SimulationScreen;
 
 /**
  * Author: Anshu Dwibhashi
  * Control to open menu
  */
-public class CloseControl extends Control {
+public class MenuControl extends Control {
     private SimulationScreen context;
 
-    public CloseControl(SimulationScreen context) {
-        super(new Image(CardGridGenerator.class.getResourceAsStream("/img/close.png")));
+    public MenuControl(SimulationScreen context) {
+        super(new Image(CardGridGenerator.class.getResourceAsStream("/img/hamburger.png")));
         this.context = context;
     }
 
@@ -20,6 +21,6 @@ public class CloseControl extends Control {
      */
     @Override
     public void onClick() {
-        context.closeMenu();
+        context.showMenu();
     }
 }

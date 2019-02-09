@@ -33,7 +33,7 @@ public class SimulationScreen {
     private Simulation simulation;
     private int rate = 1; // Frequency in Hertz
     private Text rateText;
-    private Control speedUpControl, speedDownControl, nextStateControl, prevStateControl, playPauseToggle;
+    private Control speedUpControl, speedDownControl, nextStateControl, prevStateControl, playPauseToggle, menuControl;
     private boolean isPaused = true; // Paused by default
     private double continueIn = 1000.0 / rate; // How many milliseconds we'll continue the animation in
     private double pausedFor = 0; // How many milliseconds we've been paused for before animating
@@ -100,14 +100,39 @@ public class SimulationScreen {
         header.setEffect(new DropShadow(10, Color.DARKGREY));
         header.setFill(Color.WHITE);
 
+        menuControl = new MenuControl(this);
+        menuControl.getView().setLayoutX(scene.getWidth() - 30 - 25);
+        menuControl.getView().setLayoutY(15);
+        menuControl.getView().setCursor(Cursor.HAND);
+        menuControl.getView().setTooltip(new Tooltip("Open Menu"));
+
         Rectangle footer = new Rectangle(0, scene.getHeight() - 100, scene.getWidth(), 100);
         footer.setEffect(new DropShadow(10, Color.DARKGREY));
         footer.setFill(Color.WHITE);
 
         container.getChildren().addAll(header, footer, titleText, loadConfig, pressEscape, speedUpControl.getView(),
                 rateText, speedDownControl.getView(), nextStateControl.getView(), prevStateControl.getView(),
-                playPauseToggle.getView());
+                playPauseToggle.getView(), menuControl.getView());
         processSimulation(simulation);
+    }
+
+    public void showMenu() {
+        Group menuGroup = new Group();
+        Rectangle dialogBox = new Rectangle(0, 0, 350, 350);
+        dialogBox.setEffect(new DropShadow(10, Color.DARKGREY));
+        dialogBox.setArcWidth(20);
+        dialogBox.setArcHeight(20);
+        dialogBox.setFill(Color.WHITE);
+        menuGroup.getChildren().addAll(dialogBox);
+        menuGroup.setLayoutY(myStage.getScene().getHeight()/2 - menuGroup.getLayoutBounds().getHeight()/2);
+        menuGroup.setLayoutX(myStage.getScene().getWidth()/2 - menuGroup.getLayoutBounds().getWidth()/2);
+
+        Control closeControl = new CloseControl(this);
+        closeControl.getView().setLayoutX(dialogBox.getLayoutBounds().getWidth() - closeControl.getView().getLayoutBounds().getWidth() - 15);
+        closeControl.getView().setLayoutY(15);
+        closeControl.getView().setCursor(Cursor.HAND);
+        closeControl.getView().setTooltip(new Tooltip("Close Menu"));
+        myContainer.getChildren().add(menuGroup);
     }
 
     private void processSimulation(Simulation simulation) {

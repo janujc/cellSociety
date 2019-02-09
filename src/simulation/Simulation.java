@@ -1,5 +1,6 @@
 package simulation;
 
+import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
@@ -24,13 +25,10 @@ public abstract class Simulation {
 
     /**
      * The simulation grid made up of cells each with their own state (represented by an int)
-     * <p>
-     * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
-     * the element of each row in a particular column
      */
+    protected final Grid myGrid;
 
-    protected final Cell[][] grid;
-
+    // TODO Move this to the Grid class
     /**
      * The length of one side of the grid
      * <p>
@@ -49,7 +47,59 @@ public abstract class Simulation {
      */
     final Random rand;
 
+    // TODO Move this to the Visualizer class
     private String currentFileName, displayName;
+
+    // TODO Make constructors for the different grid types
+
+    /**
+     * Initializes instance variables
+     *
+     * @param sideSize    the length of one side of the grid
+     * @param stateColors the cell colors of each state in the simulation
+     */
+    protected Simulation(int sideSize, Color[] stateColors) {
+        colors = stateColors;
+        rand = new Random();
+    }
+
+    /**
+     * Creates and populates the simulation grid based off a list of specific locations and states
+     *
+     * @param sideSize    the length of one side of the grid
+     * @param states      the possible states of the cells in the simulation grid
+     * @param stateColors the cell colors of each state in the simulation
+     * @param cells       the 2D array with the specified states, where the indices correspond to the grid
+     */
+    protected Simulation(int sideSize, Integer[] states, Color[] stateColors, Integer[][] cells) {
+        this(sideSize, stateColors);
+        myGrid = new myGrid(states, cells);
+    }
+
+    /**
+     * Creates and populates the simulation grid randomly
+     *
+     * @param sideSize    the length of one side of the grid
+     * @param states      the possible states of the cells in the simulation grid
+     * @param stateColors the cell colors of each state in the simulation
+     */
+    protected Simulation(int sideSize, Integer[] states, Color[] stateColors) {
+        this(sideSize, stateColors);
+        myGrid.populate(states);
+    }
+
+    /**
+     * Creates and populates the simulation grid randomly with specified numbers of each state
+     *
+     * @param sideSize    the length of one side of the grid
+     * @param states      the possible states of the cells in the simulation grid
+     * @param numToOccupy the number of cells each state must occupy
+     * @param stateColors the cell colors of each state in the simulation
+     */
+    protected Simulation(int sideSize, Integer[] states, Integer[] numToOccupy, Color[] stateColors) {
+        this(sideSize, stateColors);
+        myGrid.populate(states, numToOccupy);
+    }
 
     /**
      * Creates and populates the simulation grid randomly based on population frequencies.
@@ -60,45 +110,13 @@ public abstract class Simulation {
      * @param stateColors     the cell colors of each state in the simulation
      */
     protected Simulation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors) {
-        gridSideSize = sideSize;
-        grid = new Cell[gridSideSize][gridSideSize];
-        colors = stateColors;
-        rand = new Random();
-        populateGrid(states, populationFreqs);
-    }
-
-    /**
-     * Creates and populates the simulation grid randomly based on number of cells to occupy per state.
-     * @param sideSize      the length of one side of the grid
-     * @param states        the possible states of the cells in the simulation grid
-     * @param numToOccupy   the number of cells each state must occupy
-     * @param stateColors   the cell colors of each state in the simulation
-     */
-    protected  Simulation(int sideSize, Integer[] states, Integer[] numToOccupy, Color[] stateColors) {
-        // TODO
-    }
-
-    /**
-     * Creates and populates the simulation grid randomly based on number of cells to occupy per state.
-     * @param sideSize      the length of one side of the grid
-     * @param states        the possible states of the cells in the simulation grid
-     * @param cells         a 2D array with all cells and their associated state
-     * @param stateColors   the cell colors of each state in the simulation
-     */
-    protected Simulation(int sideSize, Integer[] states, Integer[][] cells, Color[] stateColors) {
-        // TODO
-    }
-
-    /**
-     * Stores the name of the configuration file currently being used
-     * @param fileName name of the configuration file
-     */
-    public void setCurrentFileName(String fileName) {
-        this.currentFileName = fileName;
+        this(sideSize, stateColors);
+        myGrid.populate(states, populationFreqs);
     }
 
     /**
      * Returns the filename of the currently running simulation configuration
+     *
      * @return
      */
     public String getCurrentFileName() {
@@ -106,21 +124,33 @@ public abstract class Simulation {
     }
 
     /**
-     * Stores the simulation's display name
+     * Stores the name of the configuration file currently being used
+     *
      * @param fileName name of the configuration file
      */
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
+    public void setCurrentFileName(String fileName) {
+        this.currentFileName = fileName;
     }
 
     /**
      * Returns the simulation's display name
+     *
      * @return
      */
     public String getDisplayName() {
         return displayName;
     }
 
+    /**
+     * Stores the simulation's display name
+     *
+     * @param fileName name of the configuration file
+     */
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    // TODO Move this to the Grid class
     /**
      * Fills the grid with cells, with states based off of their population frequencies (probabilities, not proportions)
      *
@@ -136,6 +166,7 @@ public abstract class Simulation {
         }
     }
 
+    // TODO Move this to the Grid class
     /**
      * Determines the initial state of a cell based off of the population frequencies
      *
@@ -154,7 +185,7 @@ public abstract class Simulation {
             }
         }
 
-        return -1;    // will never get here as the population frequencies sum to 1.0
+        return -1;    // will never get here as the population frequencies must sum to 1.0
     }
 
     /**
@@ -163,7 +194,7 @@ public abstract class Simulation {
      */
     public void step() {
         calculateNextStates();
-        updateStates();
+        grid.updateStates();
     }
 
     /**
@@ -171,6 +202,7 @@ public abstract class Simulation {
      */
     protected abstract void calculateNextStates();
 
+    // TODO Move this to the Grid class
     /**
      * Updates the state of each cell in the grid
      */
@@ -181,6 +213,8 @@ public abstract class Simulation {
             }
         }
     }
+
+    // TODO Move all the neighbors stuff to the Grid class
 
     /**
      * Gets all neighbors (cardinal and corner) of a particular cell in the grid
@@ -294,6 +328,7 @@ public abstract class Simulation {
         return neighborsOfType;
     }
 
+    // TODO Move this to the Grid class
     /**
      * Returns the grid for Visualizer to access
      *
@@ -303,9 +338,10 @@ public abstract class Simulation {
         return grid;
     }
 
+    // TODO Move this to the Grid class
     public void rotateState(int i, int j) {
         int numStates = colors.length;
         int currentState = grid[i][j].getCurrState();
-        grid[i][j].setState((currentState + 1) % numStates, colors[(currentState + 1)%numStates]);
+        grid[i][j].setState((currentState + 1) % numStates, colors[(currentState + 1) % numStates]);
     }
 }

@@ -12,7 +12,7 @@ public class Hexagonal extends Grid {
     }
 
     @Override
-    public void populateGrid() {
+    public void populateGrid(Integer[] states) {
 
     }
 

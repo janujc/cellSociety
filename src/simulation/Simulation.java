@@ -237,11 +237,11 @@ public abstract class Simulation {
         return grid;
     }
 
-    public void rotateColor(Cell cell) {
+    public void rotateState(int i, int j) {
         int numStates = colors.length;
-        int currentState = cell.getCurrState();
-        if (currentState < (numStates - 1)) cell.setNextState(currentState + 1, colors[currentState + 1]);
-        else cell.setNextState(0, colors[0]);
-        cell.updateState();
+        int currentState = grid[i][j].getCurrState();
+        if (currentState < (numStates - 1)) grid[i][j].setNextState(currentState + 1, colors[currentState + 1]);
+        else grid[i][j].setNextState(0, colors[0]);
+        grid[i][j].updateState();
     }
 }

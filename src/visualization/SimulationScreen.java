@@ -8,6 +8,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Shape;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -199,8 +200,15 @@ public class SimulationScreen {
     private void initialiseGridViews(Cell[][] grid) {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
-                gridViews[i][j] = new Rectangle(getCellXLocation(j), getCellYLocation(i), currentCellSize, currentCellSize);
-                gridViews[i][j].setFill(grid[i][j].getCurrColor());
+                Shape gridView = new Rectangle(getCellXLocation(j), getCellYLocation(i), currentCellSize, currentCellSize);
+                gridView.setFill(grid[i][j].getCurrColor());
+                final Cell cell = simulation.getGrid()[i][j];
+                final int iF = i, jF = j;
+                gridView.setOnMouseClicked((e) ->  {
+                    simulation.rotateState(iF, jF);
+                    gridView.setFill(cell.getCurrColor());
+                });
+                gridViews[i][j] = (Rectangle) gridView;
                 myContainer.getChildren().add(gridViews[i][j]);
             }
         }

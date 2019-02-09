@@ -17,11 +17,18 @@ import java.util.Random;
 public abstract class Simulation {
 
     /**
+     * The value for a cell's next state that has not been set (after initialization and each step). All simulations
+     * must not use this value for other states.
+     */
+    static final int UNDETERMINED = -1;
+
+    /**
      * The simulation grid made up of cells each with their own state (represented by an int)
      * <p>
      * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
      * the element of each row in a particular column
      */
+
     protected final Cell[][] grid;
 
     /**
@@ -30,12 +37,6 @@ public abstract class Simulation {
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize
      */
     final int gridSideSize;
-
-    /**
-     * The value for a cell's next state that has not been set (after initialization and each step). All simulations
-     * must not use this value for other states.
-     */
-    static final int UNDETERMINED = -1;
 
     /**
      * The array of colors for each possible state where the index is the corresponding state

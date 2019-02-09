@@ -49,6 +49,8 @@ public abstract class Simulation {
      */
     final Random rand;
 
+    private String currentFileName;
+
     /**
      * Creates and populates the simulation grid
      *
@@ -63,6 +65,22 @@ public abstract class Simulation {
         colors = stateColors;
         rand = new Random();
         populateGrid(states, populationFreqs);
+    }
+
+    /**
+     * Stores the name of the configuration file currently being used
+     * @param fileName name of the configuration file
+     */
+    public void setCurrentFileName(String fileName) {
+        this.currentFileName = fileName;
+    }
+
+    /**
+     * Returns the filename of the currently running simulation configuration
+     * @return
+     */
+    public String getCurrentFileName() {
+        return currentFileName;
     }
 
     /**

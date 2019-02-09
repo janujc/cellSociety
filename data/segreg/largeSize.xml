@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root doctype="simulation_config">
     <SideSize count="100" />
-    <Metadata name="percentSatsfied"
+    <Metadata name="percentSatisfied"
               value="60" />
+    <Class class="simulation.Segregation" />
+    <Name name="Segregation" />
     <Data type="frequencies">
         <Item popFreq="0.2"
               state="0"

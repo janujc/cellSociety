@@ -51,7 +51,9 @@ public class ConfigParser {
                 }
                 Class<?> clazz = Class.forName(className);
                 Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Double[].class, Color[].class, String.class);
-                return (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), popFreqs.toArray(new Double[0]), colors.toArray(new Color[0]), metadata);
+                Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), popFreqs.toArray(new Double[0]), colors.toArray(new Color[0]), metadata);
+                returnable.setCurrentFileName(fileName);
+                return returnable;
             } else {
                 return null;
             }

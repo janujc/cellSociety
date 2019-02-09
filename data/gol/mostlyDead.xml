@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root doctype="simulation_config">
     <SideSize count="100" />
+    <Class class="simulation.GameOfLife" />
+    <Name name="Game of Life" />
     <Data type="frequencies">
         <Item popFreq="0.8"
               state="0"

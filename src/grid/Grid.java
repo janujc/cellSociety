@@ -37,7 +37,7 @@ public abstract class Grid {
         return neighborsOfType;
     }
 
-    private List<Cell> validateNeighbors(List<int[]> neighborCoords) {
+    protected List<Cell> validateNeighbors(List<int[]> neighborCoords) {
         List<Cell> neighbors = new ArrayList<>();
 
         for (int[] neighbor : neighborCoords) {

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 import utils.Cell;
 
+// TODO: ADD TXT WITH RULES FOR GETTING NEIGHBORS FOR SQUARE CELL
 public class Square extends Grid {
 
     public Square(int size, Color[] colors) {
@@ -44,35 +45,5 @@ public class Square extends Grid {
         // Loop through all the neighbors and add them to neighborCoords
 
         return validateNeighbors(neighborCoords);
-    }
-
-    public List<Cell> getNeighborsOfType(Cell center, int arrangement, int type) {
-        List<Cell> neighbors;
-        List<Cell> neighborsOfType = new ArrayList<>();
-        neighbors = getNeighbors(center, arrangement);
-
-        for (Cell neighbor : neighbors) {
-            if (neighbor.getCurrState() == type) {
-                neighborsOfType.add(neighbor);
-            }
-        }
-        return neighborsOfType;
-    }
-
-    private List<Cell> validateNeighbors(List<int[]> neighborCoords) {
-        List<Cell> neighbors = new ArrayList<>();
-
-        for (int[] neighbor : neighborCoords) {
-            int neighborX = neighbor[0];
-            int neighborY = neighbor[1];
-            if (!(neighborX < 0 || neighborX >= mySize || neighborY < 0 || neighborY >= mySize)) {
-                neighbors.add(myGrid[neighborX][neighborY]);
-            }
-        }
-        return neighbors;
-    }
-
-    public Cell[][] getMyGrid() {
-        return myGrid;
     }
 }

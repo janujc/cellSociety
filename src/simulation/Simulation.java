@@ -236,4 +236,12 @@ public abstract class Simulation {
     public Cell[][] getGrid() {
         return grid;
     }
+
+    public void rotateColor(Cell cell) {
+        int numStates = colors.length;
+        int currentState = cell.getCurrState();
+        if (currentState < (numStates - 1)) cell.setNextState(currentState + 1, colors[currentState + 1]);
+        else cell.setNextState(0, colors[0]);
+        cell.updateState();
+    }
 }

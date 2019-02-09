@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import simulation.Simulation;
 import utils.Cell;
 import utils.ConfigParser;
+import utils.Dialogs;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -234,7 +235,7 @@ public class SimulationScreen {
                 titleText.setX((myStage.getScene().getWidth() / 2) - titleText.getLayoutBounds().getWidth()/2);
                 titleText.setY((myStage.getScene().getHeight() / 10) - titleText.getLayoutBounds().getHeight()/2);
             } catch (Exception e) {
-                e.printStackTrace();
+                Dialogs.showAlert("Erroneous configuration file chosen.");
             }
         }
     }

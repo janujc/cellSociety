@@ -74,7 +74,7 @@ public class HomeScreen {
             Animator.animate(myScene, simulationScreen.getContainer(), ScreenType.SIMULATION_SCREEN, myScene.getWidth(),
                     0, 0, -myScene.getWidth(), false, context);
         } catch (Exception e) {
-            Dialogs.showAlert("The config file you chose isn't for this simulation.");
+            Dialogs.showAlert("Erroneous configuration file chosen.");
         }
     }
 

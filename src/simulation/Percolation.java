@@ -26,7 +26,6 @@ public class Percolation extends Simulation {
      */
     private Integer oppositeCol;
     private Integer oppositeRow;
-    private boolean simComplete;
 
     /**
      * Creates the simulation by calling super and using the constructor in simulation.Simulation
@@ -51,7 +50,6 @@ public class Percolation extends Simulation {
         super(sideSize, states, populationFreqs, colors);
         Cell startPerc = determineStartLocation();
         grid[startPerc.getCol()][startPerc.getRow()] = startPerc;
-        simComplete = false;
     }
 
     /**
@@ -92,12 +90,8 @@ public class Percolation extends Simulation {
     protected void calculateNextStates() {
         for (Cell[] xCells : grid) {
             for (Cell cell : xCells) {
-                if (simComplete) {
-                    cell.setNextState(cell.getCurrState(), colors[cell.getCurrState()]);
-                } else {
-                    Boolean hasPercolatedNeighbors = !(getNeighborsOfType(cell, PERCOLATED, false).isEmpty());
-                    calculateNextStateOfOneCell(cell, hasPercolatedNeighbors);
-                }
+                Boolean hasPercolatedNeighbors = !(getNeighborsOfType(cell, PERCOLATED, false).isEmpty());
+                calculateNextStateOfOneCell(cell, hasPercolatedNeighbors);
             }
         }
     }
@@ -124,12 +118,6 @@ public class Percolation extends Simulation {
         }
         if (cell.getCurrState() == PERCOLATED) {
             cell.setNextState(PERCOLATED, colors[PERCOLATED]);
-            if (oppositeRow != null && cell.getRow() == oppositeRow) {
-                simComplete = true;
-            }
-            if (oppositeCol != null && cell.getCol() == oppositeCol) {
-                simComplete = true;
-            }
         }
     }
 }

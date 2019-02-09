@@ -202,11 +202,10 @@ public class SimulationScreen {
             for (int j = 0; j < grid[0].length; j++) {
                 Shape gridView = new Rectangle(getCellXLocation(j), getCellYLocation(i), currentCellSize, currentCellSize);
                 gridView.setFill(grid[i][j].getCurrColor());
-                final Cell cell = simulation.getGrid()[i][j];
                 final int iF = i, jF = j;
                 gridView.setOnMouseClicked((e) ->  {
-                    simulation.rotateState(iF, jF);
-                    gridView.setFill(cell.getCurrColor());
+                    simulation.rotateState(jF, iF);
+                    gridView.setFill(simulation.getGrid()[jF][iF].getCurrColor());
                 });
                 gridViews[i][j] = (Rectangle) gridView;
                 myContainer.getChildren().add(gridViews[i][j]);

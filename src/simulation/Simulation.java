@@ -250,8 +250,6 @@ public abstract class Simulation {
     public void rotateState(int i, int j) {
         int numStates = colors.length;
         int currentState = grid[i][j].getCurrState();
-        if (currentState < (numStates - 1)) grid[i][j].setNextState(currentState + 1, colors[currentState + 1]);
-        else grid[i][j].setNextState(0, colors[0]);
-        grid[i][j].updateState();
+        grid[i][j].setState((currentState + 1) % numStates, colors[(currentState + 1)%numStates]);
     }
 }

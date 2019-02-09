@@ -71,6 +71,16 @@ public class Cell {
     }
 
     /**
+     * Sets current State and Color of Cell object.
+     * @param state the state the object.
+     * @param color the color the object.
+     */
+    public void setState(int state, Color color) {
+        myCurrState = state;
+        myCurrColor = color;
+    }
+
+    /**
      * Getter method for column in which Cell object is located
      * @return column
      */

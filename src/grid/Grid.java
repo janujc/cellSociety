@@ -7,7 +7,14 @@ import java.util.List;
 
 public abstract class Grid {
 
-    protected Cell[][] myGrid;
+    /**
+     * The simulation grid made up of cells each with their own state (represented by an int)
+     * <p>
+     * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
+     * the element of each row in a particular column
+     */
+    protected final Cell[][] myGrid;
+
     public final int mySize;
     public final Color[] myColors;
 

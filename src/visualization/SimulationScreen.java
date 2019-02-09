@@ -39,6 +39,7 @@ public class SimulationScreen {
     private double pausedFor = 0; // How many milliseconds we've been paused for before animating
     private Rectangle[][] gridViews;
     private double currentCellSize;
+    private Text titleText;
 
     private ArrayList<Cell[][]> history;
     private int historyPos = 0;
@@ -53,7 +54,7 @@ public class SimulationScreen {
         this.className = className;
 
         var container = new Group();
-        Text titleText = makeText(label, sofiaPro, Color.SLATEGREY,
+        titleText = makeText(label, sofiaPro, Color.SLATEGREY,
                 scene.getWidth() / 2,
                 scene.getHeight() / 10);
 
@@ -227,8 +228,11 @@ public class SimulationScreen {
         File chosenFile = fileChooser.showOpenDialog(myStage);
         if (chosenFile != null) {
             try {
-                Simulation newSim = ConfigParser.parseConfigFile(chosenFile.getAbsolutePath(), className);
+                Simulation newSim = ConfigParser.parseConfigFile(chosenFile.getAbsolutePath());
                 processSimulation(newSim);
+                titleText.setText(newSim.getDisplayName());
+                titleText.setX((myStage.getScene().getWidth() / 2) - titleText.getLayoutBounds().getWidth()/2);
+                titleText.setY((myStage.getScene().getHeight() / 10) - titleText.getLayoutBounds().getHeight()/2);
             } catch (Exception e) {
                 e.printStackTrace();
             }

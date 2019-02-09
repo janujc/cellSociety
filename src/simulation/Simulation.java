@@ -49,7 +49,7 @@ public abstract class Simulation {
      */
     final Random rand;
 
-    private String currentFileName;
+    private String currentFileName, displayName;
 
     /**
      * Creates and populates the simulation grid
@@ -81,6 +81,22 @@ public abstract class Simulation {
      */
     public String getCurrentFileName() {
         return currentFileName;
+    }
+
+    /**
+     * Stores the simulation's display name
+     * @param fileName name of the configuration file
+     */
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    /**
+     * Returns the simulation's display name
+     * @return
+     */
+    public String getDisplayName() {
+        return displayName;
     }
 
     /**

@@ -67,7 +67,7 @@ public class HomeScreen {
         // Just use an arbitrary simulation class for test
         try {
             SimulationScreen simulationScreen = new SimulationScreen(myScene, context.getStage(),
-                    ConfigParser.parseConfigFile(configFolder + "default.xml", className),
+                    ConfigParser.parseConfigFile(configFolder + "default.xml"),
                     label, configFolder, className);
             context.setSimulationScreen(simulationScreen);
             ((Group) myScene.getRoot()).getChildren().add(simulationScreen.getContainer());

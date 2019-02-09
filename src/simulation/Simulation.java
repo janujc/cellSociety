@@ -23,21 +23,30 @@ public abstract class Simulation {
      * the element of each row in a particular column
      */
     protected final Cell[][] grid;
-    /**
-     * Used for random number generation. Implemented as an instance variable to avoid initializing multiple times in a
-     * short time period, resulting in similar seeds.
-     */
-    final Random rand;
+
     /**
      * The length of one side of the grid
      * <p>
      * Grid is always a square, so its dimensions are gridSideSize x gridSideSize
      */
     final int gridSideSize;
+
+    /**
+     * The value for a cell's next state that has not been set (after initialization and each step). All simulations
+     * must not use this value for other states.
+     */
+    static final int UNDETERMINED = -1;
+
     /**
      * The array of colors for each possible state where the index is the corresponding state
      */
     final Color[] colors;
+
+    /**
+     * Used for random number generation. Implemented as an instance variable to avoid initializing multiple times in a
+     * short time period, resulting in similar seeds.
+     */
+    final Random rand;
 
     /**
      * Creates and populates the simulation grid

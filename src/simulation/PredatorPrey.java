@@ -20,7 +20,6 @@ public class PredatorPrey extends Simulation {
     private static final int EMPTY = 0;
     private static final int FISH = 1;
     private static final int SHARK = 2;
-    private static final int UNDETERMINED = -1;    // only possible for next states
 
     /**
      * The color of an empty cell

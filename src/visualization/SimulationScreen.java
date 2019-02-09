@@ -19,6 +19,9 @@ import utils.Dialogs;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static uitools.TextGenerator.makeText;
 import static uitools.TextGenerator.makeTextRelative;
@@ -41,6 +44,7 @@ public class SimulationScreen {
     private Rectangle[][] gridViews;
     private double currentCellSize;
     private Text titleText;
+    private Map<Color, Map<Integer, Integer>> populationStats; // Color -> {iteration: freq}
 
     private ArrayList<Cell[][]> history;
     private int historyPos = 0;
@@ -53,6 +57,7 @@ public class SimulationScreen {
         this.history = new ArrayList<>();
         this.configFolder = configFolder;
         this.className = className;
+        this.populationStats = new HashMap<>();
 
         var container = new Group();
         titleText = makeText(label, sofiaPro, Color.SLATEGREY,
@@ -234,6 +239,7 @@ public class SimulationScreen {
                 titleText.setText(newSim.getDisplayName());
                 titleText.setX((myStage.getScene().getWidth() / 2) - titleText.getLayoutBounds().getWidth()/2);
                 titleText.setY((myStage.getScene().getHeight() / 10) - titleText.getLayoutBounds().getHeight()/2);
+                populationStats.clear();
             } catch (Exception e) {
                 Dialogs.showAlert("Erroneous configuration file chosen.");
             }
@@ -333,12 +339,30 @@ public class SimulationScreen {
             historyPos++;
         } else {
             Cell[][] oldGrid = makeDeepCopy(simulation.getGrid());
+            updatePopulationStats(oldGrid, historyPos);
 
             history.add(oldGrid); // Save current grid in history
             historyPos++;
             simulation.step(); // Compute next grid
             Cell[][] newGrid = simulation.getGrid(); // Get next grid
             renderGrid(newGrid);
+        }
+    }
+
+    private void updatePopulationStats(Cell[][] grid, int historyPos) {
+        for (Cell[] row : grid) {
+            for (Cell cell : row) {
+                if (!populationStats.containsKey(cell.getCurrColor())) {
+                    populationStats.put(cell.getCurrColor(), new HashMap<>());
+                }
+
+                if (populationStats.get(cell.getCurrColor()).containsKey(historyPos)) {
+                    populationStats.get(cell.getCurrColor()).put(historyPos,
+                            populationStats.get(cell.getCurrColor()).get(historyPos) + 1);
+                } else {
+                    populationStats.get(cell.getCurrColor()).put(historyPos, 1);
+                }
+            }
         }
     }
 

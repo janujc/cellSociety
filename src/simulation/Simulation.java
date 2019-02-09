@@ -68,28 +68,6 @@ public abstract class Simulation {
     }
 
     /**
-     * Creates and populates the simulation grid randomly based on number of cells to occupy per state.
-     * @param sideSize      the length of one side of the grid
-     * @param states        the possible states of the cells in the simulation grid
-     * @param numToOccupy   the number of cells each state must occupy
-     * @param stateColors   the cell colors of each state in the simulation
-     */
-    protected  Simulation(int sideSize, Integer[] states, Integer[] numToOccupy, Color[] stateColors) {
-        // TODO
-    }
-
-    /**
-     * Creates and populates the simulation grid randomly based on number of cells to occupy per state.
-     * @param sideSize      the length of one side of the grid
-     * @param states        the possible states of the cells in the simulation grid
-     * @param cells         a 2D array with all cells and their associated state
-     * @param stateColors   the cell colors of each state in the simulation
-     */
-    protected Simulation(int sideSize, Integer[] states, Integer[][] cells, Color[] stateColors) {
-        // TODO
-    }
-
-    /**
      * Stores the name of the configuration file currently being used
      * @param fileName name of the configuration file
      */

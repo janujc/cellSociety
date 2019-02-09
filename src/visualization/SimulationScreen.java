@@ -116,23 +116,31 @@ public class SimulationScreen {
         processSimulation(simulation);
     }
 
+    private Group menuGroup = null;
     public void showMenu() {
-        Group menuGroup = new Group();
+        menuGroup = new Group();
         Rectangle dialogBox = new Rectangle(0, 0, 350, 350);
-        dialogBox.setEffect(new DropShadow(10, Color.DARKGREY));
+        dialogBox.setEffect(new DropShadow(25, 0, 0, Color.web("#333333")));
         dialogBox.setArcWidth(20);
         dialogBox.setArcHeight(20);
         dialogBox.setFill(Color.WHITE);
-        menuGroup.getChildren().addAll(dialogBox);
-        menuGroup.setLayoutY(myStage.getScene().getHeight()/2 - menuGroup.getLayoutBounds().getHeight()/2);
-        menuGroup.setLayoutX(myStage.getScene().getWidth()/2 - menuGroup.getLayoutBounds().getWidth()/2);
 
         Control closeControl = new CloseControl(this);
-        closeControl.getView().setLayoutX(dialogBox.getLayoutBounds().getWidth() - closeControl.getView().getLayoutBounds().getWidth() - 15);
-        closeControl.getView().setLayoutY(15);
+        closeControl.getView().setLayoutX(dialogBox.getWidth() - 50);
+        closeControl.getView().setLayoutY(10);
         closeControl.getView().setCursor(Cursor.HAND);
         closeControl.getView().setTooltip(new Tooltip("Close Menu"));
+
+        menuGroup.getChildren().addAll(dialogBox, closeControl.getView());
+        menuGroup.setLayoutY(myStage.getScene().getHeight()/2 - dialogBox.getLayoutBounds().getHeight()/2 - 15);
+        menuGroup.setLayoutX(myStage.getScene().getWidth()/2 - dialogBox.getLayoutBounds().getWidth()/2);
+
         myContainer.getChildren().add(menuGroup);
+    }
+
+    public void closeMenu() {
+        myContainer.getChildren().remove(menuGroup);
+        menuGroup = null;
     }
 
     private void processSimulation(Simulation simulation) {

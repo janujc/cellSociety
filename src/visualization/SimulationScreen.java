@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import static uitools.TextGenerator.makeText;
+import static uitools.TextGenerator.makeTextRelative;
 import static visualization.Controller.*;
 
 /**
@@ -118,11 +119,14 @@ public class SimulationScreen {
     private Group menuGroup = null;
     public void showMenu() {
         menuGroup = new Group();
-        Rectangle dialogBox = new Rectangle(0, 0, 350, 350);
+        Rectangle dialogBox = new Rectangle(0, 0, 350, 240);
         dialogBox.setEffect(new DropShadow(25, 0, 0, Color.web("#333333")));
         dialogBox.setArcWidth(20);
         dialogBox.setArcHeight(20);
         dialogBox.setFill(Color.WHITE);
+
+        double originY = myStage.getScene().getHeight()/2 - dialogBox.getLayoutBounds().getHeight()/2 - 15;
+        double originX = myStage.getScene().getWidth()/2 - dialogBox.getLayoutBounds().getWidth()/2;
 
         Control closeControl = new CloseControl(this);
         closeControl.getView().setLayoutX(dialogBox.getWidth() - 50);
@@ -130,15 +134,34 @@ public class SimulationScreen {
         closeControl.getView().setCursor(Cursor.HAND);
         closeControl.getView().setTooltip(new Tooltip("Close Menu"));
 
-        Control graphControl = new GraphControl(this);
-        graphControl.getView().setLayoutX(dialogBox.getWidth()/3 - graphControl.getView().getMaxWidth()/2);
-        graphControl.getView().setLayoutY(10);
-        graphControl.getView().setCursor(Cursor.HAND);
-        graphControl.getView().setTooltip(new Tooltip("Show graph"));
+        Text graphText = makeTextRelative("Population Graph", bebasKaiMedium, Color.SLATEGREY,
+        dialogBox.getWidth()/2, 85);
+        graphText.setCursor(Cursor.HAND);
+        graphText.setOnMouseClicked((event)->{
+            System.out.println("Clicked graph button");
+        });
 
-        menuGroup.getChildren().addAll(dialogBox, closeControl.getView(), graphControl.getView());
-        menuGroup.setLayoutY(myStage.getScene().getHeight()/2 - dialogBox.getLayoutBounds().getHeight()/2 - 15);
-        menuGroup.setLayoutX(myStage.getScene().getWidth()/2 - dialogBox.getLayoutBounds().getWidth()/2);
+        Text settingsText = makeTextRelative("Parameter settings", bebasKaiMedium, Color.SLATEGREY,
+                dialogBox.getWidth()/2, 85 + 40);
+        settingsText.setCursor(Cursor.HAND);
+        settingsText.setOnMouseClicked((event)->{
+            System.out.println("Clicked settings button");
+        });
+
+        Text saveText = makeTextRelative("Save current state", bebasKaiMedium, Color.SLATEGREY,
+                dialogBox.getWidth()/2, 85 + 80);
+        saveText.setCursor(Cursor.HAND);
+        saveText.setOnMouseClicked((event)->{
+            System.out.println("Clicked save button");
+        });
+
+        Text compareText = makeTextRelative("Compare with another simulation", bebasKaiMedium, Color.SLATEGREY,
+                dialogBox.getWidth()/2, 85 + 120);
+
+        menuGroup.getChildren().addAll(dialogBox, closeControl.getView(), graphText, settingsText, saveText,
+                compareText);
+        menuGroup.setLayoutY(originY);
+        menuGroup.setLayoutX(originX);
 
         myContainer.getChildren().add(menuGroup);
     }

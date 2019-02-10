@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.StackPane;
@@ -157,7 +158,7 @@ public class SimulationScreen {
                 dialogBox.getWidth()/2, 85 + 40);
         settingsText.setCursor(Cursor.HAND);
         settingsText.setOnMouseClicked((event)->{
-            System.out.println("Clicked settings button");
+            handleSettingsClick();
         });
 
         Text saveText = makeTextRelative("Save current state", bebasKaiMedium, Color.SLATEGREY,
@@ -180,6 +181,47 @@ public class SimulationScreen {
         menuGroup.setLayoutX(originX);
 
         myContainer.getChildren().add(menuGroup);
+    }
+
+    private void handleSettingsClick () {
+        // Remove everything but the box and the close button
+        while (menuGroup.getChildren().size() > 2)
+            menuGroup.getChildren().remove(2);
+
+        TextField gridSizeTf = new TextField();
+        gridSizeTf.setPromptText("Enter grid size (e.g. 100)");
+        gridSizeTf.setLayoutX(30);
+        gridSizeTf.setLayoutY(60);
+        gridSizeTf.setPrefWidth(menuGroup.getChildren().get(0).getLayoutBounds().getWidth() - 60);
+
+        TextField popFreqsTf = new TextField();
+        popFreqsTf.setPromptText("Enter population frequencies (e.g. 0.3, 0.7)");
+        popFreqsTf.setLayoutX(30);
+        popFreqsTf.setLayoutY(60 + 30);
+        popFreqsTf.setPrefWidth(menuGroup.getChildren().get(0).getLayoutBounds().getWidth() - 60);
+
+        Text random = makeTextRelative("If you don't want to specify\nfrequencies, enter \"RANDOM\" above to\nrandomly " +
+                "assign states to cells.", sofiaProSmall, Color.SLATEGREY, 180, 160);
+
+        Rectangle saveButton = new Rectangle(100, 30, Color.SLATEGREY);
+        saveButton.setX(menuGroup.getChildren().get(0).getLayoutBounds().getWidth()/2 - saveButton.getLayoutBounds().getWidth()/2);
+        saveButton.setArcHeight(20);
+        saveButton.setArcWidth(20);
+        saveButton.setCursor(Cursor.HAND);
+        //saveButton.setOnMouseClicked(saveHandler);
+        saveButton.setY(menuGroup.getChildren().get(0).getLayoutBounds().getHeight() - saveButton.getLayoutBounds().getHeight()/2 - 45);
+
+        Text saveText = new Text("Save");
+        saveText.setFont(bebasKai);
+        saveText.setFill(Color.GHOSTWHITE);
+        saveText.setCursor(Cursor.HAND);
+        saveText.toFront();
+        //saveText.setOnMouseClicked(saveHandler);
+        saveText.setX(menuGroup.getChildren().get(0).getLayoutBounds().getWidth()/2 - saveText.getLayoutBounds().getWidth()/2);
+        saveText.setY(menuGroup.getChildren().get(0).getLayoutBounds().getHeight() - saveText.getLayoutBounds().getHeight()/2 - 32.5);
+
+        menuGroup.getChildren().addAll(gridSizeTf, popFreqsTf, random, saveButton, saveText);
+
     }
 
     private LineChart<Number,Number> lineChart = null;
@@ -205,6 +247,7 @@ public class SimulationScreen {
 
         stage.setScene(scene);
         stage.show();
+        closeMenu();
     }
 
     public void closeMenu() {

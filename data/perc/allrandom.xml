@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Root doctype="simulation_config">
+    <SideSize count="100" />
+    <Class class="simulation.Percolation" />
+    <Name name="Percolation" />
+    <Data type="allrandom">
+        <Item state="0"
+              color="#000000"/>
+        <Item state="1"
+              color="#FFFFFF"/>
+        <Item state="2"
+              color="#0000FF"/>
+    </Data>
+</Root>

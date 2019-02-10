@@ -2,6 +2,7 @@ package utils;
 
 import javafx.scene.paint.Color;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import simulation.Simulation;
 
 import java.io.File;
@@ -62,6 +63,61 @@ public class ConfigParser {
                 returnable.setDisplayName(displayName);
                 returnable.setCurrentFileName(fileName);
                 return returnable;
+            } else if (data.getAttribute("type").equals("allrandom")) {
+                ArrayList<Integer> states = new ArrayList<>();
+                ArrayList<Color> colors = new ArrayList<>();
+                for (int i = 0; i < data.getElementsByTagName("Item").getLength(); i++) {
+                    Element item = (Element) data.getElementsByTagName("Item").item(i);
+                    states.add(Integer.valueOf(item.getAttribute("state")));
+                    colors.add(Color.web(item.getAttribute("color")));
+                }
+                Class<?> clazz = Class.forName(className);
+                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Color[].class, String.class);
+                Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), colors.toArray(new Color[0]), metadata);
+                returnable.setDisplayName(displayName);
+                returnable.setCurrentFileName(fileName);
+                return returnable;
+            } else if (data.getAttribute("type").equals("fixednumber")) {
+                ArrayList<Integer> numbers = new ArrayList<>();
+                ArrayList<Integer> states = new ArrayList<>();
+                ArrayList<Color> colors = new ArrayList<>();
+                for (int i = 0; i < data.getElementsByTagName("Item").getLength(); i++) {
+                    Element item = (Element) data.getElementsByTagName("Item").item(i);
+                    states.add(Integer.valueOf(item.getAttribute("state")));
+                    numbers.add(Integer.valueOf(item.getAttribute("number")));
+                    colors.add(Color.web(item.getAttribute("color")));
+                }
+                Class<?> clazz = Class.forName(className);
+                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Integer[].class, Color[].class, String.class);
+                Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]),
+                        numbers.toArray(new Integer[0]), colors.toArray(new Color[0]), metadata);
+                returnable.setDisplayName(displayName);
+                returnable.setCurrentFileName(fileName);
+                return returnable;
+            } else if (data.getAttribute("type").equals("specific")) {
+                Integer[][] cells = new Integer[sideSize][sideSize];
+
+                for (int i = 0; i < data.getElementsByTagName("Row").getLength(); i++) {
+                    Node item = (Node) data.getElementsByTagName("Row").item(i);
+                    int j = 0;
+                    for(String number : item.getTextContent().split(",")) {
+                        cells[i][j++] = Integer.valueOf(number);
+                    }
+                }
+                ArrayList<Integer> states = new ArrayList<>();
+                ArrayList<Color> colors = new ArrayList<>();
+                for (int i = 0; i < data.getElementsByTagName("Item").getLength(); i++) {
+                    Element item = (Element) data.getElementsByTagName("Item").item(i);
+                    states.add(Integer.valueOf(item.getAttribute("state")));
+                    colors.add(Color.web(item.getAttribute("color")));
+                }
+                Class<?> clazz = Class.forName(className);
+                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Integer[][].class, Color[].class, String.class);
+                Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]),
+                        cells, colors.toArray(new Color[0]), metadata);
+                returnable.setDisplayName(displayName);
+                returnable.setCurrentFileName(fileName);
+                return returnable;
             } else {
                 return null;
             }
@@ -86,6 +142,11 @@ public class ConfigParser {
                 currentRow = currentRow.substring(0, currentRow.length() - 1);
                 currentRow = currentRow.concat("</Row>\n");
                 datawrapper = datawrapper.concat(currentRow);
+            }
+
+            int stateIndex = 0;
+            for(Color color : simulation.getColors()) {
+                datawrapper = datawrapper.concat("\t\t<Item state=\""+(stateIndex++)+"\" color=\""+color.toString()+"\"/>\n");
             }
             datawrapper = datawrapper.concat("\t</Data>\n");
 

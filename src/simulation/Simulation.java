@@ -42,6 +42,10 @@ public abstract class Simulation {
      */
     final Color[] colors;
 
+    public Color[] getColors() {
+        return colors;
+    }
+
     /**
      * Used for random number generation. Implemented as an instance variable to avoid initializing multiple times in a
      * short time period, resulting in similar seeds.

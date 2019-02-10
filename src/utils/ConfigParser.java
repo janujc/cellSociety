@@ -5,8 +5,11 @@ import org.w3c.dom.Element;
 import simulation.Simulation;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * Author: Anshu Dwibhashi
@@ -64,6 +67,39 @@ public class ConfigParser {
             }
         } catch (Exception e) {
             throw (e);
+        }
+    }
+
+    public static void addGridToFile(File chosenFile, Simulation simulation) {
+        try {
+            File inputFile = new File(simulation.getCurrentFileName());
+            Scanner scanner = new Scanner(inputFile);
+            String text = scanner.useDelimiter("\\A").next();
+            scanner.close();
+
+            String datawrapper = "<Data type=\"specific\">\n";
+            for (Cell[] row : simulation.getGrid()) {
+                String currentRow = "\t\t<Row>";
+                for (Cell cell : row) {
+                    currentRow = currentRow.concat(cell.getCurrState() + ",");
+                }
+                currentRow = currentRow.substring(0, currentRow.length() - 1);
+                currentRow = currentRow.concat("</Row>\n");
+                datawrapper = datawrapper.concat(currentRow);
+            }
+            datawrapper = datawrapper.concat("\t</Data>\n");
+
+            String substringToReplace = text.substring(
+                    text.indexOf("<Data"), text.indexOf("</Data>") + "</Data>".length()
+            );
+
+            String contents = text.replace(substringToReplace, datawrapper);
+
+            try (PrintStream out = new PrintStream(new FileOutputStream(chosenFile.getAbsolutePath()))) {
+                out.print(contents);
+            }
+        } catch (Exception e) {
+            Dialogs.showAlert("File not found");
         }
     }
 }

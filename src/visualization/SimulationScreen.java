@@ -165,7 +165,7 @@ public class SimulationScreen {
                 dialogBox.getWidth()/2, 85 + 80);
         saveText.setCursor(Cursor.HAND);
         saveText.setOnMouseClicked((event)->{
-            System.out.println("Clicked save button");
+            handleSaveClick();
         });
 
         Text compareText = makeTextRelative("Compare with another simulation", bebasKaiMedium, Color.SLATEGREY,
@@ -208,7 +208,7 @@ public class SimulationScreen {
         saveButton.setArcHeight(20);
         saveButton.setArcWidth(20);
         saveButton.setCursor(Cursor.HAND);
-        //saveButton.setOnMouseClicked(saveHandler);
+        //saveButton.setOnMouseClicked();
         saveButton.setY(menuGroup.getChildren().get(0).getLayoutBounds().getHeight() - saveButton.getLayoutBounds().getHeight()/2 - 45);
 
         Text saveText = new Text("Save");
@@ -216,12 +216,27 @@ public class SimulationScreen {
         saveText.setFill(Color.GHOSTWHITE);
         saveText.setCursor(Cursor.HAND);
         saveText.toFront();
-        //saveText.setOnMouseClicked(saveHandler);
+        //saveText.setOnMouseClicked();
         saveText.setX(menuGroup.getChildren().get(0).getLayoutBounds().getWidth()/2 - saveText.getLayoutBounds().getWidth()/2);
         saveText.setY(menuGroup.getChildren().get(0).getLayoutBounds().getHeight() - saveText.getLayoutBounds().getHeight()/2 - 32.5);
 
         menuGroup.getChildren().addAll(gridSizeTf, popFreqsTf, random, saveButton, saveText);
 
+    }
+
+    private void handleSaveClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(configFolder));
+        File chosenFile = fileChooser.showSaveDialog(myStage);
+        if (chosenFile != null) {
+            // Now save current state in this file
+            if(!chosenFile.getAbsolutePath().endsWith(".xml")) {
+                chosenFile = new File(chosenFile.getAbsolutePath()+".xml");
+            }
+            ConfigParser.addGridToFile(chosenFile, simulation);
+        }
+        Dialogs.showAlert("File saved!");
+        closeMenu();
     }
 
     private LineChart<Number,Number> lineChart = null;

@@ -5,29 +5,13 @@ import utils.Cell;
 
 import java.util.List;
 
-// TODO:
 public class Triangular extends Grid {
     public Triangular(int size, Color[] colors ) {
-        super(size, colors);
+        super(size, colors, 1.5);
     }
 
     @Override
-    public void populateGrid() {
-
-    }
-
-    @Override
-    public void populateGrid(Integer[] states, Double[] populationFreqs) {
-
-    }
-
-    @Override
-    public void populateGrid(Integer[][] states) {
-
-    }
-
-    @Override
-    public List<Cell> getNeighbors(Cell center, int arrangement) {
+    public List<Cell> getNeighbors(Cell center, Boolean onlyCardinal) {
         return null;
     }
 }

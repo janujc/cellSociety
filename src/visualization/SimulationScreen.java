@@ -3,9 +3,14 @@ package visualization;
 import controls.*;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
@@ -19,6 +24,9 @@ import utils.Dialogs;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static uitools.TextGenerator.makeText;
 import static uitools.TextGenerator.makeTextRelative;
@@ -41,6 +49,7 @@ public class SimulationScreen {
     private Rectangle[][] gridViews;
     private double currentCellSize;
     private Text titleText;
+    private Map<Color, XYChart.Series<Number, Number>> populationStats; // Color -> {iteration: freq}
 
     private ArrayList<Cell[][]> history;
     private int historyPos = 0;
@@ -53,6 +62,7 @@ public class SimulationScreen {
         this.history = new ArrayList<>();
         this.configFolder = configFolder;
         this.className = className;
+        this.populationStats = new HashMap<>();
 
         var container = new Group();
         titleText = makeText(label, sofiaPro, Color.SLATEGREY,
@@ -140,7 +150,7 @@ public class SimulationScreen {
         dialogBox.getWidth()/2, 85);
         graphText.setCursor(Cursor.HAND);
         graphText.setOnMouseClicked((event)->{
-            System.out.println("Clicked graph button");
+            handleGraphClick();
         });
 
         Text settingsText = makeTextRelative("Parameter settings", bebasKaiMedium, Color.SLATEGREY,
@@ -170,6 +180,31 @@ public class SimulationScreen {
         menuGroup.setLayoutX(originX);
 
         myContainer.getChildren().add(menuGroup);
+    }
+
+    private LineChart<Number,Number> lineChart = null;
+    private void handleGraphClick() {
+        Stage stage = new Stage();
+        stage.setTitle("Populations over time");
+        //defining the axes
+        final NumberAxis xAxis = new NumberAxis();
+        final NumberAxis yAxis = new NumberAxis();
+        xAxis.setLabel("Time");
+        yAxis.setLabel("Population");
+
+        //creating the chart
+        lineChart =
+                new LineChart<Number,Number>(xAxis,yAxis);
+
+        Scene scene  = new Scene(lineChart,800,600);
+        for (Color color : populationStats.keySet()) {
+            addToLine(color);
+        }
+
+        lineChart.setLegendVisible(false);
+
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void closeMenu() {
@@ -234,6 +269,7 @@ public class SimulationScreen {
                 titleText.setText(newSim.getDisplayName());
                 titleText.setX((myStage.getScene().getWidth() / 2) - titleText.getLayoutBounds().getWidth()/2);
                 titleText.setY((myStage.getScene().getHeight() / 10) - titleText.getLayoutBounds().getHeight()/2);
+                populationStats.clear();
             } catch (Exception e) {
                 Dialogs.showAlert("Erroneous configuration file chosen.");
             }
@@ -333,12 +369,67 @@ public class SimulationScreen {
             historyPos++;
         } else {
             Cell[][] oldGrid = makeDeepCopy(simulation.getGrid());
+            updatePopulationStats(oldGrid, historyPos);
 
             history.add(oldGrid); // Save current grid in history
             historyPos++;
             simulation.step(); // Compute next grid
             Cell[][] newGrid = simulation.getGrid(); // Get next grid
             renderGrid(newGrid);
+        }
+    }
+
+    private void updatePopulationStats(Cell[][] grid, int historyPos) {
+        Map<Color, Integer> popThisIteration = new HashMap<>();
+        for (Cell[] row : grid) {
+            for (Cell cell : row) {
+                if (!popThisIteration.containsKey(cell.getCurrColor())) {
+                    popThisIteration.put(cell.getCurrColor(), 1);
+                } else {
+                    popThisIteration.put(cell.getCurrColor(), popThisIteration.get(cell.getCurrColor()) + 1);
+                }
+            }
+        }
+        for (Color color : popThisIteration.keySet()) {
+            boolean needToAddToLine = false;
+            if (!populationStats.containsKey(color)) {
+                populationStats.put(color, new XYChart.Series<>());
+                if (lineChart != null) {
+                    needToAddToLine = true;
+                }
+            }
+
+            populationStats.get(color).getData().add(new XYChart.Data<>(historyPos, popThisIteration.get(color)));
+            if (needToAddToLine) {
+                addToLine(color);
+            }
+            cleanUpGraph();
+        }
+    }
+
+    private void addToLine(Color color) {
+        lineChart.getData().add(populationStats.get(color));
+
+        Node line = populationStats.get(color).getNode().lookup(".chart-series-line");
+
+        String rgb = String.format("%d, %d, %d",
+                (int) (color.getRed() * 255),
+                (int) (color.getGreen() * 255),
+                (int) (color.getBlue() * 255));
+        line.setStyle("-fx-stroke: rgba(" + rgb + ", 1.0);");
+    }
+
+    private void cleanUpGraph() {
+        if (lineChart != null) {
+            //in loop take all series
+            for (XYChart.Series<Number, Number> series : lineChart.getData()) {
+                //for all series, take date, each data has Node (symbol) for representing point
+                for (XYChart.Data<Number, Number> data : series.getData()) {
+                    // this node is StackPane
+                    StackPane stackPane = (StackPane) data.getNode();
+                    stackPane.setVisible(false);
+                }
+            }
         }
     }
 

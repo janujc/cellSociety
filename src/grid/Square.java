@@ -1,48 +1,33 @@
 package grid;
 
 import javafx.scene.paint.Color;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Random;
 import utils.Cell;
 
-// TODO: ADD TXT WITH RULES FOR GETTING NEIGHBORS FOR SQUARE CELL
 public class Square extends Grid {
+    private String fileName = "data/grid/SquareNeighbors.txt";
 
     public Square(int size, Color[] colors) {
-        super(size, colors);
+        super(size, colors, 1);
     }
 
-    public void populateGrid() {} // each state equally likely
-
-    public void populateGrid(Integer[] states, Double[] populationFreqs) {
-        Random rand = new Random();
-
-        for (int x = 0; x < mySize; x++) {
-            for (int y = 0; y < mySize; y++) {
-                int randNum = rand.nextInt(100);
-                double cumulativeFreqs = 0;
-                for (int k = 0; k < states.length; k++) {
-                    cumulativeFreqs += populationFreqs[k];
-                    if (randNum < 100 * (cumulativeFreqs)) {
-                        myGrid[x][y] = new Cell(states[k], x, y, myColors[k]);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
-    public void populateGrid(Integer[][] states) { // Given 2-d array
-
-    }
-
-    public List<Cell> getNeighbors(Cell center, int arrangement) {
-        List<int[]> neighborCoords = new ArrayList<>();
+    public List<Cell> getNeighbors(Cell center, Boolean bool) {
         int centerX = center.getCol();
         int centerY = center.getRow();
 
-        // Loop through all the neighbors and add them to neighborCoords
+        neighborCoords.add(new int[]{centerX, centerY - 1});    // North
+        neighborCoords.add(new int[]{centerX + 1, centerY});    // East
+        neighborCoords.add(new int[]{centerX, centerY + 1});    // South
+        neighborCoords.add(new int[]{centerX - 1, centerY});    // West
+
+        if (! bool) {
+            neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
+            neighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast
+            neighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest
+            neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest
+        }
 
         return validateNeighbors(neighborCoords);
     }

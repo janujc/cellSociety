@@ -8,26 +8,11 @@ import java.util.List;
 // TODO:
 public class Hexagonal extends Grid {
     public Hexagonal(int size, Color[] colors ) {
-        super(size, colors);
+        super(size, colors, 4);
     }
 
     @Override
-    public void populateGrid() {
-
-    }
-
-    @Override
-    public void populateGrid(Integer[] states, Double[] populationFreqs) {
-
-    }
-
-    @Override
-    public void populateGrid(Integer[][] states) {
-
-    }
-
-    @Override
-    public List<Cell> getNeighbors(Cell center, int arrangement) {
+    public List<Cell> getNeighbors(Cell center, Boolean onlyCardinal) {
         return null;
     }
 }

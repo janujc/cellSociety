@@ -205,6 +205,7 @@ public class SimulationScreen {
 
         stage.setScene(scene);
         stage.show();
+        closeMenu();
     }
 
     public void closeMenu() {

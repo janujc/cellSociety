@@ -5,7 +5,7 @@ import javafx.scene.paint.Color;
 import java.util.List;
 import java.util.Random;
 import utils.Cell;
-
+/*
 public class Square extends Grid {
     private String fileName = "data/grid/SquareNeighbors.txt";
 
@@ -32,3 +32,4 @@ public class Square extends Grid {
         return validateNeighbors(neighborCoords);
     }
 }
+*/

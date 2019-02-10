@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 import utils.Cell;
 
 import java.util.List;
-
+/*
 // TODO:
 public class Hexagonal extends Grid {
     public Hexagonal(int size, Color[] colors ) {
@@ -16,3 +16,4 @@ public class Hexagonal extends Grid {
         return null;
     }
 }
+*/

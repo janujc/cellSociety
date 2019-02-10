@@ -27,6 +27,7 @@ public abstract class Simulation {
      * The simulation grid made up of cells each with their own state (represented by an int)
      */
     protected final Grid myGrid;
+    protected final Cell[][] grid;
 
     // TODO Move this to the Grid class
     /**
@@ -58,8 +59,11 @@ public abstract class Simulation {
      * @param sideSize    the length of one side of the grid
      * @param stateColors the cell colors of each state in the simulation
      */
-    protected Simulation(int sideSize, Color[] stateColors) {
+    protected Simulation(int sideSize, Integer[] states, Color[] stateColors) {
+        gridSideSize = sideSize;
         colors = stateColors;
+        myGrid = new Grid(gridSideSize, states, colors);
+        grid = myGrid.getMyGrid();
         rand = new Random();
     }
 
@@ -72,8 +76,8 @@ public abstract class Simulation {
      * @param cells       the 2D array with the specified states, where the indices correspond to the grid
      */
     protected Simulation(int sideSize, Integer[] states, Color[] stateColors, Integer[][] cells) {
-        this(sideSize, stateColors);
-        myGrid = new myGrid(states, cells);
+        this(sideSize, states, stateColors);
+        myGrid.populateGrid(cells);
     }
 
     /**
@@ -83,10 +87,11 @@ public abstract class Simulation {
      * @param states      the possible states of the cells in the simulation grid
      * @param stateColors the cell colors of each state in the simulation
      */
+    /*
     protected Simulation(int sideSize, Integer[] states, Color[] stateColors) {
-        this(sideSize, stateColors);
-        myGrid.populate(states);
-    }
+        this(sideSize, states, stateColors);
+        myGrid = new Grid(states, colors);
+    }*/
 
     /**
      * Creates and populates the simulation grid randomly with specified numbers of each state
@@ -97,8 +102,8 @@ public abstract class Simulation {
      * @param stateColors the cell colors of each state in the simulation
      */
     protected Simulation(int sideSize, Integer[] states, Integer[] numToOccupy, Color[] stateColors) {
-        this(sideSize, stateColors);
-        myGrid.populate(states, numToOccupy);
+        this(sideSize, states, stateColors);
+        myGrid.populateGrid(states);
     }
 
     /**
@@ -110,8 +115,8 @@ public abstract class Simulation {
      * @param stateColors     the cell colors of each state in the simulation
      */
     protected Simulation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors) {
-        this(sideSize, stateColors);
-        myGrid.populate(states, populationFreqs);
+        this(sideSize, states, stateColors);
+        myGrid.populateGrid(states, populationFreqs);
     }
 
     /**
@@ -194,7 +199,7 @@ public abstract class Simulation {
      */
     public void step() {
         calculateNextStates();
-        grid.updateStates();
+        updateStates();
     }
 
     /**

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public abstract class Grid {
+public class Grid {
 
     /**
      * The simulation grid made up of cells each with their own state (represented by an int)
@@ -23,15 +23,21 @@ public abstract class Grid {
     public final int mySize;
     public final int myNumRows;
     public final int myNumCols;
+    private final Integer[] myStates;
     public final Color[] myColors;
     protected List<int[]> neighborCoords = new ArrayList<>();
 
-    public Grid(int size, Color[] colors, double mult) {
+    public Grid(int size, Integer[] states, Color[] colors) {
         mySize = size;
-        myNumCols = (int) (size * mult);
-        myNumRows = size;
+        myNumCols = mySize;
+        myNumRows = mySize;
+        myGrid = new Cell[myNumCols][myNumRows];
+        myStates = states;
         myColors = colors;
     }
+
+
+
 
     public void populateGrid(Integer[] states) {
         Random rand = new Random();
@@ -70,7 +76,7 @@ public abstract class Grid {
         }
     }
 
-    public abstract List<Cell> getNeighbors(Cell center, Boolean bool);
+    //public abstract List<Cell> getNeighbors(Cell center, Boolean bool);
 
 //    public static void neighborRules(String code, String fileName) {
 //        File file = new File(fileName);
@@ -97,7 +103,7 @@ public abstract class Grid {
         List<Cell> neighbors;
         List<Cell> neighborsOfType = new ArrayList<>();
 
-        neighbors = getNeighbors(center, onlyCardinal);
+        neighbors = new ArrayList<>(); //getNeighbors(center, onlyCardinal);
 
         for (Cell neighbor : neighbors) {
             if (neighbor.getCurrState() == type) {

@@ -24,10 +24,8 @@ import utils.ConfigParser;
 import utils.Dialogs;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Constructor;
+import java.util.*;
 
 import static uitools.TextGenerator.makeText;
 import static uitools.TextGenerator.makeTextRelative;
@@ -208,7 +206,7 @@ public class SimulationScreen {
         saveButton.setArcHeight(20);
         saveButton.setArcWidth(20);
         saveButton.setCursor(Cursor.HAND);
-        //saveButton.setOnMouseClicked();
+        saveButton.setOnMouseClicked(e -> changeParams(popFreqsTf.getText(), gridSizeTf.getText()));
         saveButton.setY(menuGroup.getChildren().get(0).getLayoutBounds().getHeight() - saveButton.getLayoutBounds().getHeight()/2 - 45);
 
         Text saveText = new Text("Save");
@@ -216,12 +214,65 @@ public class SimulationScreen {
         saveText.setFill(Color.GHOSTWHITE);
         saveText.setCursor(Cursor.HAND);
         saveText.toFront();
-        //saveText.setOnMouseClicked();
+        saveText.setOnMouseClicked(e -> changeParams(popFreqsTf.getText(), gridSizeTf.getText()));
         saveText.setX(menuGroup.getChildren().get(0).getLayoutBounds().getWidth()/2 - saveText.getLayoutBounds().getWidth()/2);
         saveText.setY(menuGroup.getChildren().get(0).getLayoutBounds().getHeight() - saveText.getLayoutBounds().getHeight()/2 - 32.5);
 
         menuGroup.getChildren().addAll(gridSizeTf, popFreqsTf, random, saveButton, saveText);
 
+    }
+
+    private void changeParams(String popFreqsText, String gridSizeText) {
+        try {
+            int gridSize;
+            if (gridSizeText == null || gridSizeText.isEmpty()) {
+                gridSize = simulation.getGrid().length;
+            } else {
+                gridSize = Integer.valueOf(gridSizeText);
+            }
+            boolean random = (popFreqsText == null || popFreqsText.isEmpty() || popFreqsText.equals("RANDOM"));
+
+            Simulation newSim;
+            Integer[] states = new Integer[simulation.getColors().length];
+            Arrays.setAll(states, i -> i);
+            if (random) {
+                Class<?> clazz = Class.forName(className);
+                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Color[].class, String.class);
+                newSim = (Simulation) constructor.newInstance(gridSize, states, simulation.getColors(), simulation.getMetadata());
+            } else {
+                Class<?> clazz = Class.forName(className);
+                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Double[].class, Color[].class, String.class);
+                ArrayList<Double> popFreqsList = new ArrayList<>();
+                double popFreqsSum = 0;
+                for (String item : popFreqsText.split(",")) {
+                    popFreqsList.add(Double.parseDouble(item));
+                    popFreqsSum += Double.parseDouble(item);
+                }
+                if (popFreqsSum < 1.0) {
+                    Dialogs.showAlert("Frequencies must add to 1");
+                    closeMenu(); return;
+                }
+                if (popFreqsList.size() != simulation.getColors().length) {
+                    Dialogs.showAlert("Not enough frequencies");
+                    closeMenu(); return;
+                }
+                newSim = (Simulation) constructor.newInstance(gridSize, states, popFreqsList.toArray(new Double[0]), simulation.getColors(), simulation.getMetadata());
+            }
+
+
+            newSim.setDisplayName(simulation.getDisplayName());
+            newSim.setCurrentFileName(simulation.getCurrentFileName());
+            newSim.setMetadata(simulation.getMetadata());
+
+            processSimulation(newSim);
+            titleText.setText(newSim.getDisplayName());
+            titleText.setX((myStage.getScene().getWidth() / 2) - titleText.getLayoutBounds().getWidth() / 2);
+            titleText.setY((myStage.getScene().getHeight() / 10) - titleText.getLayoutBounds().getHeight() / 2);
+            populationStats.clear();
+            closeMenu();
+        } catch (Exception e) {
+            Dialogs.showAlert("Malformed data provided");
+        }
     }
 
     private void handleSaveClick() {

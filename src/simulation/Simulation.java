@@ -29,6 +29,16 @@ public abstract class Simulation {
     protected final Grid myGrid;
     protected final Cell[][] grid;
 
+    protected String metadata;
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
+
     // TODO Move this to the Grid class
     /**
      * The length of one side of the grid

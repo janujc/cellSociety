@@ -61,6 +61,7 @@ public class ConfigParser {
                 Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Double[].class, Color[].class, String.class);
                 Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), popFreqs.toArray(new Double[0]), colors.toArray(new Color[0]), metadata);
                 returnable.setDisplayName(displayName);
+                returnable.setMetadata(metadata);
                 returnable.setCurrentFileName(fileName);
                 return returnable;
             } else if (data.getAttribute("type").equals("allrandom")) {
@@ -75,6 +76,7 @@ public class ConfigParser {
                 Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Color[].class, String.class);
                 Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), colors.toArray(new Color[0]), metadata);
                 returnable.setDisplayName(displayName);
+                returnable.setMetadata(metadata);
                 returnable.setCurrentFileName(fileName);
                 return returnable;
             } else if (data.getAttribute("type").equals("fixednumber")) {
@@ -92,6 +94,7 @@ public class ConfigParser {
                 Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]),
                         numbers.toArray(new Integer[0]), colors.toArray(new Color[0]), metadata);
                 returnable.setDisplayName(displayName);
+                returnable.setMetadata(metadata);
                 returnable.setCurrentFileName(fileName);
                 return returnable;
             } else if (data.getAttribute("type").equals("specific")) {
@@ -117,6 +120,7 @@ public class ConfigParser {
                         cells, colors.toArray(new Color[0]), metadata);
                 returnable.setDisplayName(displayName);
                 returnable.setCurrentFileName(fileName);
+                returnable.setMetadata(metadata);
                 return returnable;
             } else {
                 return null;

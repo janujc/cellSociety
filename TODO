@@ -17,14 +17,9 @@ Cell
 	Determine best value for undetermined next state (currently -1)
 
 Fire
+    Remove end state implementation
 ?    Determine if I need to implement extra rules
 
 PredatorPrey
 ?    Determine if it's ok that updates are not lock-step synchronized
 ?    Determine if using maps instead of mobile objects to save states is ok
-
-GameOfLife
-    Implement end state
-
-Segregation
-	Implement end state

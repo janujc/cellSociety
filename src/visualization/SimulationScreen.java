@@ -31,6 +31,8 @@ import static uitools.TextGenerator.makeText;
 import static uitools.TextGenerator.makeTextRelative;
 import static visualization.Controller.*;
 
+
+// TODO: Graph populations for shells too
 /**
  * Author: Anshu Dwibhashi
  * Class defining the screen that displays a simulation

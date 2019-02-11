@@ -53,7 +53,7 @@ public class Grid {
     }
 
     // populate randomly with a set number of each state
-    public void populate(Integer[] states, Color[] colors, Integer[] numToOccupy){
+    public void populate(Integer[] states, Color[] colors, Integer[] numToOccupy) {
         Random rand = new Random();
         int[] numAlreadyOccupied = new int[numToOccupy.length];
 

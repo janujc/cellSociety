@@ -2,12 +2,11 @@ package grid;
 
 import javafx.scene.paint.Color;
 import utils.Cell;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Grid {
+public abstract class Grid {
 
     /**
      * The simulation grid made up of cells each with their own state (represented by an int)
@@ -16,17 +15,20 @@ public class Grid {
      * the element of each row in a particular column
      */
     private final Cell[][] myGrid;
-
+    private final boolean isToroidal;
     private final int mySize;
     private final int myNumRows;
     private final int myNumCols;
 
-    private List<int[]> neighborCoords = new ArrayList<>();
+    final boolean onlyCardinalNeighbors;
+    List<int[]> neighborCoords = new ArrayList<>();
 
-    public Grid(int size) {
+    public Grid(int size, boolean onlyCardinal, boolean toroidal) {
         mySize = size;
         myNumCols = mySize;
         myNumRows = mySize;
+        onlyCardinalNeighbors = onlyCardinal;
+        isToroidal = toroidal;
         myGrid = new Cell[myNumCols][myNumRows];
     }
 
@@ -96,7 +98,7 @@ public class Grid {
         }
     }
 
-    //public abstract List<Cell> getNeighbors(Cell center, Boolean bool);
+    public abstract List<Cell> getNeighbors(Cell center);
 
 //    public static void neighborRules(String code, String fileName) {
 //        File file = new File(fileName);
@@ -119,11 +121,11 @@ public class Grid {
 //        }
 //    }
 
-    public List<Cell> getNeighborsOfType(Cell center, Boolean onlyCardinal, int type) {
+    public List<Cell> getNeighborsOfType(Cell center, int type) {
         List<Cell> neighbors;
         List<Cell> neighborsOfType = new ArrayList<>();
 
-        neighbors = new ArrayList<>(); //getNeighbors(center, onlyCardinal);
+        neighbors = getNeighbors(center);
 
         for (Cell neighbor : neighbors) {
             if (neighbor.getCurrState() == type) {
@@ -142,8 +144,22 @@ public class Grid {
             if (!(neighborX < 0 || neighborX >= myNumCols || neighborY < 0 || neighborY >= myNumRows)) {
                 neighbors.add(myGrid[neighborX][neighborY]);
             }
+            else if (isToroidal) {
+                int[] toroidalNeighborCoords = getToroidalNeighbor(neighborX, neighborY);
+                neighbors.add(myGrid[toroidalNeighborCoords[0]][toroidalNeighborCoords[1]]);
+            }
         }
         return neighbors;
+    }
+
+    private int[] getToroidalNeighbor(int x, int y) {
+        int toroidalX = x;
+        int toroidalY = y;
+        if (x < 0) toroidalX = myNumCols + x;
+        else if (x >= myNumCols) toroidalX = myNumCols - x;
+        if (y < 0) toroidalY = myNumRows + x;
+        else if (y >= myNumRows) toroidalX = myNumRows - x;
+        return new int[]{toroidalX, toroidalY};
     }
 
     public Cell[][] getMyGrid() {

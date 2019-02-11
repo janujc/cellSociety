@@ -5,11 +5,12 @@ import utils.Cell;
 import java.util.List;
 
 public class Hexagonal extends Grid {
-    public Hexagonal(int size, Integer[] states, Color[] colors) {
-        super(size, states, colors);
+    public Hexagonal(int size, boolean onlyCardinal, boolean toroidal) {
+        super(size, onlyCardinal, toroidal);
     }
 
-    public List<Cell> getNeighbors(Cell center, Boolean onlyCardinal) {
+    @Override
+    public List<Cell> getNeighbors(Cell center) {
         int centerX = center.getCol();
         int centerY = center.getRow();
 

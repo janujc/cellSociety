@@ -1,31 +1,31 @@
 package grid;
 
-import javafx.scene.paint.Color;
 import utils.Cell;
 
 import java.util.List;
 
 public class Triangular extends Grid {
-    public Triangular(int size, Integer[] states, Color[] colors) {
-        super(size, states, colors);
+    public Triangular(int size, boolean onlyCardinal, boolean toroidal) {
+        super(size, onlyCardinal, toroidal);
     }
 
-    public List<Cell> getNeighbors(Cell center, Boolean onlyCardinal) {
+    @Override
+    public List<Cell> getNeighbors(Cell center) {
         int centerX = center.getCol();
         int centerY = center.getRow();
 
-        if (((centerX + centerY) % 2) == 0) getNeighborsForSouth(centerX, centerY, onlyCardinal);
-        else getNeighborsForNorth(centerX, centerY, onlyCardinal);
+        if (((centerX + centerY) % 2) == 0) getNeighborsForSouth(centerX, centerY);
+        else getNeighborsForNorth(centerX, centerY);
 
         return validateNeighbors(neighborCoords);
     }
 
-    private void getNeighborsForNorth(int centerX, int centerY, Boolean onlyCardinal) {
+    private void getNeighborsForNorth(int centerX, int centerY) {
         neighborCoords.add(new int[]{centerX + 1, centerY});        // East
         neighborCoords.add(new int[]{centerX, centerY + 1});        // South
         neighborCoords.add(new int[]{centerX - 1, centerY});        // West
 
-        if (! onlyCardinal) {
+        if (! onlyCardinalNeighbors) {
             neighborCoords.add(new int[]{centerX, centerY - 1});        // North
             neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
             neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest
@@ -38,12 +38,12 @@ public class Triangular extends Grid {
         }
     }
 
-    private void getNeighborsForSouth(int centerX, int centerY, Boolean onlyCardinal) {
+    private void getNeighborsForSouth(int centerX, int centerY) {
         neighborCoords.add(new int[]{centerX, centerY - 1});        // North
         neighborCoords.add(new int[]{centerX + 1, centerY});        // East
         neighborCoords.add(new int[]{centerX - 1, centerY});        // West
 
-        if (! onlyCardinal) {
+        if (! onlyCardinalNeighbors) {
             neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
             neighborCoords.add(new int[]{centerX + 2, centerY - 1});    // Far Northeast
             neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest

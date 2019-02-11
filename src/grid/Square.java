@@ -7,11 +7,12 @@ import java.util.Random;
 import utils.Cell;
 
 public class Square extends Grid {
-    public Square(int size, Integer[] states, Color[] colors) {
-        super(size, states, colors);
+    public Square(int size, boolean onlyCardinal, boolean toroidal) {
+        super(size, onlyCardinal, toroidal);
     }
 
-    public List<Cell> getNeighbors(Cell center, Boolean onlyCardinal) {
+    @Override
+    public List<Cell> getNeighbors(Cell center) {
         int centerX = center.getCol();
         int centerY = center.getRow();
 
@@ -20,7 +21,7 @@ public class Square extends Grid {
         neighborCoords.add(new int[]{centerX, centerY + 1});    // South
         neighborCoords.add(new int[]{centerX - 1, centerY});    // West
 
-        if (! onlyCardinal) {
+        if (! onlyCardinalNeighbors) {
             neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
             neighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast
             neighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest

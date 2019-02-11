@@ -3,12 +3,9 @@ package grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Grid {
 
@@ -18,49 +15,72 @@ public class Grid {
      * NOTE: grid is in (x, y) coordinate form, so the outer array represents the columns and the inner array represents
      * the element of each row in a particular column
      */
-    protected final Cell[][] myGrid;
+    private final Cell[][] myGrid;
 
-    public final int mySize;
-    public final int myNumRows;
-    public final int myNumCols;
-    private final Integer[] myStates;
-    public final Color[] myColors;
-    protected List<int[]> neighborCoords = new ArrayList<>();
+    private final int mySize;
+    private final int myNumRows;
+    private final int myNumCols;
 
-    public Grid(int size, Integer[] states, Color[] colors) {
+    private List<int[]> neighborCoords = new ArrayList<>();
+
+    public Grid(int size) {
         mySize = size;
         myNumCols = mySize;
         myNumRows = mySize;
         myGrid = new Cell[myNumCols][myNumRows];
-        myStates = states;
-        myColors = colors;
     }
 
+    // populate based on list of states
+    public void populate(Color[] colors, Integer[][] cells) {
+        for (int x = 0; x < myNumCols; x++) {
+            for (int y = 0; y < myNumRows; y++) {
+                int currState = cells[x][y];
+                myGrid[x][y] = new Cell(currState, x, y, colors[currState]);
+            }
+        }
+    }
 
-
-
-    public void populateGrid(Integer[] states) {
+    // populate randomly
+    public void populate(Integer[] states, Color[] colors) {
         Random rand = new Random();
 
         for (int x = 0; x < myNumCols; x++) {
             for (int y = 0; y < myNumRows; y++) {
                 int randNum = rand.nextInt(states.length);
-                myGrid[x][y] = new Cell(states[randNum], x, y, myColors[randNum]);
+                myGrid[x][y] = new Cell(states[randNum], x, y, colors[randNum]);
             }
         }
     }
 
-    public void populateGrid(Integer[] states, Double[] populationFreqs) {
+    // populate randomly with a set number of each state
+    public void populate(Integer[] states, Color[] colors, Integer[] numToOccupy){
+        Random rand = new Random();
+        int[] numAlreadyOccupied = new int[numToOccupy.length];
+
+        for (int x = 0; x < myNumCols; x++) {
+            for (int y = 0; y < myNumRows; y++) {
+                int randNum = rand.nextInt(states.length);
+                while (numAlreadyOccupied[randNum] == numToOccupy[randNum]) {
+                    randNum = rand.nextInt(states.length);
+                }
+                myGrid[x][y] = new Cell(states[randNum], x, y, colors[randNum]);
+                numAlreadyOccupied[randNum]++;
+            }
+        }
+    }
+
+    // populate based on population frequencies
+    public void populate(Integer[] states, Color[] colors, Double[] populationFreqs) {
         Random rand = new Random();
 
         for (int x = 0; x < myNumCols; x++) {
             for (int y = 0; y < myNumRows; y++) {
                 int randNum = rand.nextInt(100);
                 double cumulativeFreqs = 0;
-                for (int k = 0; k < states.length; k++) {
-                    cumulativeFreqs += populationFreqs[k];
+                for (int i = 0; i < states.length; i++) {
+                    cumulativeFreqs += populationFreqs[i];
                     if (randNum < 100 * (cumulativeFreqs)) {
-                        myGrid[x][y] = new Cell(states[k], x, y, myColors[k]);
+                        myGrid[x][y] = new Cell(states[i], x, y, colors[i]);
                         break;
                     }
                 }
@@ -68,10 +88,10 @@ public class Grid {
         }
     }
 
-    public void populateGrid(Integer[][] states){
-        for (int x = 0; x < myNumCols; x++) {
-            for (int y = 0; y < myNumRows; y++) {
-                myGrid[x][y] = new Cell(states[x][y], x, y, myColors[states[x][y]]);
+    public void updateStates() {
+        for (Cell[] column : myGrid) {
+            for (Cell cell : column) {
+                cell.updateState();
             }
         }
     }

@@ -75,7 +75,7 @@ public abstract class Simulation {
      */
     protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Integer[][] cells) {
         this(grid, simStates, stateColors);
-        myGrid.populate(states, colors, cells);
+        myGrid.populate(colors, cells);
     }
 
     /**

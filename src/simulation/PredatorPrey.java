@@ -1,5 +1,6 @@
 package simulation;
 
+import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
@@ -17,9 +18,9 @@ public class PredatorPrey extends Simulation {
     /**
      * The possible states of each cell in the PredatorPrey simulation
      */
-    private static final int EMPTY = 0;
-    private static final int FISH = 1;
-    private static final int SHARK = 2;
+    private final int EMPTY;
+    private final int FISH;
+    private final int SHARK;
 
     /**
      * The color of an empty cell
@@ -60,15 +61,20 @@ public class PredatorPrey extends Simulation {
     /**
      * Creates the simulation and calls the super constructor to create the grid
      *
-     * @param sideSize        the length of one side of the grid
+     * @param grid            the simulation grid
      * @param states          the possible states of the cells in the simulation grid
      * @param populationFreqs the population frequencies of the states (not exact percentages)
      * @param stateColors     the cell colors of each state in the simulation
      * @param simData         the string containing the PredatorPrey-specific parameters (NUM_TURNS_TO_BREED_FISH,
      *                        NUM_TURNS_TO_STARVE, NUM_TURNS_TO_BREED_SHARK) each separated by a comma (",")
      */
-    public PredatorPrey(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, String simData) {
-        super(sideSize, states, populationFreqs, stateColors);
+    public PredatorPrey(Grid grid, Integer[] states, Color[] stateColors, Double[] populationFreqs, String simData) {
+        super(grid, states, stateColors, populationFreqs);
+
+        EMPTY = states[0];
+        FISH = states[1];
+        SHARK = states[2];
+
         EMPTY_COLOR = colors[EMPTY];
 
         String[] data = simData.split(",");
@@ -85,7 +91,7 @@ public class PredatorPrey extends Simulation {
      * Adds all of the animals to the turn tracker and adds all of the sharks to the hunger tracker
      */
     private void initializeTrackers() {
-        for (Cell[] column : grid) {
+        for (Cell[] column : myCells) {
             for (Cell cell : column) {
                 int currState = cell.getCurrState();
                 if (currState == EMPTY) {
@@ -134,7 +140,7 @@ public class PredatorPrey extends Simulation {
     private List<Cell> getCellsInRandomOrder() {
         List<Cell> allCells = new ArrayList<>();
 
-        for (Cell[] column : grid) {
+        for (Cell[] column : myCells) {
             Collections.addAll(allCells, column);
         }
         Collections.shuffle(allCells, rand);

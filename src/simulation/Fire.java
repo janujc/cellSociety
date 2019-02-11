@@ -1,5 +1,6 @@
 package simulation;
 
+import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
@@ -17,9 +18,9 @@ public class Fire extends Simulation {
     /**
      * The possible states of each cell in the Fire simulation
      */
-    private static final int EMPTY = 0;
-    private static final int TREE = 1;
-    private static final int BURNING = 2;
+    private final int EMPTY;
+    private final int TREE;
+    private final int BURNING;
 
     /**
      * The probability that a tree next to a burning tree catches on fire, which is read from the config file
@@ -27,28 +28,21 @@ public class Fire extends Simulation {
     private final double PROB_CATCH;
 
     /**
-     * Describes whether the sim has reached its end state (no burning trees left). True if it has, false otherwise.
-     */
-    private boolean simComplete;
-    /**
-     * Describes whether the sim will reach its end states after the current step. True if it will, false otherwise.
-     */
-    private boolean simWillEndAfterStep;
-
-    /**
      * Creates the simulation and calls the super constructor to create the grid
      *
-     * @param sideSize        the length of one side of the grid
-     * @param states          the possible states of the cells in the simulation grid
-     * @param populationFreqs the population frequencies of the states (probabilities, not proportions)
+     * @param grid            the simulation grid
+     * @param simStates       the possible states of the cells in the simulation grid
      * @param stateColors     the cell colors of each state in the simulation
+     * @param populationFreqs the population frequencies of the states (probabilities, not proportions)
      * @param probCatch       the probability that a tree next to a burning tree catches on fire, read from the config
      *                        file (passed in a String, so need to parse)
      */
-    public Fire(int sideSize, Integer[] states, Double[] populationFreqs, Color[] stateColors, String probCatch) {
-        super(sideSize, states, populationFreqs, stateColors);
+    public Fire(Grid grid, Integer[] simStates, Color[] stateColors, Double[] populationFreqs, String probCatch) {
+        super(grid, simStates, stateColors, populationFreqs);
+        EMPTY = states[0];
+        TREE = states[1];
+        BURNING = states[2];
         PROB_CATCH = Double.valueOf(probCatch);
-        simComplete = false;
     }
 
     /**
@@ -58,25 +52,11 @@ public class Fire extends Simulation {
      */
     @Override
     protected void calculateNextStates() {
-
-        // assume this is true at first and only determine if it's false while calculating (simplest implementation)
-        simWillEndAfterStep = true;
-        for (Cell[] column : grid) {
+        for (Cell[] column : myCells) {
             for (Cell cell : column) {
-                int cellState;
-
-                // if sim has reaches its end state, no need to calculate new states
-                if (simComplete) {
-                    cellState = cell.getCurrState();
-                } else {
-                    cellState = calculateNextStateOfCurrCell(cell);
-                }
+                int cellState = calculateNextStateOfCurrCell(cell);
                 cell.setNextState(cellState, colors[cellState]);
             }
-        }
-
-        if (simWillEndAfterStep) {
-            simComplete = true;
         }
     }
 
@@ -110,16 +90,11 @@ public class Fire extends Simulation {
      * @return the next state of the cell containing the tree
      */
     private int calculateTreeNextState(Cell tree) {
-        List<Cell> burningNeighbors = getNeighborsOfType(tree, BURNING, true);
+        List<Cell> burningNeighbors = myGrid.getNeighborsOfType(tree, true, BURNING);
 
         if (!burningNeighbors.isEmpty()) {
             int randNum = rand.nextInt(100);
             if (randNum < PROB_CATCH * 100) {
-
-                // only need one tree to catch fire for the simulation to not end after the current step
-                if (simWillEndAfterStep) {
-                    simWillEndAfterStep = false;
-                }
                 return BURNING;
             }
         }

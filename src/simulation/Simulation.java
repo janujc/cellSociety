@@ -2,6 +2,7 @@ package simulation;
 
 import grid.Grid;
 import javafx.scene.paint.Color;
+import utils.Cell;
 
 import java.util.Random;
 
@@ -19,17 +20,18 @@ public abstract class Simulation {
      * must not use this value for other states.
      */
     static final int UNDETERMINED = -1;
-
-    /**
-     * The simulation grid made up of cells each with their own state (represented by an int)
-     */
-    protected final Grid myGrid;
-
     /**
      * The possible states of each cell in the simulation
      */
     protected final Integer[] states;
-
+    /**
+     * The simulation grid made up of cells each with their own state (represented by an int)
+     */
+    final Grid myGrid;
+    /**
+     * The 2d array of cells in the grid
+     */
+    final Cell[][] myCells;
     /**
      * The colors for each possible state where the index corresponds to the states array
      */
@@ -60,6 +62,7 @@ public abstract class Simulation {
      */
     protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors) {
         myGrid = grid;
+        myCells = myGrid.getMyGrid();
         states = simStates;
         colors = stateColors;
         rand = new Random();

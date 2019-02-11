@@ -1,25 +1,17 @@
 TODO
 
 General
-    Flip grid visualization on the NW-SW axis
 	Find way to hide grid data structure
-	Pick better colors for GameOfLife, Percolation, and Segregation (check Fire contrast)
+	Pick better colors for GameOfLife, Percolation, and Segregation
 	Implement way to display color key
-	Add UI input for simulation parameters
-	Make simulation completely stop if it has reached its end state (no more steps)
-	Make it so simulation can run indefinitely without crashing
-	Fix double-click glitches
 ?    Remove unnecessary javadoc comments
 ?    Determine if wildcard imports are ok
-	Determine if we need to write simulation rules in the comments
-
-Cell
-	Determine best value for undetermined next state (currently -1)
 
 Fire
-    Remove end state implementation
+    Make other constructors
 ?    Determine if I need to implement extra rules
 
 PredatorPrey
+    Make other constructors
 ?    Determine if it's ok that updates are not lock-step synchronized
 ?    Determine if using maps instead of mobile objects to save states is ok

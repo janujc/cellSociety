@@ -170,7 +170,7 @@ public class SimulationScreen {
                 dialogBox.getWidth()/2, 85 + 120);
         compareText.setCursor(Cursor.HAND);
         compareText.setOnMouseClicked((event)->{
-            System.out.println("Clicked compare button");
+            handleCompareClick();
         });
 
         menuGroup.getChildren().addAll(dialogBox, closeControl.getView(), graphText, settingsText, saveText,
@@ -179,6 +179,26 @@ public class SimulationScreen {
         menuGroup.setLayoutX(originX);
 
         myContainer.getChildren().add(menuGroup);
+    }
+
+    private void handleCompareClick() {
+        if (!isPaused) {
+            ((PlayPauseToggleControl) playPauseToggle).onClick();
+        }
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setInitialDirectory(new File(configFolder));
+        File chosenFile = fileChooser.showOpenDialog(myStage);
+        if (chosenFile != null) {
+            try {
+                Simulation compSim = ConfigParser.parseConfigFile(chosenFile.getAbsolutePath());
+                new SimulationShell(new Stage(), compSim, compSim.getDisplayName());
+                populationStats.clear();
+                // TODO: reset current simulation
+                // TODO: Add all shells to an instance var
+            } catch (Exception e) {
+                Dialogs.showAlert("Erroneous configuration file chosen.");
+            }
+        }
     }
 
     private void handleSettingsClick () {

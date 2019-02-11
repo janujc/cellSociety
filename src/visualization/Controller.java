@@ -132,11 +132,6 @@ public class Controller extends Application {
         if (code == KeyCode.ESCAPE && currentScreen == ScreenType.SIMULATION_SCREEN) {
             Animator.animate(myScene, (Group) ((Group) myScene.getRoot()).getChildren().get(1), ScreenType.HOME_SCREEN,
                     0, -WINDOW_WIDTH, WINDOW_WIDTH, 0, true, this);
-        } else if (code == KeyCode.K) {
-            Stage stage = new Stage();
-            new SimulationShell(stage, new Percolation(100, new Integer[]{0, 1, 2},
-                    new Double[]{0.1,0.6,0.3},
-                    new Color[]{Color.BLUE, Color.BLACK, Color.WHITE}, ""), "Percolation");
         }
     }
 

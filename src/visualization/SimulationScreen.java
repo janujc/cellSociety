@@ -194,7 +194,7 @@ public class SimulationScreen {
         if (chosenFile != null) {
             try {
                 Simulation compSim = ConfigParser.parseConfigFile(chosenFile.getAbsolutePath());
-                var simShell = new SimulationShell(new Stage(), compSim, compSim.getDisplayName(), rate);
+                var simShell = new SimulationShell(new Stage(), compSim, compSim.getDisplayName());
                 populationStats.clear();
 
                 // Reset current simulation
@@ -395,6 +395,10 @@ public class SimulationScreen {
                 + currentCellSize * row;
     }
 
+    public ArrayList<SimulationShell> getPossessedShells() {
+        return possessedShells;
+    }
+
     /**
      * Method to load new config file for this simulation
      */
@@ -432,6 +436,10 @@ public class SimulationScreen {
                 continueIn = 1000.0 / rate;
 
                 stepForward();
+
+                for(SimulationShell ss : possessedShells) {
+                    ss.stepForward();
+                }
             } else {
                 pausedFor += elapsedTime * 1000; // We continue to pause the animation
             }

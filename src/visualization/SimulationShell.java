@@ -19,19 +19,13 @@ public class SimulationShell {
     private Rectangle[][] gridViews;
     private Stage myStage;
     private double currentCellSize = 0.0;
-    private int rate = 1; // Frequency in Hertz
-    private boolean isPaused = true; // Paused by default
-    private double continueIn; // How many milliseconds we'll continue the animation in
-    private double pausedFor = 0; // How many milliseconds we've been paused for before animating
 
     // TODO: refactor render, getcelllox and initialise methods into new static class
     // TODO: interface that simulationshell and screen both implement
 
-    public SimulationShell(Stage myStage, Simulation simulation, String title, int rate) {
+    public SimulationShell(Stage myStage, Simulation simulation, String title) {
         this.myStage = myStage;
         this.history = new ArrayList<>();
-        this.rate = rate;
-        this.continueIn = 1000.0 / rate;
 
         myContainer = new Group();
         Scene scene = new Scene(myContainer, 400, 400, Color.GHOSTWHITE);
@@ -91,22 +85,14 @@ public class SimulationShell {
                 + currentCellSize * row;
     }
 
-    /**
-     * Method that changes state of the current simulation each frame
-     *
-     * @param elapsedTime
-     */
-    public void step(double elapsedTime) {
-        if (!isPaused) {
-            if (pausedFor >= continueIn) {
-                // We've paused enough
-                pausedFor = 0;
-                continueIn = 1000.0 / rate;
 
-                stepForward();
-            } else {
-                pausedFor += elapsedTime * 1000; // We continue to pause the animation
-            }
+    /**
+     * Method to reset the grid to how it was one cycle ago
+     */
+    public void stepBack() {
+        if (historyPos > 0) {
+            renderGrid(history.get(historyPos - 1));
+            historyPos--;
         }
     }
 
@@ -136,46 +122,6 @@ public class SimulationShell {
             }
         }
         return b;
-    }
-
-
-    /**
-     * Get whether the simulation is paused right now
-     *
-     * @return
-     */
-    public boolean getIsPaused() {
-        return isPaused;
-    }
-
-    /**
-     * Set whether the simulation is paused right now
-     *
-     * @param isPaused Whether the simulation is paused right now
-     */
-    public void setIsPaused(boolean isPaused) {
-        this.isPaused = isPaused;
-    }
-
-
-    /**
-     * Method to obtain the current rate of simulation
-     *
-     * @return Rate of simulation in Hertz
-     */
-    public int getRate() {
-        return rate;
-    }
-
-    /**
-     * Set the rate at which the simulation is taking place
-     *
-     * @param rate Rate of simulation in Hertz
-     */
-    public void setRate(int rate) {
-        if (rate > 0 && rate <= 10) { // rate can't go below 1 (that's just pause), and can't see clearly above 10
-            this.rate = rate;
-        }
     }
 
     public void destroy() {

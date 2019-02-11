@@ -3,6 +3,7 @@ package controls;
 import javafx.scene.image.Image;
 import uitools.CardGridGenerator;
 import visualization.SimulationScreen;
+import visualization.SimulationShell;
 
 /**
  * Author: Anshu Dwibhashi
@@ -20,6 +21,7 @@ public class SpeedUpControl extends Control {
      */
     @Override
     protected void onClick() {
-        context.setRate(context.getRate()+1);
+        int rate = context.getRate()+1;
+        context.setRate(rate);
     }
 }

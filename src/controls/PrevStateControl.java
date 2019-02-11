@@ -3,6 +3,7 @@ package controls;
 import javafx.scene.image.Image;
 import uitools.CardGridGenerator;
 import visualization.SimulationScreen;
+import visualization.SimulationShell;
 
 /**
  * Author: Anshu Dwibhashi
@@ -22,5 +23,8 @@ public class PrevStateControl extends Control {
     @Override
     public void onClick() {
         context.stepBack();
+        for(SimulationShell ss : context.getPossessedShells()) {
+            ss.stepBack();
+        }
     }
 }

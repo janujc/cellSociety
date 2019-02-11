@@ -130,6 +130,7 @@ public class Controller extends Application {
     // What to do each time a key is pressed
     private void handleKeyInput(KeyCode code) {
         if (code == KeyCode.ESCAPE && currentScreen == ScreenType.SIMULATION_SCREEN) {
+            simulationScreen.destroyPossessions();
             Animator.animate(myScene, (Group) ((Group) myScene.getRoot()).getChildren().get(1), ScreenType.HOME_SCREEN,
                     0, -WINDOW_WIDTH, WINDOW_WIDTH, 0, true, this);
         }

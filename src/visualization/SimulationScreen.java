@@ -56,9 +56,12 @@ public class SimulationScreen {
 
     private String className;
 
+    private ArrayList<SimulationShell> possessedShells;
+
     SimulationScreen(Scene scene, Stage myStage, Simulation simulation, String label, String configFolder, String className) {
         this.myStage = myStage;
         this.history = new ArrayList<>();
+        this.possessedShells = new ArrayList<>();
         this.configFolder = configFolder;
         this.className = className;
         this.populationStats = new HashMap<>();
@@ -191,13 +194,24 @@ public class SimulationScreen {
         if (chosenFile != null) {
             try {
                 Simulation compSim = ConfigParser.parseConfigFile(chosenFile.getAbsolutePath());
-                new SimulationShell(new Stage(), compSim, compSim.getDisplayName());
+                var simShell = new SimulationShell(new Stage(), compSim, compSim.getDisplayName(), rate);
                 populationStats.clear();
-                // TODO: reset current simulation
-                // TODO: Add all shells to an instance var
+
+                // Reset current simulation
+                while (historyPos > 0) {
+                    stepBack();
+                }
+
+                possessedShells.add(simShell);
             } catch (Exception e) {
                 Dialogs.showAlert("Erroneous configuration file chosen.");
             }
+        }
+    }
+
+    public void destroyPossessions() {
+        for (SimulationShell ss : possessedShells) {
+            ss.destroy();
         }
     }
 

@@ -21,15 +21,17 @@ public class SimulationShell {
     private double currentCellSize = 0.0;
     private int rate = 1; // Frequency in Hertz
     private boolean isPaused = true; // Paused by default
-    private double continueIn = 1000.0 / rate; // How many milliseconds we'll continue the animation in
+    private double continueIn; // How many milliseconds we'll continue the animation in
     private double pausedFor = 0; // How many milliseconds we've been paused for before animating
 
     // TODO: refactor render, getcelllox and initialise methods into new static class
     // TODO: interface that simulationshell and screen both implement
 
-    public SimulationShell(Stage myStage, Simulation simulation, String title) {
+    public SimulationShell(Stage myStage, Simulation simulation, String title, int rate) {
         this.myStage = myStage;
         this.history = new ArrayList<>();
+        this.rate = rate;
+        this.continueIn = 1000.0 / rate;
 
         myContainer = new Group();
         Scene scene = new Scene(myContainer, 400, 400, Color.GHOSTWHITE);
@@ -174,5 +176,9 @@ public class SimulationShell {
         if (rate > 0 && rate <= 10) { // rate can't go below 1 (that's just pause), and can't see clearly above 10
             this.rate = rate;
         }
+    }
+
+    public void destroy() {
+        myStage.close();
     }
 }

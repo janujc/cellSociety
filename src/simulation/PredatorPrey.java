@@ -154,7 +154,7 @@ public class PredatorPrey extends Simulation {
      * @param mover the animal that will move, represented by its current cell
      */
     private void moveIfAble(Cell mover) {
-        List<Cell> canMoveTo = getCardinalNeighbors(mover);
+        List<Cell> canMoveTo = myGrid.getNeighbors(mover, true);
 
         canMoveTo = getCellsOfType(canMoveTo, EMPTY);
         if (canMoveTo.isEmpty()) {
@@ -299,7 +299,7 @@ public class PredatorPrey extends Simulation {
      * @param shark the shark that will eat or move, represented by its current cell
      */
     private void eatOrMove(Cell shark) {
-        List<Cell> fishEdible = getCardinalNeighbors(shark);
+        List<Cell> fishEdible = myGrid.getNeighbors(shark, true);
 
         fishEdible = getCellsOfType(fishEdible, FISH);
         if (!fishEdible.isEmpty()) {

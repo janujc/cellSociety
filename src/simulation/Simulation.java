@@ -171,4 +171,10 @@ public abstract class Simulation {
     public void setCurrentFileName(String fileName) {
         this.currentFileName = fileName;
     }
+
+    public void rotateState(int i, int j) {
+        int numStates = colors.length;
+        int currentState = myCells[i][j].getCurrState();
+        myCells[i][j].setState((currentState + 1) % numStates, colors[(currentState + 1) % numStates]);
+    }
 }

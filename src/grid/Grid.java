@@ -160,6 +160,14 @@ public abstract class Grid {
         return new int[]{toroidalX, toroidalY};
     }
 
+    public int getNumRows() {
+        return myNumRows;
+    }
+
+    public int getMyNumCols() {
+        return myNumCols;
+    }
+
     public Cell getCellAt(int x, int y) {
         return myGrid[x][y];
     }

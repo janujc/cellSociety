@@ -20,14 +20,12 @@ public abstract class Grid {
     private final int myNumRows;
     private final int myNumCols;
 
-    final boolean onlyCardinalNeighbors;
     List<int[]> neighborCoords = new ArrayList<>();
 
-    public Grid(int size, boolean onlyCardinal, boolean toroidal) {
+    public Grid(int size, boolean toroidal) {
         mySize = size;
         myNumCols = mySize;
         myNumRows = mySize;
-        onlyCardinalNeighbors = onlyCardinal;
         isToroidal = toroidal;
         myGrid = new Cell[myNumCols][myNumRows];
     }
@@ -98,7 +96,7 @@ public abstract class Grid {
         }
     }
 
-    public abstract List<Cell> getNeighbors(Cell center);
+    public abstract List<Cell> getNeighbors(Cell center, boolean onlyCardinal);
 
 //    public static void neighborRules(String code, String fileName) {
 //        File file = new File(fileName);
@@ -121,11 +119,11 @@ public abstract class Grid {
 //        }
 //    }
 
-    public List<Cell> getNeighborsOfType(Cell center, int type) {
+    public List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
         List<Cell> neighbors;
         List<Cell> neighborsOfType = new ArrayList<>();
 
-        neighbors = getNeighbors(center);
+        neighbors = getNeighbors(center, onlyCardinal);
 
         for (Cell neighbor : neighbors) {
             if (neighbor.getCurrState() == type) {

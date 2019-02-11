@@ -90,7 +90,7 @@ public class Fire extends Simulation {
      * @return the next state of the cell containing the tree
      */
     private int calculateTreeNextState(Cell tree) {
-        List<Cell> burningNeighbors = myGrid.getNeighborsOfType(tree, true, BURNING);
+        List<Cell> burningNeighbors = myGrid.getNeighborsOfType(tree, BURNING, true);
 
         if (!burningNeighbors.isEmpty()) {
             int randNum = rand.nextInt(100);

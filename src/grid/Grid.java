@@ -164,7 +164,7 @@ public abstract class Grid {
         return myNumRows;
     }
 
-    public int getMyNumCols() {
+    public int getNumCols() {
         return myNumCols;
     }
 

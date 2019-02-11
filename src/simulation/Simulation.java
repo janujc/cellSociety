@@ -53,6 +53,8 @@ public abstract class Simulation {
      */
     private String currentFileName;
 
+    private String metadata;
+
     /**
      * Initializes instance variables
      *
@@ -170,5 +172,24 @@ public abstract class Simulation {
      */
     public void setCurrentFileName(String fileName) {
         this.currentFileName = fileName;
+    }
+
+    public String getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(String metadata) {
+        this.metadata = metadata;
+    }
+
+    public Color[] getColors() {
+        return colors;
+    }
+
+    // TODO
+    public void rotateState(int i, int j) {
+        int numStates = colors.length;
+        int currentState = myCells[i][j].getCurrState();
+        myCells[i][j].setState((currentState + 1) % numStates, colors[(currentState + 1) % numStates]);
     }
 }

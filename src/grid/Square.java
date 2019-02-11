@@ -5,15 +5,13 @@ import javafx.scene.paint.Color;
 import java.util.List;
 import java.util.Random;
 import utils.Cell;
-/*
-public class Square extends Grid {
-    private String fileName = "data/grid/SquareNeighbors.txt";
 
-    public Square(int size, Color[] colors) {
-        super(size, colors, 1);
+public class Square extends Grid {
+    public Square(int size, Integer[] states, Color[] colors) {
+        super(size, states, colors);
     }
 
-    public List<Cell> getNeighbors(Cell center, Boolean bool) {
+    public List<Cell> getNeighbors(Cell center, Boolean onlyCardinal) {
         int centerX = center.getCol();
         int centerY = center.getRow();
 
@@ -22,7 +20,7 @@ public class Square extends Grid {
         neighborCoords.add(new int[]{centerX, centerY + 1});    // South
         neighborCoords.add(new int[]{centerX - 1, centerY});    // West
 
-        if (! bool) {
+        if (! onlyCardinal) {
             neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
             neighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast
             neighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest
@@ -32,4 +30,3 @@ public class Square extends Grid {
         return validateNeighbors(neighborCoords);
     }
 }
-*/

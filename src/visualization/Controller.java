@@ -11,6 +11,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import simulation.Percolation;
 import uitools.Animator;
 import utils.ScreenType;
 
@@ -65,9 +66,7 @@ public class Controller extends Application {
     }
 
     /**
-     * Function where we build the stage with the first scene
-     *
-     * @param stage provided to us by the library
+     * Function where we get the stage
      * @throws Exception
      */
     Stage getStage() {
@@ -133,6 +132,11 @@ public class Controller extends Application {
         if (code == KeyCode.ESCAPE && currentScreen == ScreenType.SIMULATION_SCREEN) {
             Animator.animate(myScene, (Group) ((Group) myScene.getRoot()).getChildren().get(1), ScreenType.HOME_SCREEN,
                     0, -WINDOW_WIDTH, WINDOW_WIDTH, 0, true, this);
+        } else if (code == KeyCode.K) {
+            Stage stage = new Stage();
+            new SimulationShell(stage, new Percolation(100, new Integer[]{0, 1, 2},
+                    new Double[]{0.1,0.6,0.3},
+                    new Color[]{Color.BLUE, Color.BLACK, Color.WHITE}, ""), "Percolation");
         }
     }
 

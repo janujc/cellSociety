@@ -4,6 +4,7 @@ import controls.*;
 import grid.Grid;
 import grid.Hexagonal;
 import grid.Square;
+import grid.Triangular;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -389,26 +390,21 @@ public class SimulationScreen {
                 / (numCells * 1.0); // Number of cells
 
         // render initial state
-        String typeOfGrid = "square"; // TODO: dynamically change this
-        switch (typeOfGrid) {
-            case "square":
-                gridViews = SquareGridGenerator.createGrid(
-                        simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                        currentCellSize, simulation, myContainer, 87, 100
-                );
-                break;
-            case "triangular":
-                gridViews = TriangularGridGenerator.createGrid(
-                        simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                        currentCellSize, simulation, myContainer, 87, 100
-                );
-                break;
-            case "hexagonal":
-                gridViews = HexagonalGridGenerator.createGrid(
-                        simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                        currentCellSize, simulation, myContainer, 87, 100
-                );
-                break;
+        if (simulation.getGrid() instanceof Square) {
+            gridViews = SquareGridGenerator.createGrid(
+                    simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
+                    currentCellSize, simulation, myContainer, 87, 100
+            );
+        } else if (simulation.getGrid() instanceof Triangular) {
+            gridViews = TriangularGridGenerator.createGrid(
+                    simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
+                    currentCellSize, simulation, myContainer, 87, 100
+            );
+        } else if (simulation.getGrid() instanceof Hexagonal) {
+            gridViews = HexagonalGridGenerator.createGrid(
+                    simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
+                    currentCellSize, simulation, myContainer, 87, 100
+            );
         }
 
         renderGrid(simulation.getGrid().getMyGrid());

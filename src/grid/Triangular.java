@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Triangular extends Grid {
     public Triangular(int size, boolean toroidal) {
-        super(size, toroidal);
+        super(size, toroidal, 1.5);
     }
 
     @Override

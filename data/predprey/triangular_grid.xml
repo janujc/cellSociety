@@ -3,7 +3,7 @@
     <SideSize count="10" />
     <Class class="simulation.PredatorPrey" />
     <Name name="Predator Prey" />
-    <GridShape shape="hexagonal"/>
+    <GridShape shape="triangular"/>
     <Metadata name="numTurnsToBreed"
               value="4,5,20"/>
     <Data type="frequencies">

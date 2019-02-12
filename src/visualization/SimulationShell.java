@@ -36,45 +36,59 @@ public class SimulationShell {
         myContainer = new Group();
         Scene scene = new Scene(myContainer, 400, 400, Color.GHOSTWHITE);
 
-        gridViews = new Rectangle[simulation.getGrid().getMyGrid().length][simulation.getGrid().getMyGrid()[0].length];
         this.simulation = simulation;
         history.clear();
         historyPos = 0;
 
         int numCells = simulation.getGrid().getMyGrid().length;
-        currentCellSize = (400
-                - (numCells - 1) * 1) // Account for padding
-                / (numCells * 1.0); // Number of cells
 
         // render initial state
         if (simulation.getGrid() instanceof Square) {
+            currentCellSize = (400
+                    - (numCells - 1) * 1) // Account for padding
+                    / (numCells * 1.0); // Number of cells
             gridViews = SquareGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
                     currentCellSize, simulation, myContainer, 0, 0
             );
         } else if (simulation.getGrid() instanceof Triangular) {
+            currentCellSize = (400
+                    - (numCells - 1) * 1) // Account for padding
+                    / (numCells * 1.0); // Number of cells
             gridViews = TriangularGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                    currentCellSize, simulation, myContainer, 0, 0
+                    currentCellSize, simulation, myContainer, false
             );
+            myStage.setWidth(myContainer.getLayoutBounds().getWidth());
+            myStage.setHeight(myContainer.getLayoutBounds().getHeight() + currentCellSize);
         } else if (simulation.getGrid() instanceof Hexagonal) {
+            currentCellSize = (400
+                    - ((numCells - 1)/2d) * 2) // Account for padding
+                    / (numCells/2.0); // Number of cells
             gridViews = HexagonalGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                    currentCellSize, simulation, myContainer, 0, 0
+                    currentCellSize, simulation, myContainer, false
             );
+            myStage.setWidth(myContainer.getLayoutBounds().getWidth());
+            myStage.setHeight(myContainer.getLayoutBounds().getHeight() + currentCellSize);
         }
 
         renderGrid(simulation.getGrid().getMyGrid());
 
         myStage.setScene(scene);
         myStage.setTitle(title);
+
         myStage.show();
     }
 
     private void renderGrid(Cell[][] grid) {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                gridViews[i][j].setFill(grid[j][i].getCurrColor());
+        for (int i = 0; i < gridViews.length; i++) {
+            for (int j = 0; j < gridViews[0].length; j++) {
+                if (simulation.getGrid() instanceof Square) {
+                    gridViews[i][j].setFill(grid[j][i].getCurrColor());
+                } else {
+                    gridViews[i][j].setStroke(grid[j][i].getCurrColor());
+                }
             }
         }
     }

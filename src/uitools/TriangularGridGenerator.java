@@ -12,7 +12,7 @@ import simulation.Simulation;
 
 public class TriangularGridGenerator {
     public static Polygon[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer,
-                                         double marginY, double marginX) {
+                                         boolean adjustMargin) {
         var gridViews = new Polygon[rows][columns];
         double[] pointsDownwards = new double[6];
         double[] pointsUpwards = new double[6];
@@ -43,7 +43,7 @@ public class TriangularGridGenerator {
 
                 polygon.setLayoutX(xOffset);
                 polygon.setLayoutY(yOffset);
-                polygon.setStroke(simulation.getGrid().getMyGrid()[i][j].getCurrColor());
+                polygon.setStroke(simulation.getGrid().getMyGrid()[j][i].getCurrColor());
                 polygon.setStrokeWidth(cellSize);
                 final int iF = i, jF = j;
                 polygon.setOnMouseClicked((e) ->  {
@@ -56,8 +56,13 @@ public class TriangularGridGenerator {
             }
         }
 
-        myG.setLayoutY(marginY);
-        myG.setLayoutX(marginX);
+        if (adjustMargin) {
+            myG.setLayoutY(myContainer.getLayoutBounds().getHeight() / 2 - myG.getLayoutBounds().getHeight() / 2 - 5);
+            myG.setLayoutX(myContainer.getLayoutBounds().getWidth() / 2 - myG.getLayoutBounds().getWidth() / 2 + 15);
+        } else {
+            myG.setLayoutY(cellSize/2);
+            myG.setLayoutX(cellSize);
+        }
         myContainer.getChildren().addAll(myG);
 
         return gridViews;

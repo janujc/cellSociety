@@ -12,7 +12,7 @@ import simulation.Simulation;
 
 public class HexagonalGridGenerator {
     public static Polygon[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer,
-                                         double marginY, double marginX) {
+                                         boolean adjustMargin) {
         var myGrid = new Polygon[rows][columns];
         double[] points = new double[12];
         for (int i = 0; i < 12; i += 2) {
@@ -22,7 +22,6 @@ public class HexagonalGridGenerator {
         }
 
         Group myG = new Group();
-
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 double yOffset = i*2*cellSize +
@@ -41,7 +40,7 @@ public class HexagonalGridGenerator {
                 Polygon polygon = new Polygon(points);
                 polygon.setLayoutX(xOffset);
                 polygon.setLayoutY(yOffset);
-                polygon.setStroke(simulation.getGrid().getMyGrid()[i][j].getCurrColor());
+                polygon.setStroke(simulation.getGrid().getMyGrid()[j][i].getCurrColor());
                 polygon.setStrokeWidth(cellSize);
                 final int iF = i, jF = j;
                 polygon.setOnMouseClicked((e) ->  {
@@ -49,11 +48,17 @@ public class HexagonalGridGenerator {
                     polygon.setFill(simulation.getGrid().getMyGrid()[jF][iF].getCurrColor());
                 });
                 myG.getChildren().add(polygon);
+                myGrid[i][j] = polygon;
             }
         }
 
-        myG.setLayoutY(marginY);
-        myG.setLayoutX(marginX);
+        if (adjustMargin) {
+            myG.setLayoutY(myContainer.getLayoutBounds().getHeight() / 2 - myG.getLayoutBounds().getHeight() / 2 - 15);
+            myG.setLayoutX(myContainer.getLayoutBounds().getWidth() / 2 - myG.getLayoutBounds().getWidth() / 2);
+        } else {
+            myG.setLayoutY(cellSize/2);
+            myG.setLayoutX(cellSize/2);
+        }
         myContainer.getChildren().addAll(myG);
 
         return myGrid;

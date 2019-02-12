@@ -86,6 +86,13 @@ public class ConfigParser {
                     grid = new Square(sideSize, toroidal);
             }
 
+            try {
+                Element data = ((Element) rootNode.getElementsByTagName("ShowOutlines").item(0));
+                grid
+            } catch (Exception e) {
+                // This means the element didn't exist in the XMl
+                // No action required. Already set to false
+            }
 
             Element data = ((Element) rootNode.getElementsByTagName("Data").item(0));
             if (data.getAttribute("type").equals("frequencies")) {

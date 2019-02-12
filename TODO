@@ -1,17 +1,15 @@
 TODO
 
 General
-	Find way to hide grid data structure
+    Clean up classes
 	Pick better colors for GameOfLife, Percolation, and Segregation
 	Implement way to display color key
 ?    Remove unnecessary javadoc comments
 ?    Determine if wildcard imports are ok
 
 Fire
-    Make other constructors
 ?    Determine if I need to implement extra rules
 
 PredatorPrey
-    Make other constructors
 ?    Determine if it's ok that updates are not lock-step synchronized
 ?    Determine if using maps instead of mobile objects to save states is ok

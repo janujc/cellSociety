@@ -2,7 +2,7 @@
 <Root doctype="simulations_list">
     <Rows count="2" />
     <Columns count="3" />
-    <Number count="5" />
+    <Number count="6" />
     <Simulations>
         <Simulation
                 gridX="0"
@@ -40,8 +40,8 @@
                 configFolder="data/segreg/"
                 class="simulation.Segregation"/>
         <Simulation
-                gridX="1"
-                gridY="2"
+                gridX="2"
+                gridY="1"
                 label="Rock Paper Scissors"
                 background="/img/segregbg.png"
                 configFolder="data/rps/"

@@ -8,9 +8,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import simulation.Simulation;
 
 public class HexagonalGridGenerator {
-    public static Group createGrid(int rows, int columns, double cellSize) {
+    public static Polygon[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer) {
+        var myGrid = new Polygon[rows][columns];
         double[] points = new double[12];
         for (int i = 0; i < 12; i += 2) {
             double angle = Math.PI * (0.5 + i / 6d);
@@ -38,15 +40,19 @@ public class HexagonalGridGenerator {
                 Polygon polygon = new Polygon(points);
                 polygon.setLayoutX(xOffset);
                 polygon.setLayoutY(yOffset);
-                polygon.setStroke(Color.BLACK);
+                polygon.setStroke(simulation.getGrid().getMyGrid()[i][j].getCurrColor());
                 polygon.setStrokeWidth(cellSize);
+                final int iF = i, jF = j;
+                polygon.setOnMouseClicked((e) ->  {
+                    simulation.rotateState(jF, iF);
+                    polygon.setFill(simulation.getGrid().getMyGrid()[jF][iF].getCurrColor());
+                });
                 myG.getChildren().add(polygon);
             }
         }
 
-        myG.setLayoutY(25);
-        myG.setLayoutX(25);
+        myContainer.getChildren().addAll(myG);
 
-        return myG;
+        return myGrid;
     }
 }

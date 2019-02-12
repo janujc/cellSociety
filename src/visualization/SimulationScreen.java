@@ -2,6 +2,7 @@ package visualization;
 
 import controls.*;
 import grid.Grid;
+import grid.Hexagonal;
 import grid.Square;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
@@ -22,6 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import simulation.Simulation;
 import uitools.HexagonalGridGenerator;
+import uitools.SquareGridGenerator;
 import uitools.TriangularGridGenerator;
 import utils.Cell;
 import utils.ConfigParser;
@@ -52,7 +54,7 @@ public class SimulationScreen {
     private boolean isPaused = true; // Paused by default
     private double continueIn = 1000.0 / rate; // How many milliseconds we'll continue the animation in
     private double pausedFor = 0; // How many milliseconds we've been paused for before animating
-    private Rectangle[][] gridViews;
+    private Shape[][] gridViews;
     private double currentCellSize;
     private Text titleText;
     private Map<Color, XYChart.Series<Number, Number>> populationStats; // Color -> {iteration: freq}
@@ -368,9 +370,9 @@ public class SimulationScreen {
     private void processSimulation(Simulation simulation) {
         // First clear any existing stuff.
         if (gridViews != null) {
-            for (Rectangle[] row : gridViews) {
+            for (Shape[] row : gridViews) {
                 if (row != null) {
-                    for (Rectangle r : row) {
+                    for (Shape r : row) {
                         ((Group) r.getParent()).getChildren().remove(r);
                     }
                 }
@@ -387,24 +389,30 @@ public class SimulationScreen {
                 / (numCells * 1.0); // Number of cells
 
         // render initial state
-        initialiseGridViews(simulation.getGrid().getMyGrid());
+        String typeOfGrid = "square"; // TODO: dynamically change this
+        switch (typeOfGrid) {
+            case "square":
+                gridViews = SquareGridGenerator.createGrid(
+                        simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
+                        currentCellSize, simulation, myContainer
+                );
+                break;
+            case "triangular":
+                gridViews = TriangularGridGenerator.createGrid(
+                        simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
+                        currentCellSize, simulation, myContainer
+                );
+                break;
+            case "hexagonal":
+                gridViews = HexagonalGridGenerator.createGrid(
+                        simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
+                        currentCellSize, simulation, myContainer
+                );
+                break;
+        }
+
         renderGrid(simulation.getGrid().getMyGrid());
-        //myContainer.getChildren().addAll(TriangularGridGenerator.createGrid(20, 30, 10));
-        //myContainer.getChildren().addAll(HexagonalGridGenerator.createGrid(20, 80, 10));
     }
-
-    private double getCellXLocation(int column) {
-        return 100.0 + // Margin
-                column * 1.0 // Padding between cells
-                + currentCellSize * column;
-    }
-
-    private double getCellYLocation(int row) {
-        return 87.0 + // Margin
-                 row * 1.0 // Padding between cells
-                + currentCellSize * row;
-    }
-
     public ArrayList<SimulationShell> getPossessedShells() {
         return possessedShells;
     }
@@ -460,22 +468,6 @@ public class SimulationScreen {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[0].length; j++) {
                 gridViews[i][j].setFill(grid[j][i].getCurrColor());
-            }
-        }
-    }
-
-    private void initialiseGridViews(Cell[][] grid) {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                Shape gridView = new Rectangle(getCellXLocation(j), getCellYLocation(i), currentCellSize, currentCellSize);
-                gridView.setFill(grid[i][j].getCurrColor());
-                final int iF = i, jF = j;
-                gridView.setOnMouseClicked((e) ->  {
-                    simulation.rotateState(jF, iF);
-                    gridView.setFill(simulation.getGrid().getMyGrid()[jF][iF].getCurrColor());
-                });
-                gridViews[i][j] = (Rectangle) gridView;
-                myContainer.getChildren().add(gridViews[i][j]);
             }
         }
     }

@@ -8,9 +8,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import simulation.Simulation;
 
 public class TriangularGridGenerator {
-    public static Group createGrid(int rows, int columns, double cellSize) {
+    public static Polygon[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer) {
+        var gridViews = new Polygon[rows][columns];
         double[] pointsDownwards = new double[6];
         double[] pointsUpwards = new double[6];
         for (int i = 0; i < 6; i += 2) {
@@ -40,15 +42,21 @@ public class TriangularGridGenerator {
 
                 polygon.setLayoutX(xOffset);
                 polygon.setLayoutY(yOffset);
-                polygon.setStroke(Color.BLACK);
+                polygon.setStroke(simulation.getGrid().getMyGrid()[i][j].getCurrColor());
                 polygon.setStrokeWidth(cellSize);
+                final int iF = i, jF = j;
+                polygon.setOnMouseClicked((e) ->  {
+                    simulation.rotateState(jF, iF);
+                    polygon.setFill(simulation.getGrid().getMyGrid()[jF][iF].getCurrColor());
+                });
                 myG.getChildren().add(polygon);
+
+                gridViews[i][j] = polygon;
             }
         }
 
-        myG.setLayoutY(25);
-        myG.setLayoutX(25);
+        myContainer.getChildren().addAll(myG);
 
-        return myG;
+        return gridViews;
     }
 }

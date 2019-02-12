@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Hexagonal extends Grid {
     public Hexagonal(int size, boolean toroidal) {
-        super(size, toroidal);
+        super(size, toroidal, 4.0);
     }
 
     @Override

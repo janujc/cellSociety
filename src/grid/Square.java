@@ -8,7 +8,7 @@ import utils.Cell;
 
 public class Square extends Grid {
     public Square(int size, boolean toroidal) {
-        super(size, toroidal);
+        super(size, toroidal, 1.0);
     }
 
     @Override

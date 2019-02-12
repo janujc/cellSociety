@@ -16,16 +16,14 @@ public abstract class Grid {
      */
     private final Cell[][] myGrid;
     private final boolean isToroidal;
-    private final int mySize;
     private final int myNumRows;
     private final int myNumCols;
 
     List<int[]> neighborCoords = new ArrayList<>();
 
-    public Grid(int size, boolean toroidal) {
-        mySize = size;
-        myNumCols = mySize;
-        myNumRows = mySize;
+    public Grid(int size, boolean toroidal, double factor) {
+        myNumCols = (int) (size * factor);
+        myNumRows = size;
         isToroidal = toroidal;
         myGrid = new Cell[myNumCols][myNumRows];
     }

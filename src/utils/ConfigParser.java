@@ -1,7 +1,9 @@
 package utils;
 
 import grid.Grid;
+import grid.Hexagonal;
 import grid.Square;
+import grid.Triangular;
 import javafx.scene.paint.Color;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -48,8 +50,42 @@ public class ConfigParser {
             String displayName = ((Element) rootNode.getElementsByTagName("Name").item(0))
                     .getAttribute("name");
 
-            boolean toroidal = false; // TODO: decided by config
-            Grid grid = new Square(sideSize, toroidal);  // TODO: Decdied by config
+            boolean toroidal = false;
+
+            try {
+                if (((Element) rootNode.getElementsByTagName("GridEdge").item(0))
+                        .getAttribute("type").equals("toroidal")) {
+                    toroidal = true;
+                }
+            } catch (Exception e) {
+                // This means the element GridEdge didn't exist in the XMl
+                // No action required. Already set to false
+            }
+
+            String gridShape = "square";
+            try {
+                String shape = ((Element) rootNode.getElementsByTagName("GridShape").item(0))
+                        .getAttribute("shape");
+                if (shape != null && !shape.isEmpty()) {
+                    gridShape = shape;
+                }
+            } catch (Exception e) {
+                // This means the element GridEdge didn't exist in the XMl
+                // No action required. Already set to false
+            }
+
+            Grid grid;
+            switch (gridShape) {
+                case "triangular":
+                    grid = new Triangular(sideSize, toroidal);
+                    break;
+                case "hexagonal":
+                    grid = new Hexagonal(sideSize, toroidal);
+                    break;
+                default:
+                    grid = new Square(sideSize, toroidal);
+            }
+
 
             Element data = ((Element) rootNode.getElementsByTagName("Data").item(0));
             if (data.getAttribute("type").equals("frequencies")) {

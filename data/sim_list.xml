@@ -43,7 +43,7 @@
                 gridX="2"
                 gridY="1"
                 label="Rock Paper Scissors"
-                background="/img/segregbg.png"
+                background="/img/rps.png"
                 configFolder="data/rps/"
                 class="simulation.RockPaperScissors"/>
     </Simulations>

@@ -20,18 +20,21 @@ public abstract class Simulation {
      * must not use this value for other states.
      */
     static final int UNDETERMINED = -1;
+
     /**
      * The possible states of each cell in the simulation
      */
     protected final Integer[] states;
+
     /**
      * The simulation grid made up of cells each with their own state (represented by an int)
      */
     final Grid myGrid;
-    /**
-     * The 2d array of cells in the grid
-     */
-    final Cell[][] myCells;
+
+    // TODO
+    final int gridNumRows;
+    final int gridNumCols;
+
     /**
      * The colors for each possible state where the index corresponds to the states array
      */
@@ -53,6 +56,7 @@ public abstract class Simulation {
      */
     private String currentFileName;
 
+    // TODO
     private String metadata;
 
     /**
@@ -64,7 +68,8 @@ public abstract class Simulation {
      */
     protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors) {
         myGrid = grid;
-        myCells = myGrid.getMyGrid();
+        gridNumRows = myGrid.getNumRows();
+        gridNumCols = myGrid.getNumCols();
         states = simStates;
         colors = stateColors;
         rand = new Random();
@@ -138,6 +143,20 @@ public abstract class Simulation {
      */
     protected abstract void calculateNextStates();
 
+    // TODO
+    public void rotateState(int x, int y) {
+        Cell currCell = myGrid.getCellAt(x, y);
+        int currState = currCell.getCurrState();
+        int newState = (currState + 1) % states.length;
+
+        currCell.setState(newState, colors[newState]);
+    }
+
+    // TODO
+    public Grid getGrid() {
+        return myGrid;
+    }
+
     /**
      * Gets the name of the simulation currently being run
      *
@@ -174,6 +193,7 @@ public abstract class Simulation {
         this.currentFileName = fileName;
     }
 
+    // TODO
     public String getMetadata() {
         return metadata;
     }
@@ -182,14 +202,8 @@ public abstract class Simulation {
         this.metadata = metadata;
     }
 
+    // TODO
     public Color[] getColors() {
         return colors;
-    }
-
-    // TODO
-    public void rotateState(int i, int j) {
-        int numStates = colors.length;
-        int currentState = myCells[i][j].getCurrState();
-        myCells[i][j].setState((currentState + 1) % numStates, colors[(currentState + 1) % numStates]);
     }
 }

@@ -91,18 +91,19 @@ public class PredatorPrey extends Simulation {
      * Adds all of the animals to the turn tracker and adds all of the sharks to the hunger tracker
      */
     private void initializeTrackers() {
-        for (Cell[] column : myCells) {
-            for (Cell cell : column) {
-                int currState = cell.getCurrState();
+        for (int x = 0; x < gridNumCols; x++) {
+            for (int y = 0; y < gridNumRows; y++) {
+                Cell currCell = myGrid.getCellAt(x, y);
+                int currState = currCell.getCurrState();
                 if (currState == EMPTY) {
                     continue;
                 }
 
                 // grid population does not count as a turn survived
                 else if (currState == SHARK) {
-                    sharkHungerTracker.put(cell, 0);
+                    sharkHungerTracker.put(currCell, 0);
                 }
-                animalTurnTracker.put(cell, 0);
+                animalTurnTracker.put(currCell, 0);
             }
         }
     }
@@ -140,8 +141,9 @@ public class PredatorPrey extends Simulation {
     private List<Cell> getCellsInRandomOrder() {
         List<Cell> allCells = new ArrayList<>();
 
-        for (Cell[] column : myCells) {
-            Collections.addAll(allCells, column);
+        for (int x = 0; x < gridNumCols; x++) {
+            for (int y = 0; y < gridNumRows; y++)
+                allCells.add(myGrid.getCellAt(x, y));
         }
         Collections.shuffle(allCells, rand);
         return allCells;

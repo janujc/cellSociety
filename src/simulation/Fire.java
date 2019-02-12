@@ -46,16 +46,15 @@ public class Fire extends Simulation {
     }
 
     /**
-     * Calculates the next state for each cell in the grid based off this simulation's rules and the PROB_CATCH value.
-     * Afterwards, mark simulation as complete if it has been determined that the simulation will end after the current
-     * step.
+     * Calculates the next state for each cell in the grid based off this simulation's rules
      */
     @Override
     protected void calculateNextStates() {
-        for (Cell[] column : myCells) {
-            for (Cell cell : column) {
-                int cellState = calculateNextStateOfCurrCell(cell);
-                cell.setNextState(cellState, colors[cellState]);
+        for (int x = 0; x < gridNumCols; x++) {
+            for (int y = 0; y < gridNumRows; y++) {
+                Cell currCell = myGrid.getCellAt(x, y);
+                int cellState = calculateNextStateOfCurrCell(currCell);
+                currCell.setNextState(cellState, colors[cellState]);
             }
         }
     }

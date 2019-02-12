@@ -94,6 +94,28 @@ public abstract class Grid {
 
     public abstract List<Cell> getNeighbors(Cell center, boolean onlyCardinal);
 
+//    public static void neighborRules(String code, String fileName) {
+//        File file = new File(fileName);
+//
+//        Scanner kb = new Scanner(System.in);
+//        Scanner scanner;
+//        try {
+//            scanner = new Scanner(file);
+//            while (scanner.hasNext()) {
+//                final String stringFromFile = scanner.next();
+//                if (stringFromFile.contains(code)) {
+//                    // TODO: add each instruction to neighborCoords
+//                    String[] str = scanner.nextLine().split(", \\{|\\}");
+//                }
+//            }
+//        } catch (FileNotFoundException e) {
+//            System.out.println("Cannot find file " + fileName);
+//        } catch (RuntimeException e) {
+//            System.out.println("Cannot find " + code + " in " + fileName);
+//        }
+//    }
+
+
     public List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
         List<Cell> neighbors;
         List<Cell> neighborsOfType = new ArrayList<>();

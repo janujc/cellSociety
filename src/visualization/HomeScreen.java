@@ -3,6 +3,8 @@ package visualization;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import uitools.Animator;
@@ -11,6 +13,8 @@ import uitools.CardGridGenerator;
 import utils.ConfigParser;
 import utils.Dialogs;
 import utils.ScreenType;
+
+import java.util.Collections;
 
 import static uitools.TextGenerator.makeText;
 import static visualization.Controller.bebasKai;
@@ -55,11 +59,22 @@ public class HomeScreen {
             }
         }
 
-        grid.setLayoutY(myScene.getHeight() / 2 - grid.getLayoutBounds().getHeight() / 2 + 25); // extra margin
-        grid.setLayoutX(myScene.getWidth() / 2 - grid.getLayoutBounds().getWidth() / 2 + 9); // extra margin
-
         container.getChildren().addAll(titleText, subTitleText);
-        container.getChildren().addAll(grid);
+
+        if (cardGrid.length > 2 || cardGrid[0].length > 3) {
+            ScrollPane s1 = new ScrollPane();
+            s1.setPrefSize(550, 400);
+            s1.setLayoutY(myScene.getHeight() / 2 - 400/2d + 25);
+            s1.setLayoutX(myScene.getWidth() / 2 - 550/2d);
+            s1.setContent(grid);
+            s1.setBackground(Background.EMPTY);
+            s1.setStyle(".scroll-pane  > .viewport {-fx-background: transparent;}");
+            container.getChildren().addAll(s1);
+        } else {
+            grid.setLayoutY(myScene.getHeight() / 2 - grid.getLayoutBounds().getHeight() / 2 + 25); // extra margin
+            grid.setLayoutX(myScene.getWidth() / 2 - grid.getLayoutBounds().getWidth() / 2 + 9); // extra margin
+            container.getChildren().addAll(grid);
+        }
         myContainer = container;
     }
 

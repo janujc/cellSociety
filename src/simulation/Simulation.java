@@ -4,6 +4,9 @@ import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -188,6 +191,47 @@ public abstract class Simulation {
         int newState = (currState + 1) % states.length;
 
         currCell.setState(newState, colors[newState]);
+    }
+
+    /**
+     * Helper method that gets all of the cells in the grid in random order
+     * <p>
+     * Used to create less predictable simulations as animals can affect each others' behavior within the same step
+     *
+     * @return the list of cells in random order
+     */
+    List<Cell> getCellsInRandomOrder() {
+        List<Cell> allCells = new ArrayList<>();
+
+        for (int x = 0; x < gridNumCols; x++) {
+            for (int y = 0; y < gridNumRows; y++)
+                allCells.add(myGrid.getCellAt(x, y));
+        }
+        Collections.shuffle(allCells, rand);
+        return allCells;
+    }
+
+    /**
+     * Helper method that gets the most recently set state of a cell. If the cell's next state has already been set,
+     * returns that. Otherwise, returns the current state.
+     *
+     * @param cell the cell whose state is desired
+     * @return the most recently set state of the cell
+     */
+    int getMostRecentState(Cell cell) {
+        int nextState = cell.getNextState();
+
+        return (nextState == UNDETERMINED) ? cell.getCurrState() : nextState;
+    }
+
+    /**
+     * Helper method that randomly chooses a cell from a given list
+     *
+     * @param chooseFrom the list of cells to choose from
+     * @return the randomly chosen cell
+     */
+    Cell chooseRandomCellFromList(List<Cell> chooseFrom) {
+        return chooseFrom.get(rand.nextInt(chooseFrom.size()));
     }
 
     // TODO

@@ -48,7 +48,7 @@ public class TriangularGridGenerator {
                 final int iF = i, jF = j;
                 polygon.setOnMouseClicked((e) ->  {
                     simulation.rotateState(jF, iF);
-                    polygon.setFill(simulation.getGrid().getMyGrid()[jF][iF].getCurrColor());
+                    polygon.setStroke(simulation.getGrid().getMyGrid()[jF][iF].getCurrColor());
                 });
                 myG.getChildren().add(polygon);
 

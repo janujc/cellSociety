@@ -30,19 +30,19 @@ public class SimulationShell {
         myContainer = new Group();
         Scene scene = new Scene(myContainer, 400, 400, Color.GHOSTWHITE);
 
-        gridViews = new Rectangle[simulation.getGrid().length][simulation.getGrid()[0].length];
+        gridViews = new Rectangle[simulation.getGrid().getMyGrid().length][simulation.getGrid().getMyGrid()[0].length];
         this.simulation = simulation;
         history.clear();
         historyPos = 0;
 
-        int numCells = simulation.getGrid().length;
+        int numCells = simulation.getGrid().getMyGrid().length;
         currentCellSize = (400
                 - (numCells - 1) * 1) // Account for padding
                 / (numCells * 1.0); // Number of cells
 
         // render initial state
-        initialiseGridViews(simulation.getGrid());
-        renderGrid(simulation.getGrid());
+        initialiseGridViews(simulation.getGrid().getMyGrid());
+        renderGrid(simulation.getGrid().getMyGrid());
 
         myStage.setScene(scene);
         myStage.setTitle(title);
@@ -65,7 +65,7 @@ public class SimulationShell {
                 final int iF = i, jF = j;
                 gridView.setOnMouseClicked((e) ->  {
                     simulation.rotateState(jF, iF);
-                    gridView.setFill(simulation.getGrid()[jF][iF].getCurrColor());
+                    gridView.setFill(simulation.getGrid().getMyGrid()[jF][iF].getCurrColor());
                 });
                 gridViews[i][j] = (Rectangle) gridView;
                 myContainer.getChildren().add(gridViews[i][j]);
@@ -104,12 +104,12 @@ public class SimulationShell {
             renderGrid(history.get(historyPos + 1));
             historyPos++;
         } else {
-            Cell[][] oldGrid = makeDeepCopy(simulation.getGrid());
+            Cell[][] oldGrid = makeDeepCopy(simulation.getGrid().getMyGrid());
 
             history.add(oldGrid); // Save current grid in history
             historyPos++;
             simulation.step(); // Compute next grid
-            Cell[][] newGrid = simulation.getGrid(); // Get next grid
+            Cell[][] newGrid = simulation.getGrid().getMyGrid(); // Get next grid
             renderGrid(newGrid);
         }
     }

@@ -90,6 +90,10 @@ public class ConfigParser {
                 grid.setShouldShowOutlines(false);
             }
 
+            if((rootNode.getElementsByTagName("ManualSize").getLength()) == 1) {
+                grid.setManualCellSize(Double.valueOf(((Element)rootNode.getElementsByTagName("ManualSize").item(0)).getAttribute("size")));
+            }
+
             Element data = ((Element) rootNode.getElementsByTagName("Data").item(0));
             if (data.getAttribute("type").equals("frequencies")) {
                 ArrayList<Double> popFreqs = new ArrayList<>();

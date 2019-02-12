@@ -24,6 +24,7 @@ public abstract class Grid {
     private final int myNumCols;
 
     private boolean outlines = true;
+    private double manualSize = -1;
 
     public Grid(int size, boolean toroidal, double factor) {
         myNumCols = (int) (size * factor);
@@ -49,6 +50,15 @@ public abstract class Grid {
 
     public void setShouldShowOutlines(boolean s) {
         outlines = s;
+    }
+
+    // If cell size shouldn't be calculated
+    public double getManualCellSize() {
+        return manualSize;
+    }
+
+    public void setManualCellSize(double manualSize) {
+        this.manualSize = manualSize;
     }
 
     // populate randomly

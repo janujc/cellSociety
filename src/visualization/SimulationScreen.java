@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.effect.DropShadow;
@@ -387,31 +388,76 @@ public class SimulationScreen {
         // render initial state
         if (simulation.getGrid() instanceof Square) {
             int numCells = simulation.getGrid().getMyGrid().length;
-            currentCellSize = (400
-                    - (simulation.getGrid().shouldShowOutlines() ? (numCells - 1) * 1 : 0)) // Account for padding
-                    / (numCells * 1.0); // Number of cells
+            Group containerToPass;
+            if (simulation.getGrid().getManualCellSize() == -1) {
+                currentCellSize = (400
+                        - (simulation.getGrid().shouldShowOutlines() ? (numCells - 1) * 1 : 0)) // Account for padding
+                        / (numCells * 1.0); // Number of cells
+                containerToPass = myContainer;
+            } else {
+                currentCellSize = simulation.getGrid().getManualCellSize();
+                ScrollPane s1 = new ScrollPane();
+                s1.setPrefSize(400, 400);
+                Group weirdGroup = new Group();
+                s1.setContent(weirdGroup);
+                s1.setLayoutX(100);
+                s1.setLayoutY(87.5);
+                myContainer.getChildren().add(s1);
+                containerToPass = weirdGroup;
+            }
             gridViews = SquareGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                    currentCellSize, simulation, myContainer, 87, 100
+                    currentCellSize, simulation, containerToPass, 87, 100
             );
         } else if (simulation.getGrid() instanceof Triangular) {
             int numCells = simulation.getGrid().getMyGrid().length;
             System.out.println(numCells);
-            currentCellSize = (400
-                    - (simulation.getGrid().shouldShowOutlines() ? (numCells - 1) * 1 : 0))  // Account for padding
-                    / (numCells * 1.0); // Number of cells
+            Group containerToPass;
+            if (simulation.getGrid().getManualCellSize() == -1) {
+                currentCellSize = (400
+                        - (simulation.getGrid().shouldShowOutlines() ? (numCells - 1) * 1 : 0))  // Account for padding
+                        / (numCells * 1.0); // Number of cells
+                containerToPass = myContainer;
+            } else {
+                currentCellSize = simulation.getGrid().getManualCellSize();
+                ScrollPane s1 = new ScrollPane();
+                s1.setPrefSize(400, 400);
+                Group weirdGroup = new Group();
+                s1.setContent(weirdGroup);
+                s1.setLayoutX(100);
+                s1.setLayoutY(87.5);
+                myContainer.getChildren().add(s1);
+                containerToPass = weirdGroup;
+            }
+
             gridViews = TriangularGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                    currentCellSize, simulation, myContainer, true
+                    currentCellSize, simulation, containerToPass, true
             );
         } else if (simulation.getGrid() instanceof Hexagonal) {
             int numCells = simulation.getGrid().getMyGrid().length;
-            currentCellSize = (400
-                    - (simulation.getGrid().shouldShowOutlines() ? ((numCells - 1)/2d) * 2 : 0)) // Account for padding
-                    / (numCells/2.0); // Number of cells
+            Group containerToPass;
+            if (simulation.getGrid().getManualCellSize() == -1) {
+                currentCellSize = (400
+                        - (simulation.getGrid().shouldShowOutlines() ? ((numCells - 1) / 2d) * 2 : 0)) // Account for padding
+                        / (numCells / 2.0); // Number of cells
+                containerToPass = myContainer;
+            } else {
+                currentCellSize = simulation.getGrid().getManualCellSize();
+                ScrollPane s1 = new ScrollPane();
+                s1.setPrefSize(400, 400);
+                Group weirdGroup = new Group();
+                s1.setContent(weirdGroup);
+                s1.setLayoutX(100);
+                s1.setLayoutY(87.5);
+                myContainer.getChildren().add(s1);
+                containerToPass = weirdGroup;
+            }
+
+
             gridViews = HexagonalGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                    currentCellSize, simulation, myContainer, true
+                    currentCellSize, simulation, containerToPass, true
             );
         }
 

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root doctype="simulation_config">
-    <SideSize count="10" />
+    <SideSize count="50" />
     <Class class="simulation.PredatorPrey" />
     <Name name="Predator Prey" />
     <GridShape shape="triangular"/>
     <Metadata name="numTurnsToBreed"
               value="4,5,20"/>
     <Data type="frequencies">
-        <Item popFreq="0.3"
+        <Item popFreq="0.7"
               state="0"
               color="#0000ff"/>
-        <Item popFreq="0.4"
+        <Item popFreq="0.2"
               state="1"
               color="#00FF00"/>
-        <Item popFreq="0.3"
+        <Item popFreq="0.1"
               state="2"
               color="#FF0000"/>
     </Data>

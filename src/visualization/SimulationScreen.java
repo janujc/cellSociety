@@ -21,6 +21,8 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import simulation.Simulation;
+import uitools.HexagonalGridGenerator;
+import uitools.TriangularGridGenerator;
 import utils.Cell;
 import utils.ConfigParser;
 import utils.Dialogs;
@@ -385,10 +387,10 @@ public class SimulationScreen {
                 / (numCells * 1.0); // Number of cells
 
         // render initial state
-        initialiseGridViews(simulation.getGrid().getMyGrid());
-        renderGrid(simulation.getGrid().getMyGrid());
-        //myContainer.getChildren().addAll(TriangularGridGenerator.createGrid(20, 30));
-        //myContainer.getChildren().addAll(HexagonalGridGenerator.createGrid(20, 80));
+        //initialiseGridViews(simulation.getGrid().getMyGrid());
+        //renderGrid(simulation.getGrid().getMyGrid());
+        myContainer.getChildren().addAll(TriangularGridGenerator.createGrid(20, 30));
+        //myContainer.getChildren().addAll(HexagonalGridGenerator.createGrid(20, 80, 10));
     }
 
     private double getCellXLocation(int column) {

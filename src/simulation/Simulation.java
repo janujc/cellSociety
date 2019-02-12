@@ -75,6 +75,13 @@ public abstract class Simulation {
         rand = new Random();
     }
 
+    // TODO
+    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType,
+                         Object populatingInfo) {
+        this(grid, simStates, stateColors);
+        populateGrid(populatingType, populatingInfo);
+    }
+
     /**
      * Creates and populates the simulation grid based off a list of specific locations and states
      *
@@ -87,6 +94,8 @@ public abstract class Simulation {
         this(grid, simStates, stateColors);
         myGrid.populate(colors, cells);
     }
+
+    // TODO If the above constructor works, remove the rest of the constructors below
 
     /**
      * Creates and populates the simulation grid randomly
@@ -127,6 +136,30 @@ public abstract class Simulation {
     protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Double[] populationFreqs) {
         this(grid, simStates, stateColors);
         myGrid.populate(states, colors, populationFreqs);
+    }
+
+    // TODO
+    private void populateGrid(String populatingType, Object populatingInfo) {
+        final String POPULATION_LIST = "list";
+        final String POPULATION_SET_NUMBERS = "numToOccupy";
+        final String POPULATION_FREQS = "freqs";
+
+        switch (populatingType) {
+            case POPULATION_LIST:
+                myGrid.populate(colors, (Integer[][]) populatingInfo);
+                break;
+            case POPULATION_SET_NUMBERS:
+                myGrid.populate(states, colors, (Integer[]) populatingInfo);
+                break;
+            case POPULATION_FREQS:
+                myGrid.populate(states, colors, (Double[]) populatingInfo);
+                break;
+            default:
+
+                // populate randomly by default
+                myGrid.populate(states, colors);
+                break;
+        }
     }
 
     /**

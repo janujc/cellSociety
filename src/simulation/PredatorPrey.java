@@ -68,8 +68,9 @@ public class PredatorPrey extends Simulation {
      * @param simData         the string containing the PredatorPrey-specific parameters (NUM_TURNS_TO_BREED_FISH,
      *                        NUM_TURNS_TO_STARVE, NUM_TURNS_TO_BREED_SHARK) each separated by a comma (",")
      */
-    public PredatorPrey(Grid grid, Integer[] states, Color[] stateColors, Double[] populationFreqs, String simData) {
-        super(grid, states, stateColors, populationFreqs);
+    public PredatorPrey(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType,
+                        Object populatingInfo, String simData) {
+        super(grid, simStates, stateColors, populatingType, populatingInfo);
 
         EMPTY = states[0];
         FISH = states[1];

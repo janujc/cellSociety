@@ -37,8 +37,9 @@ public class Fire extends Simulation {
      * @param probCatch       the probability that a tree next to a burning tree catches on fire, read from the config
      *                        file (passed in a String, so need to parse)
      */
-    public Fire(Grid grid, Integer[] simStates, Color[] stateColors, Double[] populationFreqs, String probCatch) {
-        super(grid, simStates, stateColors, populationFreqs);
+    public Fire(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType, Object populatingInfo,
+                String probCatch) {
+        super(grid, simStates, stateColors, populatingType, populatingInfo);
         EMPTY = states[0];
         TREE = states[1];
         BURNING = states[2];

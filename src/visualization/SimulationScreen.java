@@ -388,7 +388,7 @@ public class SimulationScreen {
         if (simulation.getGrid() instanceof Square) {
             int numCells = simulation.getGrid().getMyGrid().length;
             currentCellSize = (400
-                    - (numCells - 1) * 1) // Account for padding
+                    - (simulation.getGrid().shouldShowOutlines() ? (numCells - 1) * 1 : 0)) // Account for padding
                     / (numCells * 1.0); // Number of cells
             gridViews = SquareGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
@@ -398,7 +398,7 @@ public class SimulationScreen {
             int numCells = simulation.getGrid().getMyGrid().length;
             System.out.println(numCells);
             currentCellSize = (400
-                    - (numCells - 1) * 1) // Account for padding
+                    - (simulation.getGrid().shouldShowOutlines() ? (numCells - 1) * 1 : 0))  // Account for padding
                     / (numCells * 1.0); // Number of cells
             gridViews = TriangularGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
@@ -407,7 +407,7 @@ public class SimulationScreen {
         } else if (simulation.getGrid() instanceof Hexagonal) {
             int numCells = simulation.getGrid().getMyGrid().length;
             currentCellSize = (400
-                    - ((numCells - 1)/2d) * 2) // Account for padding
+                    - (simulation.getGrid().shouldShowOutlines() ? ((numCells - 1)/2d) * 2 : 0)) // Account for padding
                     / (numCells/2.0); // Number of cells
             gridViews = HexagonalGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),

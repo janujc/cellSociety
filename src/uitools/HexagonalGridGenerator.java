@@ -25,16 +25,16 @@ public class HexagonalGridGenerator {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 double yOffset = i*2*cellSize +
-                        i*2; // padding
+                        (simulation.getGrid().shouldShowOutlines() ? i*2 : 0); // padding
                 double xOffset = 0;
                 if (j%2 == 1) {
                     yOffset += cellSize +
-                            1; // padding
+                            (simulation.getGrid().shouldShowOutlines() ? 1 : 0); // padding
                     xOffset += ((j/2)+1)*cellSize/2 + (j/2)*cellSize/2 +
-                            (j)*2; // padding
+                            (simulation.getGrid().shouldShowOutlines() ? (j)*2 : 0 ); // padding
                 } else {
                     xOffset += (j/2)*cellSize +
-                            (j)*2; // padding
+                            (simulation.getGrid().shouldShowOutlines() ? (j)*2 : 0); // padding
                 }
 
                 Polygon polygon = new Polygon(points);

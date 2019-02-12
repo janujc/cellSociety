@@ -45,7 +45,7 @@ public class SimulationShell {
         // render initial state
         if (simulation.getGrid() instanceof Square) {
             currentCellSize = (400
-                    - (numCells - 1) * 1) // Account for padding
+                    - (simulation.getGrid().shouldShowOutlines() ? (numCells - 1) * 1 : 0)) // Account for padding
                     / (numCells * 1.0); // Number of cells
             gridViews = SquareGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
@@ -53,7 +53,7 @@ public class SimulationShell {
             );
         } else if (simulation.getGrid() instanceof Triangular) {
             currentCellSize = (400
-                    - (numCells - 1) * 1) // Account for padding
+                    - - (simulation.getGrid().shouldShowOutlines() ? (numCells - 1) * 1 : 0))  // Account for padding
                     / (numCells * 1.0); // Number of cells
             gridViews = TriangularGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
@@ -63,7 +63,7 @@ public class SimulationShell {
             myStage.setHeight(myContainer.getLayoutBounds().getHeight() + currentCellSize);
         } else if (simulation.getGrid() instanceof Hexagonal) {
             currentCellSize = (400
-                    - ((numCells - 1)/2d) * 2) // Account for padding
+                    - (simulation.getGrid().shouldShowOutlines() ? ((numCells - 1)/2d) * 2 : 0)) // Account for padding
                     / (numCells/2.0); // Number of cells
             gridViews = HexagonalGridGenerator.createGrid(
                     simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),

@@ -13,7 +13,7 @@ public class SquareGridGenerator  {
         Group myG = new Group();
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                Shape gridView = new Rectangle(getCellXLocation(j, cellSize), getCellYLocation(i, cellSize), cellSize, cellSize);
+                Shape gridView = new Rectangle(getCellXLocation(j, cellSize, simulation), getCellYLocation(i, cellSize, simulation), cellSize, cellSize);
                 gridView.setFill(simulation.getGrid().getMyGrid()[i][j].getCurrColor());
                 final int iF = i, jF = j;
                 gridView.setOnMouseClicked((e) ->  {
@@ -32,13 +32,13 @@ public class SquareGridGenerator  {
 
 
 
-    private static double getCellXLocation(int column, double currentCellSize) {
-        return column * 1.0 // Padding between cells
+    private static double getCellXLocation(int column, double currentCellSize, Simulation simulation) {
+        return (simulation.getGrid().shouldShowOutlines() ? column * 1.0 : 0) // Padding between cells
                 + currentCellSize * column;
     }
 
-    private static double getCellYLocation(int row, double currentCellSize) {
-        return row * 1.0 // Padding between cells
+    private static double getCellYLocation(int row, double currentCellSize, Simulation simulation) {
+        return (simulation.getGrid().shouldShowOutlines() ? row * 1.0 : 0) // Padding between cells
                 + currentCellSize * row;
     }
 

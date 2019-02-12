@@ -29,9 +29,9 @@ public class TriangularGridGenerator {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 double yOffset = i*cellSize + i*cellSize/2 +
-                        i*2; // padding
+                        (simulation.getGrid().shouldShowOutlines() ? i*2 : 0); // padding
                 double xOffset = j*cellSize
-                        + j*2; // padding
+                        + (simulation.getGrid().shouldShowOutlines() ? j*2 : 0); // padding
                 Polygon polygon;
 
                 if ((j%2 == 1 && i%2 == 0) || (j%2 != 1 && i%2 != 0)) {

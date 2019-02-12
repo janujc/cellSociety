@@ -23,7 +23,7 @@ public abstract class Grid {
     private final int myNumRows;
     private final int myNumCols;
 
-    private boolean showOutlines = false;
+    private boolean outlines = true;
 
     public Grid(int size, boolean toroidal, double factor) {
         myNumCols = (int) (size * factor);
@@ -44,7 +44,11 @@ public abstract class Grid {
 
     // Whether or not the grid shows outlines
     public boolean shouldShowOutlines() {
-        return showOutlines;
+        return outlines;
+    }
+
+    public void setShouldShowOutlines(boolean s) {
+        outlines = s;
     }
 
     // populate randomly

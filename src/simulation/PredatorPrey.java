@@ -4,12 +4,13 @@ import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class that represents the Predator-Prey simulation
- * <p>
- * States: empty (0), fish (1), shark (2)
  *
  * @author Jonathan Yu
  */

@@ -1,20 +1,25 @@
-
 package simulation;
 
 import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * Class that represents the Rock-Paper-Scissors simulation
+ *
+ * @author Jonathan Yu
+ */
 public class RockPaperScissors extends Simulation {
 
+    private static final int MIN_GRADIENT = 0;
     private final int WHITE;
     private final int RED;
-    private final int BLUE;
     private final int GREEN;
-
-    private static final int MIN_GRADIENT = 0;
+    private final int BLUE;
     private final int MAX_GRADIENT;
 
     private final Map<Cell, Integer> gradientTracker;
@@ -25,8 +30,8 @@ public class RockPaperScissors extends Simulation {
 
         WHITE = states[0];
         RED = states[1];
-        BLUE = states[2];
-        GREEN = states[3];
+        GREEN = states[2];
+        BLUE = states[3];
 
         MAX_GRADIENT = Integer.valueOf(maxGradient);
 
@@ -47,41 +52,27 @@ public class RockPaperScissors extends Simulation {
     protected void calculateNextStates() {
         for (Cell cell : getCellsInRandomOrder()) {
             int cellState = getMostRecentState(cell);
+
             List<Cell> neighbors = myGrid.getNeighbors(cell, false);
             Cell randNeighbor = chooseRandomCellFromList(neighbors);
             int neighborState = getMostRecentState(randNeighbor);
 
-            if (cellState == WHITE) {
-                if (neighborState != WHITE) {
-                    cell.setNextState(neighborState, colors[neighborState]);
-                    eat(cell, randNeighbor);
-                    continue;
-                }
+            if (shouldEat(cellState, neighborState)) {
+                eat(cell, randNeighbor);
+            } else {
+                cell.setNextState(cellState, colors[cellState]);
             }
-            else if (cellState == RED) {
-                if (neighborState == GREEN) {
-                    cell.setNextState(GREEN, colors[GREEN]);
-                    eat(cell, randNeighbor);
-                    continue;
-                }
-            }
-            else if (cellState == BLUE) {
-                if (neighborState == RED) {
-                    cell.setNextState(RED, colors[RED]);
-                    eat(cell, randNeighbor);
-                    continue;
-                }
-            }
-            else {
-                if (neighborState == BLUE) {
-                    cell.setNextState(BLUE, colors[BLUE]);
-                    eat(cell, randNeighbor);
-                    continue;
-                }
-            }
-
-            cell.setNextState(cellState, colors[cellState]);
         }
+    }
+
+    private boolean shouldEat(int currCellState, int neighborState) {
+        if (currCellState == WHITE && neighborState != WHITE) {
+            return true;
+        } else if (currCellState == RED && neighborState == GREEN) {
+            return true;
+        } else if (currCellState == GREEN && neighborState == BLUE) {
+            return true;
+        } else return currCellState == BLUE && neighborState == RED;
     }
 
     private void eat(Cell currCell, Cell neighbor) {
@@ -96,8 +87,7 @@ public class RockPaperScissors extends Simulation {
         if (currCellState == WHITE || currCellGradient == MIN_GRADIENT) {
             currCell.setNextState(neighborState, colors[neighborState]);
             currCellGradient = neighborGradient - 1;
-        }
-        else {
+        } else {
             currCell.setNextState(currCellState, colors[currCellState]);
             currCellGradient--;
         }
@@ -116,7 +106,6 @@ public class RockPaperScissors extends Simulation {
         int currState = currCell.getCurrState();
         int newState = (currState + 1) % states.length;
 
-        // TODO Avoid unnecessary remove calls
         gradientTracker.put(currCell, MAX_GRADIENT);
 
         currCell.setState(newState, colors[newState]);

@@ -6,7 +6,7 @@
     <Metadata name="maxGradient"
               value="9"/>
     <Data type="frequencies">
-        <Item popFreq="0.6"
+        <Item popFreq="0.7"
               state="0"
               color="#FFFFFF"/>
         <Item popFreq="0.1"
@@ -15,7 +15,7 @@
         <Item popFreq="0.1"
               state="2"
               color="#008000"/>
-        <Item popFreq="0.2"
+        <Item popFreq="0.1"
               state="3"
               color="#0000FF"/>
     </Data>

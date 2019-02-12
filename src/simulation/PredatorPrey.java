@@ -66,7 +66,6 @@ public class PredatorPrey extends Simulation {
      * @param simStates      the possible states of the cells in the simulation grid
      * @param stateColors    the cell colors of each state in the simulation
      * @param populatingType designates how the grid should be populated (with a list, randomly, with set numbers of each state, based on frequencies)
-     * @param stateColors    the cell colors of each state in the simulation
      * @param simData        the string containing the PredatorPrey-specific parameters (NUM_TURNS_TO_BREED_FISH,
      *                       NUM_TURNS_TO_STARVE, NUM_TURNS_TO_BREED_SHARK) each separated by a comma (",")
      */
@@ -279,14 +278,12 @@ public class PredatorPrey extends Simulation {
         }
     }
 
-    // TODO
     @Override
     public void rotateState(int x, int y) {
         Cell currCell = myGrid.getCellAt(x, y);
         int currState = currCell.getCurrState();
         int newState = (currState + 1) % states.length;
 
-        // TODO Avoid unnecessary remove calls
         animalTurnTracker.remove(currCell);
         sharkHungerTracker.remove(currCell);
         if (newState != EMPTY) {

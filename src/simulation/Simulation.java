@@ -38,8 +38,7 @@ public abstract class Simulation {
      * The simulation grid made up of cells each with their own state (represented by an int)
      */
     final Grid myGrid;
-
-    // TODO
+    
     final int gridNumRows;
     final int gridNumCols;
 
@@ -64,7 +63,6 @@ public abstract class Simulation {
      */
     private String currentFileName;
 
-    // TODO
     private String metadata;
 
     /**
@@ -83,14 +81,12 @@ public abstract class Simulation {
         rand = new Random();
     }
 
-    // TODO
     protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType,
                          Object populatingInfo) {
         this(grid, simStates, stateColors);
         populateGrid(populatingType, populatingInfo);
     }
 
-    // TODO
     private void populateGrid(String populatingType, Object populatingInfo) {
         final String POPULATION_LIST = "list";
         final String POPULATION_SET_NUMBERS = "numToOccupy";
@@ -114,62 +110,6 @@ public abstract class Simulation {
         }
     }
 
-    // TODO If the above constructor works, remove the rest of the constructors below
-//
-//    /**
-//     * Creates and populates the simulation grid based off a list of specific locations and states
-//     *
-//     * @param grid        the simulation grid
-//     * @param simStates   the possible states of the cells in the simulation grid
-//     * @param stateColors the cell colors of each state in the simulation
-//     * @param cells       the 2D array with the specified states, where the indices correspond to the grid
-//     */
-//    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Integer[][] cells) {
-//        this(grid, simStates, stateColors);
-//        myGrid.populate(colors, cells);
-//    }
-//
-//    /**
-//     * Creates and populates the simulation grid randomly
-//     *
-//     * @param grid        the simulation grid
-//     * @param simStates   the possible states of the cells in the simulation grid
-//     * @param stateColors the cell colors of each state in the simulation
-//     * @param random      true if the grid should be populated with equal probabilities of each state, false otherwise
-//     */
-//    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, boolean random) {
-//        this(grid, simStates, stateColors);
-//        if (random) {
-//            myGrid.populate(states, colors);
-//        }
-//    }
-//
-//    /**
-//     * Creates and populates the simulation grid randomly with specified numbers of each state
-//     *
-//     * @param grid        the simulation grid
-//     * @param simStates   the possible states of the cells in the simulation grid
-//     * @param stateColors the cell colors of each state in the simulation
-//     * @param numToOccupy the number of cells each state must occupy
-//     */
-//    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Integer[] numToOccupy) {
-//        this(grid, simStates, stateColors);
-//        myGrid.populate(states, colors, numToOccupy);
-//    }
-//
-//    /**
-//     * Creates and populates the simulation grid based on population frequencies.
-//     *
-//     * @param grid            the simulation grid
-//     * @param simStates       the possible states of the cells in the simulation grid
-//     * @param stateColors     the cell colors of each state in the simulation
-//     * @param populationFreqs the population frequencies of the states (probabilities, not proportions)
-//     */
-//    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Double[] populationFreqs) {
-//        this(grid, simStates, stateColors);
-//        myGrid.populate(states, colors, populationFreqs);
-//    }
-
     /**
      * Calculates the next state for each cell in the grid, then updates the grid. This represents a single step in the
      * simulation.
@@ -184,7 +124,6 @@ public abstract class Simulation {
      */
     protected abstract void calculateNextStates();
 
-    // TODO
     public void rotateState(int x, int y) {
         Cell currCell = myGrid.getCellAt(x, y);
         int currState = currCell.getCurrState();
@@ -234,7 +173,6 @@ public abstract class Simulation {
         return chooseFrom.get(rand.nextInt(chooseFrom.size()));
     }
 
-    // TODO
     public Grid getGrid() {
         return myGrid;
     }
@@ -275,7 +213,6 @@ public abstract class Simulation {
         this.currentFileName = fileName;
     }
 
-    // TODO
     public String getMetadata() {
         return metadata;
     }
@@ -284,7 +221,6 @@ public abstract class Simulation {
         this.metadata = metadata;
     }
 
-    // TODO
     public Color[] getColors() {
         return colors;
     }

@@ -1,5 +1,6 @@
 package simulation;
 
+import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
@@ -59,14 +60,11 @@ public class Segregation extends Simulation {
      * should be at least a 0.1 chance that each Cell in the simulation is EMPTY. When creating a grid, it is
      * recommended that the side length be between 25 and 100.
      *
-     * @param sideSize        length of one side of grid
-     * @param states          an array of the possible states of each cell
-     * @param populationFreqs an array of the frequencies corresponding to the states
-     * @param colors          an array of the colors corresponding to the states
      * @param percentSatsfied percentage of neighbors of same state threshold
      */
-    public Segregation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String percentSatsfied) {
-        super(sideSize, states, populationFreqs, colors);
+    public Segregation(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType,
+                       Object populatingInfo, String percentSatsfied) {
+        super(grid, simStates, stateColors, populatingType, populatingInfo);
         minPercentSatisfaction = Integer.valueOf(percentSatsfied);
     }
 
@@ -89,16 +87,17 @@ public class Segregation extends Simulation {
         dissatisfiedAgents = new ArrayList<>();
         emptyCell = new ArrayList<>();
 
-        for (Cell[] xCells : grid) {
-            for (Cell cell : xCells) {
-                if (cell.getCurrState() == EMPTY) {
-                    emptyCell.add(cell);
+        for (int x = 0; x < gridNumCols; x++) {
+            for (int y = 0; y < gridNumRows; y++) {
+                Cell currCell = myGrid.getCellAt(x, y);
+                if (currCell.getCurrState() == EMPTY) {
+                    emptyCell.add(currCell);
                 } else {
-                    List<Cell> simNeighbors = getNeighborsOfType(cell, cell.getCurrState(), false);
-                    List<Cell> difNeighbors = getNeighborsOfType(cell, oppositeAgent(cell.getCurrState()), false);
+                    List<Cell> simNeighbors = myGrid.getNeighborsOfType(currCell, currCell.getCurrState(), false);
+                    List<Cell> difNeighbors = myGrid.getNeighborsOfType(currCell, oppositeAgent(currCell.getCurrState()), false);
                     int numSimNeighbors = simNeighbors.size();
                     int numDifNeighbors = difNeighbors.size();
-                    determineAgentBehavior(cell, numSimNeighbors, numDifNeighbors);
+                    determineAgentBehavior(currCell, numSimNeighbors, numDifNeighbors);
                 }
             }
         }

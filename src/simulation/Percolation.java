@@ -1,5 +1,6 @@
 package simulation;
 
+import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
@@ -17,15 +18,9 @@ public class Percolation extends Simulation {
     /**
      * The possible states of each cell in the Percolation simulation
      */
-    private int BLOCKED = 0;
-    private int OPEN = 1;
-    private int PERCOLATED = 2;
-
-    /**
-     * Instance variables to detect when to end Percolation
-     */
-    private Integer oppositeCol;
-    private Integer oppositeRow;
+    private int BLOCKED;
+    private int OPEN;
+    private int PERCOLATED;
 
     /**
      * Creates the simulation by calling super and using the constructor in simulation.Simulation
@@ -40,16 +35,17 @@ public class Percolation extends Simulation {
      * Cell and having the constructor randomly generate a single PERCOLATED Cell. When creating a grid, it is
      * recommended that the side length be between 25 and 100.
      *
-     * @param sideSize        length of one side of grid
-     * @param states          an array of the possible states of each cell
-     * @param populationFreqs an array of the frequencies corresponding to the states
-     * @param colors          an array of the colors corresponding to the states
      * @param metadata        any other information that might be needed for the simulation. In this case, null.
      */
-    public Percolation(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String metadata) {
-        super(sideSize, states, populationFreqs, colors);
-        Cell startPerc = determineStartLocation();
-        grid[startPerc.getCol()][startPerc.getRow()] = startPerc;
+    public Percolation(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType, Object populatingInfo,
+                       String metadata) {
+        super(grid, simStates, stateColors, populatingType, populatingInfo);
+        BLOCKED = states[0];
+        OPEN = states[1];
+        PERCOLATED = states[2];
+        Cell temp = determineStartLocation();
+        Cell startPerc = myGrid.getCellAt(temp.getCol(), temp.getRow());
+        startPerc.setState(PERCOLATED, colors[PERCOLATED]);
     }
 
     /**
@@ -64,20 +60,16 @@ public class Percolation extends Simulation {
         int coord1, coord2;
         if (side == 0) {
             coord1 = 0;
-            coord2 = rand.nextInt(gridSideSize);
-            oppositeCol = gridSideSize - 1;
+            coord2 = rand.nextInt(gridNumRows);
         } else if (side == 1) {
-            coord1 = gridSideSize - 1;
-            coord2 = rand.nextInt(gridSideSize);
-            oppositeCol = 0;
+            coord1 = gridNumCols - 1;
+            coord2 = rand.nextInt(gridNumRows);
         } else if (side == 2) {
-            coord1 = rand.nextInt(gridSideSize);
+            coord1 = rand.nextInt(gridNumCols);
             coord2 = 0;
-            oppositeRow = gridSideSize - 1;
         } else {
-            coord1 = rand.nextInt(gridSideSize);
-            coord2 = gridSideSize - 1;
-            oppositeRow = 0;
+            coord1 = rand.nextInt(gridNumCols);
+            coord2 = gridNumRows - 1;
         }
         return new Cell(PERCOLATED, coord1, coord2, colors[PERCOLATED]);
     }
@@ -88,10 +80,11 @@ public class Percolation extends Simulation {
      */
     @Override
     protected void calculateNextStates() {
-        for (Cell[] xCells : grid) {
-            for (Cell cell : xCells) {
-                Boolean hasPercolatedNeighbors = !(getNeighborsOfType(cell, PERCOLATED, false).isEmpty());
-                calculateNextStateOfOneCell(cell, hasPercolatedNeighbors);
+        for (int x = 0; x < gridNumCols; x++) {
+            for (int y = 0; y < gridNumRows; y++) {
+                Cell currCell = myGrid.getCellAt(x, y);
+                Boolean hasPercolatedNeighbors = !(myGrid.getNeighborsOfType(currCell, PERCOLATED, false).isEmpty());
+                calculateNextStateOfCurrCell(currCell, hasPercolatedNeighbors);
             }
         }
     }
@@ -103,7 +96,7 @@ public class Percolation extends Simulation {
      * @param cell                   current Cell object
      * @param hasPercolatedNeighbors Boolean corresponding to number of PERCOLATED neighbors
      */
-    private void calculateNextStateOfOneCell(Cell cell, Boolean hasPercolatedNeighbors) {
+    private void calculateNextStateOfCurrCell(Cell cell, Boolean hasPercolatedNeighbors) {
         if (cell.getCurrState() == BLOCKED) {
             cell.setNextState(BLOCKED, colors[BLOCKED]);
             return;

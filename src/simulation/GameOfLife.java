@@ -1,5 +1,6 @@
 package simulation;
 
+import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
@@ -16,8 +17,8 @@ public class GameOfLife extends Simulation {
     /**
      * The possible states of each cell in the GameOfLife simulation
      */
-    private final Integer DEAD = 0;
-    private final Integer ALIVE = 1;
+    private final Integer DEAD;
+    private final Integer ALIVE;
 
     /**
      * Creates the simulation by calling super and using the constructor in simulation.Simulation
@@ -30,14 +31,13 @@ public class GameOfLife extends Simulation {
      * For the Game of Life simulation, there are only two possible states, dead and alive. When choosing a grid length,
      * it is recommended that the number be between 25 and 100 so that it is easier to follow each step.
      *
-     * @param sideSize length of one side of grid
-     * @param states an array of the possible states of each cell
-     * @param populationFreqs an array of the frequencies corresponding to the states
-     * @param colors an array of the colors corresponding to the states
      * @param metadata any other information that might be needed for the simulation. In this case, null.
      */
-    public GameOfLife(int sideSize, Integer[] states, Double[] populationFreqs, Color[] colors, String metadata) {
-        super(sideSize, states, populationFreqs, colors);
+    public GameOfLife(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType, Object populatingInfo,
+                      String metadata) {
+        super(grid, simStates, stateColors, populatingType, populatingInfo);
+        DEAD = states[0];
+        ALIVE = states[1];
     }
 
     /**
@@ -45,10 +45,11 @@ public class GameOfLife extends Simulation {
      */
     @Override
     protected void calculateNextStates() {
-        for (Cell[] xCells : grid) {
-            for (Cell cell : xCells) {
-                int numOfAliveNeighbors = getNeighborsOfType(cell, ALIVE, false).size();
-                calculateNextStateOfOneCell(cell, numOfAliveNeighbors);
+        for (int x = 0; x < gridNumCols; x++) {
+            for (int y = 0; y < gridNumRows; y++) {
+                Cell currCell = myGrid.getCellAt(x, y);
+                int numOfAliveNeighbors = myGrid.getNeighborsOfType(currCell, ALIVE, false).size();
+                calculateNextStateOfCurrCell(currCell, numOfAliveNeighbors);
             }
         }
     }
@@ -64,7 +65,7 @@ public class GameOfLife extends Simulation {
      * @param cell current Cell object
      * @param numOfAliveNeighbors number of neighbors whose current state is ALIVE
      */
-    protected void calculateNextStateOfOneCell(Cell cell, int numOfAliveNeighbors) {
+    private void calculateNextStateOfCurrCell(Cell cell, int numOfAliveNeighbors) {
         if (cell.getCurrState() == ALIVE && numOfAliveNeighbors < 2) {
             cell.setNextState(DEAD, colors[DEAD]);
         } else if (cell.getCurrState() == ALIVE && (numOfAliveNeighbors == 2 || numOfAliveNeighbors == 3)) {

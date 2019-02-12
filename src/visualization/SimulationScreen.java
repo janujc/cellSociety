@@ -1,6 +1,8 @@
 package visualization;
 
 import controls.*;
+import grid.Grid;
+import grid.Square;
 import javafx.scene.Cursor;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -25,6 +27,7 @@ import utils.Dialogs;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
+import java.net.SocketImpl;
 import java.util.*;
 
 import static uitools.TextGenerator.makeText;
@@ -271,13 +274,16 @@ public class SimulationScreen {
             Simulation newSim;
             Integer[] states = new Integer[simulation.getColors().length];
             Arrays.setAll(states, i -> i);
+            boolean toroidal = false; // TODO: decided by config
             if (random) {
                 Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Color[].class, String.class);
-                newSim = (Simulation) constructor.newInstance(gridSize, states, simulation.getColors(), simulation.getMetadata());
+                Constructor<?> constructor = clazz.getConstructor(Grid.class, Integer[].class, Color[].class, String.class, Object.class, String.class);
+                Grid grid = new Square(gridSize, toroidal); // TODO: decided by config
+                newSim = (Simulation) constructor.newInstance(grid, states, simulation.getColors(), Simulation.RANDOM_TYPE, null, simulation.getMetadata());
             } else {
                 Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Double[].class, Color[].class, String.class);
+                Grid grid = new Square(gridSize, toroidal); // TODO: decided by config
+                Constructor<?> constructor = clazz.getConstructor(Grid.class, Integer[].class, Color[].class, String.class, Object.class, String.class);
                 ArrayList<Double> popFreqsList = new ArrayList<>();
                 double popFreqsSum = 0;
                 for (String item : popFreqsText.split(",")) {
@@ -292,7 +298,7 @@ public class SimulationScreen {
                     Dialogs.showAlert("Not enough frequencies");
                     closeMenu(); return;
                 }
-                newSim = (Simulation) constructor.newInstance(gridSize, states, popFreqsList.toArray(new Double[0]), simulation.getColors(), simulation.getMetadata());
+                newSim = (Simulation) constructor.newInstance(grid, states, simulation.getColors(), Simulation.FREQUENCIES, popFreqsList.toArray(new Double[0]), simulation.getMetadata());
             }
 
 

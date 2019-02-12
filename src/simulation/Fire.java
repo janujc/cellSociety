@@ -30,12 +30,13 @@ public class Fire extends Simulation {
     /**
      * Creates the simulation and calls the super constructor to create the grid
      *
-     * @param grid            the simulation grid
-     * @param simStates       the possible states of the cells in the simulation grid
-     * @param stateColors     the cell colors of each state in the simulation
-     * @param populationFreqs the population frequencies of the states (probabilities, not proportions)
-     * @param probCatch       the probability that a tree next to a burning tree catches on fire, read from the config
-     *                        file (passed in a String, so need to parse)
+     * @param grid           the simulation grid
+     * @param simStates      the possible states of the cells in the simulation grid
+     * @param stateColors    the cell colors of each state in the simulation
+     * @param populatingType designates how the grid should be populated (with a list, randomly, with set numbers of each state, based on frequencies)
+     * @param populatingInfo the data needed to populate the grid based on populatingType
+     * @param probCatch      the probability that a tree next to a burning tree catches on fire, read from the config
+     *                       file (passed in a String, so need to parse)
      */
     public Fire(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType, Object populatingInfo,
                 String probCatch) {

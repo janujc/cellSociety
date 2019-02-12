@@ -87,62 +87,6 @@ public abstract class Simulation {
         populateGrid(populatingType, populatingInfo);
     }
 
-    /**
-     * Creates and populates the simulation grid based off a list of specific locations and states
-     *
-     * @param grid        the simulation grid
-     * @param simStates   the possible states of the cells in the simulation grid
-     * @param stateColors the cell colors of each state in the simulation
-     * @param cells       the 2D array with the specified states, where the indices correspond to the grid
-     */
-    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Integer[][] cells) {
-        this(grid, simStates, stateColors);
-        myGrid.populate(colors, cells);
-    }
-
-    // TODO If the above constructor works, remove the rest of the constructors below
-
-    /**
-     * Creates and populates the simulation grid randomly
-     *
-     * @param grid        the simulation grid
-     * @param simStates   the possible states of the cells in the simulation grid
-     * @param stateColors the cell colors of each state in the simulation
-     * @param random      true if the grid should be populated with equal probabilities of each state, false otherwise
-     */
-    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, boolean random) {
-        this(grid, simStates, stateColors);
-        if (random) {
-            myGrid.populate(states, colors);
-        }
-    }
-
-    /**
-     * Creates and populates the simulation grid randomly with specified numbers of each state
-     *
-     * @param grid        the simulation grid
-     * @param simStates   the possible states of the cells in the simulation grid
-     * @param stateColors the cell colors of each state in the simulation
-     * @param numToOccupy the number of cells each state must occupy
-     */
-    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Integer[] numToOccupy) {
-        this(grid, simStates, stateColors);
-        myGrid.populate(states, colors, numToOccupy);
-    }
-
-    /**
-     * Creates and populates the simulation grid based on population frequencies.
-     *
-     * @param grid            the simulation grid
-     * @param simStates       the possible states of the cells in the simulation grid
-     * @param stateColors     the cell colors of each state in the simulation
-     * @param populationFreqs the population frequencies of the states (probabilities, not proportions)
-     */
-    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Double[] populationFreqs) {
-        this(grid, simStates, stateColors);
-        myGrid.populate(states, colors, populationFreqs);
-    }
-
     // TODO
     private void populateGrid(String populatingType, Object populatingInfo) {
         final String POPULATION_LIST = "list";
@@ -166,6 +110,62 @@ public abstract class Simulation {
                 break;
         }
     }
+
+    // TODO If the above constructor works, remove the rest of the constructors below
+//
+//    /**
+//     * Creates and populates the simulation grid based off a list of specific locations and states
+//     *
+//     * @param grid        the simulation grid
+//     * @param simStates   the possible states of the cells in the simulation grid
+//     * @param stateColors the cell colors of each state in the simulation
+//     * @param cells       the 2D array with the specified states, where the indices correspond to the grid
+//     */
+//    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Integer[][] cells) {
+//        this(grid, simStates, stateColors);
+//        myGrid.populate(colors, cells);
+//    }
+//
+//    /**
+//     * Creates and populates the simulation grid randomly
+//     *
+//     * @param grid        the simulation grid
+//     * @param simStates   the possible states of the cells in the simulation grid
+//     * @param stateColors the cell colors of each state in the simulation
+//     * @param random      true if the grid should be populated with equal probabilities of each state, false otherwise
+//     */
+//    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, boolean random) {
+//        this(grid, simStates, stateColors);
+//        if (random) {
+//            myGrid.populate(states, colors);
+//        }
+//    }
+//
+//    /**
+//     * Creates and populates the simulation grid randomly with specified numbers of each state
+//     *
+//     * @param grid        the simulation grid
+//     * @param simStates   the possible states of the cells in the simulation grid
+//     * @param stateColors the cell colors of each state in the simulation
+//     * @param numToOccupy the number of cells each state must occupy
+//     */
+//    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Integer[] numToOccupy) {
+//        this(grid, simStates, stateColors);
+//        myGrid.populate(states, colors, numToOccupy);
+//    }
+//
+//    /**
+//     * Creates and populates the simulation grid based on population frequencies.
+//     *
+//     * @param grid            the simulation grid
+//     * @param simStates       the possible states of the cells in the simulation grid
+//     * @param stateColors     the cell colors of each state in the simulation
+//     * @param populationFreqs the population frequencies of the states (probabilities, not proportions)
+//     */
+//    protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, Double[] populationFreqs) {
+//        this(grid, simStates, stateColors);
+//        myGrid.populate(states, colors, populationFreqs);
+//    }
 
     /**
      * Calculates the next state for each cell in the grid, then updates the grid. This represents a single step in the

@@ -387,9 +387,9 @@ public class SimulationScreen {
                 / (numCells * 1.0); // Number of cells
 
         // render initial state
-        //initialiseGridViews(simulation.getGrid().getMyGrid());
-        //renderGrid(simulation.getGrid().getMyGrid());
-        myContainer.getChildren().addAll(TriangularGridGenerator.createGrid(20, 30));
+        initialiseGridViews(simulation.getGrid().getMyGrid());
+        renderGrid(simulation.getGrid().getMyGrid());
+        //myContainer.getChildren().addAll(TriangularGridGenerator.createGrid(20, 30, 10));
         //myContainer.getChildren().addAll(HexagonalGridGenerator.createGrid(20, 80, 10));
     }
 

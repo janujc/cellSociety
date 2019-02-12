@@ -15,6 +15,11 @@ import java.util.Random;
  */
 public abstract class Simulation {
 
+    public static String RANDOM_TYPE = "random";
+    public static String FREQUENCIES = "freqs";
+    public static String NUM_OCCUPY  = "numToOccupy";
+    public static String LIST_BASED  = "list";
+
     /**
      * The value for a cell's next state that has not been set (after initialization and each step). All simulations
      * must not use this value for other states.

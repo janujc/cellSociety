@@ -1,5 +1,7 @@
 package utils;
 
+import grid.Grid;
+import grid.Square;
 import javafx.scene.paint.Color;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -46,6 +48,9 @@ public class ConfigParser {
             String displayName = ((Element) rootNode.getElementsByTagName("Name").item(0))
                     .getAttribute("name");
 
+            boolean toroidal = false; // TODO: decided by config
+            Grid grid = new Square(sideSize, toroidal);  // TODO: Decdied by config
+
             Element data = ((Element) rootNode.getElementsByTagName("Data").item(0));
             if (data.getAttribute("type").equals("frequencies")) {
                 ArrayList<Double> popFreqs = new ArrayList<>();
@@ -58,8 +63,8 @@ public class ConfigParser {
                     colors.add(Color.web(item.getAttribute("color")));
                 }
                 Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Double[].class, Color[].class, String.class);
-                Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), popFreqs.toArray(new Double[0]), colors.toArray(new Color[0]), metadata);
+                Constructor<?> constructor = clazz.getConstructor(Grid.class, Integer[].class, Color[].class, String.class, Object.class, String.class);
+                Simulation returnable = (Simulation) constructor.newInstance(grid, states.toArray(new Integer[0]), colors.toArray(new Color[0]), Simulation.FREQUENCIES, popFreqs.toArray(new Double[0]), metadata);
                 returnable.setDisplayName(displayName);
                 returnable.setMetadata(metadata);
                 returnable.setCurrentFileName(fileName);
@@ -73,8 +78,8 @@ public class ConfigParser {
                     colors.add(Color.web(item.getAttribute("color")));
                 }
                 Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Color[].class, String.class);
-                Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]), colors.toArray(new Color[0]), metadata);
+                Constructor<?> constructor = clazz.getConstructor(Grid.class, Integer[].class, Color[].class, String.class, Object.class, String.class);
+                Simulation returnable = (Simulation) constructor.newInstance(grid, states.toArray(new Integer[0]), colors.toArray(new Color[0]), Simulation.RANDOM_TYPE, null, metadata);
                 returnable.setDisplayName(displayName);
                 returnable.setMetadata(metadata);
                 returnable.setCurrentFileName(fileName);
@@ -90,9 +95,9 @@ public class ConfigParser {
                     colors.add(Color.web(item.getAttribute("color")));
                 }
                 Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Integer[].class, Color[].class, String.class);
-                Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]),
-                        numbers.toArray(new Integer[0]), colors.toArray(new Color[0]), metadata);
+                Constructor<?> constructor = clazz.getConstructor(Grid.class, Integer[].class, Color[].class, String.class, Object.class, String.class);
+                Simulation returnable = (Simulation) constructor.newInstance(grid, states.toArray(new Integer[0]), colors.toArray(new Color[0]), Simulation.NUM_OCCUPY,
+                        numbers.toArray(new Integer[0]), metadata);
                 returnable.setDisplayName(displayName);
                 returnable.setMetadata(metadata);
                 returnable.setCurrentFileName(fileName);
@@ -115,9 +120,9 @@ public class ConfigParser {
                     colors.add(Color.web(item.getAttribute("color")));
                 }
                 Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(int.class, Integer[].class, Integer[][].class, Color[].class, String.class);
-                Simulation returnable = (Simulation) constructor.newInstance(sideSize, states.toArray(new Integer[0]),
-                        cells, colors.toArray(new Color[0]), metadata);
+                Constructor<?> constructor = clazz.getConstructor(Grid.class, Integer[].class, Color[].class, String.class, Object.class, String.class);
+                Simulation returnable = (Simulation) constructor.newInstance(grid, states.toArray(new Integer[0]),
+                        colors.toArray(new Color[0]), Simulation.LIST_BASED, cells, metadata);
                 returnable.setDisplayName(displayName);
                 returnable.setCurrentFileName(fileName);
                 returnable.setMetadata(metadata);
@@ -138,7 +143,7 @@ public class ConfigParser {
             scanner.close();
 
             String datawrapper = "<Data type=\"specific\">\n";
-            for (Cell[] row : simulation.getGrid()) {
+            for (Cell[] row : simulation.getGrid().getMyGrid()) {
                 String currentRow = "\t\t<Row>";
                 for (Cell cell : row) {
                     currentRow = currentRow.concat(cell.getCurrState() + ",");

@@ -62,7 +62,7 @@ public class ConfigParser {
                 // No action required. Already set to false
             }
 
-            String gridShape = "square";
+            String gridShape = Grid.SQUARE_GRID;
             try {
                 String shape = ((Element) rootNode.getElementsByTagName("GridShape").item(0))
                         .getAttribute("shape");
@@ -76,10 +76,10 @@ public class ConfigParser {
 
             Grid grid;
             switch (gridShape) {
-                case "triangular":
+                case Grid.TRIANGULAR_GRID:
                     grid = new Triangular(sideSize, toroidal);
                     break;
-                case "hexagonal":
+                case Grid.HEXAGONAL_GRID:
                     grid = new Hexagonal(sideSize, toroidal);
                     break;
                 default:

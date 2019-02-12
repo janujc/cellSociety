@@ -214,7 +214,6 @@ public class SimulationScreen {
 
                 possessedShells.add(simShell);
             } catch (Exception e) {
-                e.printStackTrace();
                 Dialogs.showAlert("Erroneous configuration file chosen.");
             }
         }

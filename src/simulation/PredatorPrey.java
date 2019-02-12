@@ -134,24 +134,6 @@ public class PredatorPrey extends Simulation {
     }
 
     /**
-     * Helper method that gets all of the cells in the grid in random order
-     * <p>
-     * Used to create less predictable simulations as animals can affect each others' behavior within the same step
-     *
-     * @return the list of cells in random order
-     */
-    private List<Cell> getCellsInRandomOrder() {
-        List<Cell> allCells = new ArrayList<>();
-
-        for (int x = 0; x < gridNumCols; x++) {
-            for (int y = 0; y < gridNumRows; y++)
-                allCells.add(myGrid.getCellAt(x, y));
-        }
-        Collections.shuffle(allCells, rand);
-        return allCells;
-    }
-
-    /**
      * Moves animal to a randomly-chosen empty cardinal neighbor cell. If no such cells exist, leaves it in the current
      * cell. If a shark does not move, checks if it starves.
      *
@@ -191,29 +173,6 @@ public class PredatorPrey extends Simulation {
             }
         }
         return cellsOfType;
-    }
-
-    /**
-     * Helper method that gets the most recently set state of a cell. If the cell's next state has already been set,
-     * returns that. Otherwise, returns the current state.
-     *
-     * @param cell the cell whose state is desired
-     * @return the most recently set state of the cell
-     */
-    private int getMostRecentState(Cell cell) {
-        int nextState = cell.getNextState();
-
-        return (nextState == UNDETERMINED) ? cell.getCurrState() : nextState;
-    }
-
-    /**
-     * Helper method that randomly chooses a cell from a given list
-     *
-     * @param chooseFrom the list of cells to choose from
-     * @return the randomly chosen cell
-     */
-    private Cell chooseRandomCellFromList(List<Cell> chooseFrom) {
-        return chooseFrom.get(rand.nextInt(chooseFrom.size()));
     }
 
     /**
@@ -336,7 +295,7 @@ public class PredatorPrey extends Simulation {
                 sharkHungerTracker.put(currCell, 0);
             }
         }
-        
+
         currCell.setState(newState, colors[newState]);
     }
 }

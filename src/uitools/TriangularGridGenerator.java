@@ -10,8 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class TriangularGridGenerator {
-    public static Group createGrid(int rows, int columns) {
-        // TODO: Change to use dynamic cell sizes based on grid width
+    public static Group createGrid(int rows, int columns, double cellSize) {
         double[] pointsDownwards = new double[6];
         double[] pointsUpwards = new double[6];
         for (int i = 0; i < 6; i += 2) {
@@ -26,15 +25,15 @@ public class TriangularGridGenerator {
 
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                double yOffset = i*10 + i*10/2 +
+                double yOffset = i*cellSize + i*cellSize/2 +
                         i*2; // padding
-                double xOffset = j*10
-                        + j*1; // padding
+                double xOffset = j*cellSize
+                        + j*2; // padding
                 Polygon polygon;
 
                 if ((j%2 == 1 && i%2 == 0) || (j%2 != 1 && i%2 != 0)) {
                     polygon = new Polygon(pointsUpwards);
-                    yOffset += 10/2;
+                    yOffset += cellSize/2;
                 } else {
                     polygon = new Polygon(pointsDownwards);
                 }
@@ -42,7 +41,7 @@ public class TriangularGridGenerator {
                 polygon.setLayoutX(xOffset);
                 polygon.setLayoutY(yOffset);
                 polygon.setStroke(Color.BLACK);
-                polygon.setStrokeWidth(10);
+                polygon.setStrokeWidth(cellSize);
                 myG.getChildren().add(polygon);
             }
         }

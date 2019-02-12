@@ -1,7 +1,8 @@
 package grid;
 
-import javafx.scene.paint.Color;
 import utils.Cell;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Hexagonal extends Grid {
@@ -11,6 +12,8 @@ public class Hexagonal extends Grid {
 
     @Override
     public List<Cell> getNeighbors(Cell center, boolean onlyCardinal) {
+        List<int[]> neighborCoords = new ArrayList<>();
+
         int centerX = center.getCol();
         int centerY = center.getRow();
 

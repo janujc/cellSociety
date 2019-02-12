@@ -2,6 +2,7 @@ package grid;
 
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import utils.Cell;
@@ -13,6 +14,8 @@ public class Square extends Grid {
 
     @Override
     public List<Cell> getNeighbors(Cell center, boolean onlyCardinal) {
+        List<int[]> neighborCoords = new ArrayList<>();
+
         int centerX = center.getCol();
         int centerY = center.getRow();
 

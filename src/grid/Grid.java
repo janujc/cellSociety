@@ -19,8 +19,6 @@ public abstract class Grid {
     private final int myNumRows;
     private final int myNumCols;
 
-    List<int[]> neighborCoords = new ArrayList<>();
-
     public Grid(int size, boolean toroidal, double factor) {
         myNumCols = (int) (size * factor);
         myNumRows = size;
@@ -95,27 +93,6 @@ public abstract class Grid {
     }
 
     public abstract List<Cell> getNeighbors(Cell center, boolean onlyCardinal);
-
-//    public static void neighborRules(String code, String fileName) {
-//        File file = new File(fileName);
-//
-//        Scanner kb = new Scanner(System.in);
-//        Scanner scanner;
-//        try {
-//            scanner = new Scanner(file);
-//            while (scanner.hasNext()) {
-//                final String stringFromFile = scanner.next();
-//                if (stringFromFile.contains(code)) {
-//                    // TODO: add each instruction to neighborCoords
-//                    String[] str = scanner.nextLine().split(", \\{|\\}");
-//                }
-//            }
-//        } catch (FileNotFoundException e) {
-//            System.out.println("Cannot find file " + fileName);
-//        } catch (RuntimeException e) {
-//            System.out.println("Cannot find " + code + " in " + fileName);
-//        }
-//    }
 
     public List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
         List<Cell> neighbors;

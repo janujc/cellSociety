@@ -8,8 +8,6 @@ import java.util.List;
 
 /**
  * Class that represents the Spreading of Fire simulation
- * <p>
- * States: empty (0), tree (1), burning tree (2)
  *
  * @author Jonathan Yu
  */

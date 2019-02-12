@@ -1,20 +1,25 @@
-
 package simulation;
 
 import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * Class that represents the Rock-Paper-Scissors simulation
+ *
+ * @author Jonathan Yu
+ */
 public class RockPaperScissors extends Simulation {
 
+    private static final int MIN_GRADIENT = 0;
     private final int WHITE;
     private final int RED;
     private final int GREEN;
     private final int BLUE;
-
-    private static final int MIN_GRADIENT = 0;
     private final int MAX_GRADIENT;
 
     private final Map<Cell, Integer> gradientTracker;
@@ -54,8 +59,7 @@ public class RockPaperScissors extends Simulation {
 
             if (shouldEat(cellState, neighborState)) {
                 eat(cell, randNeighbor);
-            }
-            else {
+            } else {
                 cell.setNextState(cellState, colors[cellState]);
             }
         }
@@ -64,19 +68,11 @@ public class RockPaperScissors extends Simulation {
     private boolean shouldEat(int currCellState, int neighborState) {
         if (currCellState == WHITE && neighborState != WHITE) {
             return true;
-        }
-        else if (currCellState == RED && neighborState == GREEN) {
+        } else if (currCellState == RED && neighborState == GREEN) {
             return true;
-        }
-        else if (currCellState == GREEN && neighborState == BLUE) {
+        } else if (currCellState == GREEN && neighborState == BLUE) {
             return true;
-        }
-        else if (currCellState == BLUE && neighborState == RED){
-            return true;
-        }
-        else {
-            return false;
-        }
+        } else return currCellState == BLUE && neighborState == RED;
     }
 
     private void eat(Cell currCell, Cell neighbor) {
@@ -91,8 +87,7 @@ public class RockPaperScissors extends Simulation {
         if (currCellState == WHITE || currCellGradient == MIN_GRADIENT) {
             currCell.setNextState(neighborState, colors[neighborState]);
             currCellGradient = neighborGradient - 1;
-        }
-        else {
+        } else {
             currCell.setNextState(currCellState, colors[currCellState]);
             currCellGradient--;
         }

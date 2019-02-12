@@ -62,19 +62,18 @@ public class RockPaperScissors extends Simulation {
             if (neighborState != WHITE) {
                 if (cellState == WHITE) {
                     replaceWhite(cell, randNeighbor);
-                }
-                else if (shouldEat(cellState, neighborState)) {
+                    continue;
+                } else if (shouldEat(cellState, neighborState)) {
                     eat(cell, randNeighbor);
+                    continue;
                 }
             }
-            else {
-                cell.setNextState(cellState, colors[cellState]);
-            }
+            cell.setNextState(cellState, colors[cellState]);
         }
     }
 
     private void replaceWhite(Cell whiteCell, Cell colorCell) {
-        int colorCellState = colorCell.getCurrState();
+        int colorCellState = getMostRecentState(colorCell);
         int colorCellGradient = gradientTracker.get(colorCell);
 
         if (colorCellGradient < MAX_GRADIENT) {

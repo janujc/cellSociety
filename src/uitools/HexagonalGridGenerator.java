@@ -11,7 +11,8 @@ import javafx.scene.shape.Polygon;
 import simulation.Simulation;
 
 public class HexagonalGridGenerator {
-    public static Polygon[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer) {
+    public static Polygon[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer,
+                                         double marginY, double marginX) {
         var myGrid = new Polygon[rows][columns];
         double[] points = new double[12];
         for (int i = 0; i < 12; i += 2) {
@@ -51,6 +52,8 @@ public class HexagonalGridGenerator {
             }
         }
 
+        myG.setLayoutY(marginY);
+        myG.setLayoutX(marginX);
         myContainer.getChildren().addAll(myG);
 
         return myGrid;

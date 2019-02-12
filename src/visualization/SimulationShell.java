@@ -49,7 +49,7 @@ public class SimulationShell {
             case "square":
                 gridViews = SquareGridGenerator.createGrid(
                         simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                        currentCellSize, simulation, myContainer
+                        currentCellSize, simulation, myContainer, 0, 0
                 );
                 break;
             case "triangular":

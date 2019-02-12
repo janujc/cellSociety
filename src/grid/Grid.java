@@ -8,6 +8,10 @@ import java.util.Random;
 
 public abstract class Grid {
 
+    public final static String SQUARE_GRID = "square";
+    public final static String TRIANGULAR_GRID = "triangular";
+    public final static String HEXAGONAL_GRID = "hexagonal";
+
     /**
      * The simulation grid made up of cells each with their own state (represented by an int)
      * <p>

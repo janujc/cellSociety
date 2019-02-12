@@ -1,15 +1,25 @@
 package grid;
 
 import utils.Cell;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hexagonal extends Grid {
+    /**
+     *
+     * @param size
+     * @param toroidal
+     */
     public Hexagonal(int size, boolean toroidal) {
         super(size, toroidal, 4.0);
     }
 
+    /**
+     *
+     * @param center
+     * @param onlyCardinal
+     * @return
+     */
     @Override
     public List<Cell> getNeighbors(Cell center, boolean onlyCardinal) {
         List<int[]> neighborCoords = new ArrayList<>();

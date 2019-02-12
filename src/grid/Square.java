@@ -1,17 +1,25 @@
 package grid;
 
-import javafx.scene.paint.Color;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import utils.Cell;
 
 public class Square extends Grid {
+    /**
+     *
+     * @param size
+     * @param toroidal
+     */
     public Square(int size, boolean toroidal) {
         super(size, toroidal, 1.0);
     }
 
+    /**
+     *
+     * @param center
+     * @param onlyCardinal
+     * @return
+     */
     @Override
     public List<Cell> getNeighbors(Cell center, boolean onlyCardinal) {
         List<int[]> neighborCoords = new ArrayList<>();

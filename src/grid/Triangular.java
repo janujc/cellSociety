@@ -1,15 +1,25 @@
 package grid;
 
 import utils.Cell;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Triangular extends Grid {
+    /**
+     *
+     * @param size
+     * @param toroidal
+     */
     public Triangular(int size, boolean toroidal) {
         super(size, toroidal, 1.5);
     }
 
+    /**
+     *
+     * @param center
+     * @param onlyCardinal
+     * @return
+     */
     @Override
     public List<Cell> getNeighbors(Cell center, boolean onlyCardinal) {
         List<int[]> neighborCoords = new ArrayList<>();

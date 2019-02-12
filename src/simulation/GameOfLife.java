@@ -31,6 +31,11 @@ public class GameOfLife extends Simulation {
      * For the Game of Life simulation, there are only two possible states, dead and alive. When choosing a grid length,
      * it is recommended that the number be between 25 and 100 so that it is easier to follow each step.
      *
+     * @param grid           the simulation grid
+     * @param simStates      the possible states of the cells in the simulation grid
+     * @param stateColors    the cell colors of each state in the simulation
+     * @param populatingType designates how the grid should be populated (with a list, randomly, with set numbers of each state, based on frequencies)
+     * @param populatingInfo the data needed to populate the grid based on populatingType
      * @param metadata any other information that might be needed for the simulation. In this case, null.
      */
     public GameOfLife(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType, Object populatingInfo,

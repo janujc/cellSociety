@@ -35,7 +35,12 @@ public class Percolation extends Simulation {
      * Cell and having the constructor randomly generate a single PERCOLATED Cell. When creating a grid, it is
      * recommended that the side length be between 25 and 100.
      *
-     * @param metadata        any other information that might be needed for the simulation. In this case, null.
+     * @param grid           the simulation grid
+     * @param simStates      the possible states of the cells in the simulation grid
+     * @param stateColors    the cell colors of each state in the simulation
+     * @param populatingType designates how the grid should be populated (with a list, randomly, with set numbers of each state, based on frequencies)
+     * @param populatingInfo the data needed to populate the grid based on populatingType
+     * @param metadata any other information that might be needed for the simulation. In this case, null.
      */
     public Percolation(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType, Object populatingInfo,
                        String metadata) {

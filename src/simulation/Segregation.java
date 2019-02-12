@@ -60,6 +60,11 @@ public class Segregation extends Simulation {
      * should be at least a 0.1 chance that each Cell in the simulation is EMPTY. When creating a grid, it is
      * recommended that the side length be between 25 and 100.
      *
+     * @param grid           the simulation grid
+     * @param simStates      the possible states of the cells in the simulation grid
+     * @param stateColors    the cell colors of each state in the simulation
+     * @param populatingType designates how the grid should be populated (with a list, randomly, with set numbers of each state, based on frequencies)
+     * @param populatingInfo the data needed to populate the grid based on populatingType
      * @param percentSatsfied percentage of neighbors of same state threshold
      */
     public Segregation(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType,
@@ -164,9 +169,6 @@ public class Segregation extends Simulation {
         }
     }
 
-    /**
-     * For all remaining cells in emptyCell, sets their next state to empty.
-     */
     private void updateEmpty() {
         for (Cell empty : emptyCell) {
             empty.setNextState(EMPTY, colors[EMPTY]);

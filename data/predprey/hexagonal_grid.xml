@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Root doctype="simulation_config">
     <SideSize count="50" />
+    <GridEdge type="toroidal" />
     <Class class="simulation.PredatorPrey" />
     <Name name="Predator Prey" />
     <GridShape shape="hexagonal"/>

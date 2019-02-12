@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Root doctype="simulation_config">
+    <SideSize count="50" />
+    <GridShape shape="hexagonal"/>
+    <Class class="simulation.Fire" />
+    <Name name="Fire" />
+    <Metadata name="probCatch"
+              value="0.55"/>
+    <Data type="frequencies">
+        <Item popFreq="0.0"
+              state="0"
+              color="#FFFF00"/>
+        <Item popFreq="0.99"
+              state="1"
+              color="#228B22"/>
+        <Item popFreq="0.01"
+              state="2"
+              color="#FF0000"/>
+    </Data>
+</Root>

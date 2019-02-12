@@ -11,7 +11,8 @@ import javafx.scene.shape.Polygon;
 import simulation.Simulation;
 
 public class TriangularGridGenerator {
-    public static Polygon[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer) {
+    public static Polygon[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer,
+                                         double marginY, double marginX) {
         var gridViews = new Polygon[rows][columns];
         double[] pointsDownwards = new double[6];
         double[] pointsUpwards = new double[6];
@@ -55,6 +56,8 @@ public class TriangularGridGenerator {
             }
         }
 
+        myG.setLayoutY(marginY);
+        myG.setLayoutX(marginX);
         myContainer.getChildren().addAll(myG);
 
         return gridViews;

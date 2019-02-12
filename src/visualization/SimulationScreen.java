@@ -394,19 +394,19 @@ public class SimulationScreen {
             case "square":
                 gridViews = SquareGridGenerator.createGrid(
                         simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                        currentCellSize, simulation, myContainer
+                        currentCellSize, simulation, myContainer, 87, 100
                 );
                 break;
             case "triangular":
                 gridViews = TriangularGridGenerator.createGrid(
                         simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                        currentCellSize, simulation, myContainer
+                        currentCellSize, simulation, myContainer, 87, 100
                 );
                 break;
             case "hexagonal":
                 gridViews = HexagonalGridGenerator.createGrid(
                         simulation.getGrid().getNumRows(), simulation.getGrid().getNumCols(),
-                        currentCellSize, simulation, myContainer
+                        currentCellSize, simulation, myContainer, 87, 100
                 );
                 break;
         }

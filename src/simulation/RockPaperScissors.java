@@ -86,11 +86,11 @@ public class RockPaperScissors extends Simulation {
     }
 
     private boolean shouldEat(int currCellState, int neighborState) {
-        if (currCellState == RED && neighborState == GREEN) {
+        if (currCellState == RED && neighborState == BLUE) {
             return true;
-        } else if (currCellState == GREEN && neighborState == BLUE) {
+        } else if (currCellState == GREEN && neighborState == RED) {
             return true;
-        } else return currCellState == BLUE && neighborState == RED;
+        } else return currCellState == BLUE && neighborState == GREEN;
     }
 
     private void eat(Cell eaten, Cell eater) {

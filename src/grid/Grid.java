@@ -6,8 +6,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * @author Januario Carreiro and Jonathan Yu
+ *
+ * Grid class holds all the cells that will be used by the Simulation and Visualization classes. To add a different
+ * grid type, one should extend the Grid class and at least @overwrite getNeighbors.
+ * If one wants to access the individual cells, getCellAt() should be used
+ */
 public abstract class Grid {
-
+    /**
+     * Strings for each Grid subclass. If more subclasses are added, be sure to also add it below.
+     */
     public final static String SQUARE_GRID = "square";
     public final static String TRIANGULAR_GRID = "triangular";
     public final static String HEXAGONAL_GRID = "hexagonal";
@@ -199,7 +208,6 @@ public abstract class Grid {
 //        }
 //    }
 
-
     /**
      *
      * @param center
@@ -277,6 +285,11 @@ public abstract class Grid {
         return myGrid[x][y];
     }
 
+    /**
+     *
+     * @return
+     */
+    @Deprecated
     public Cell[][] getMyGrid() {
         return myGrid;
     }

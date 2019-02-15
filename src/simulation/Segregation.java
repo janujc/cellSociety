@@ -3,7 +3,6 @@ package simulation;
 import grid.Grid;
 import javafx.scene.paint.Color;
 import utils.Cell;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,7 +53,7 @@ public class Segregation extends Simulation {
         super(grid, simStates, stateColors, populatingType, populatingInfo);
         minPercentSatisfaction = Integer.valueOf(percentSatisfied);
     }
-    
+
     @Override
     protected void calculateNextStates() {
         determineCellBehavior();

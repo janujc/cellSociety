@@ -7,11 +7,18 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * @author Januario Carreiro and Jonathan Yu
- *
  * Grid class holds all the cells that will be used by the Simulation and Visualization classes. To add a different
- * grid type, one should extend the Grid class and at least @overwrite getNeighbors.
- * If one wants to access the individual cells, getCellAt() should be used
+ * grid type, one should extend the Grid class and at least overwrite getNeighbors().
+ * <p>
+ * The Grid is initialized without any Cell objects. In order to initialize Cell objects throughout the grid,
+ * one of the four populate() methods should be used.
+ * <p>
+ * To update the state of each Cell, first Cell.nextState and Cell.nextColor should be set. Then the simulation class
+ * should use the updateStates() method and all Cell objects will have their nextState become their currState.
+ *
+ * NOTE: If one wants to access the individual cells, getCellAt() should be used, not getMyGrid().
+ *
+ * @author Januario Carreiro and Jonathan Yu
  */
 public abstract class Grid {
     /**
@@ -35,10 +42,15 @@ public abstract class Grid {
     private double manualSize = -1;
 
     /**
+     * Constructor for Grid. Initializes instance variables.
      *
-     * @param size
-     * @param toroidal
-     * @param factor
+     * Note: Not all grids have the same length and width because the size of each cell changes depending on
+     * whether the grid has Square, Triangular or Hexagonal cells. If rows = columns for the Triangular and Hexagonal
+     * grid types, the visualization would look off.
+     *
+     * @param size      the standard number of rows/columns
+     * @param toroidal  whether the Grid is toroidal or not. Necessary for correct getNeighbor() implementation
+     * @param factor    how much size is to multiplied by to get number of columns.
      */
     public Grid(int size, boolean toroidal, double factor) {
         myNumCols = (int) (size * factor);
@@ -47,12 +59,11 @@ public abstract class Grid {
         myGrid = new Cell[myNumCols][myNumRows];
     }
 
-    // populate based on list of states
-
     /**
+     * Method to populate the grid when passed a 2-D ARRAY OF STATES by config file.
      *
-     * @param colors
-     * @param cells
+     * @param colors    array of colors for each state
+     * @param cells     2-D array of which state the Cell at each location should be
      */
     public void populate(Color[] colors, Integer[][] cells) {
         for (int x = 0; x < myNumCols; x++) {
@@ -63,50 +74,11 @@ public abstract class Grid {
         }
     }
 
-    // Whether or not the grid shows outlines
-
     /**
-     * Method used by visualization.SimulationScreen to determine whether this grid is outlined or not
+     * Method to populate the grid completely randomly.
      *
-     * @return boolean outlines
-     */
-    public boolean shouldShowOutlines() {
-        return outlines;
-    }
-
-    /**
-     * Sets whether grid should show outlines
-     *
-     * @param s boolean to set variable outlines
-     */
-    public void setShouldShowOutlines(boolean s) {
-        outlines = s;
-    }
-
-    // If cell size shouldn't be calculated
-
-    /**
-     *
-     * @return
-     */
-    public double getManualCellSize() {
-        return manualSize;
-    }
-
-    /**
-     *
-     * @param manualSize
-     */
-    public void setManualCellSize(double manualSize) {
-        this.manualSize = manualSize;
-    }
-
-    // populate randomly
-
-    /**
-     *
-     * @param states
-     * @param colors
+     * @param states    array of states
+     * @param colors    array of colors corresponding to states
      */
     public void populate(Integer[] states, Color[] colors) {
         Random rand = new Random();
@@ -119,13 +91,12 @@ public abstract class Grid {
         }
     }
 
-    // populate randomly with a set number of each state
-
     /**
+     * Method to populate semi-randomly when a SET NUMBER OF EACH STATE is specified.
      *
-     * @param states
-     * @param colors
-     * @param numToOccupy
+     * @param states        array of states
+     * @param colors        array of colors corresponding to states
+     * @param numToOccupy   number of Cell object at each state
      */
     public void populate(Integer[] states, Color[] colors, Integer[] numToOccupy) {
         Random rand = new Random();
@@ -144,11 +115,11 @@ public abstract class Grid {
     }
 
     /**
-     * Method to populate the grid to specified population frequencies
+     * Method to populate the grid to SPECIFIED POPULATION FREQUENCIES.
      *
-     * @param states
-     * @param colors
-     * @param populationFreqs
+     * @param states            array of states
+     * @param colors            array of colors corresponding to states
+     * @param populationFreqs   relative frequencies (read: probability) of each state. Should sum to 1.
      */
     public void populate(Integer[] states, Color[] colors, Double[] populationFreqs) {
         Random rand = new Random();
@@ -169,7 +140,8 @@ public abstract class Grid {
     }
 
     /**
-     *
+     * Method to update the state of each Cell. Should be called by Simulation after setting next state of each Cell
+     * object.
      */
     public void updateStates() {
         for (Cell[] column : myGrid) {
@@ -180,40 +152,21 @@ public abstract class Grid {
     }
 
     /**
+     * Method to get neighbors of each Cell object. Each Grid subclass should override this method.
      *
-     * @param center
-     * @param onlyCardinal
-     * @return
+     * @param center        Cell whose neighbors are being calculated
+     * @param onlyCardinal  whether to calculate all neighbors or only "cardinal" neighbors
+     * @return              a list of Cells that are neighbors of center
      */
     public abstract List<Cell> getNeighbors(Cell center, boolean onlyCardinal);
 
-//    public static void neighborRules(String code, String fileName) {
-//        File file = new File(fileName);
-//
-//        Scanner kb = new Scanner(System.in);
-//        Scanner scanner;
-//        try {
-//            scanner = new Scanner(file);
-//            while (scanner.hasNext()) {
-//                final String stringFromFile = scanner.next();
-//                if (stringFromFile.contains(code)) {
-//                    // TODO: add each instruction to neighborCoords
-//                    String[] str = scanner.nextLine().split(", \\{|\\}");
-//                }
-//            }
-//        } catch (FileNotFoundException e) {
-//            System.out.println("Cannot find file " + fileName);
-//        } catch (RuntimeException e) {
-//            System.out.println("Cannot find " + code + " in " + fileName);
-//        }
-//    }
-
     /**
+     * Method to only get neighbors of each Cell object that are currently a certain state.
      *
-     * @param center
-     * @param type
-     * @param onlyCardinal
-     * @return
+     * @param center        Cell whose neighbors are being calculated
+     * @param type          state that we are looking for
+     * @param onlyCardinal  whether to calculate all neighbors or only "cardinal" neighbors
+     * @return              a list of Cells that are neighbors of center and are of state "type"
      */
     public List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
         List<Cell> neighbors;
@@ -257,17 +210,18 @@ public abstract class Grid {
     }
 
     /**
+     * Gets number of rows in Grid.
      *
-     *
-     * @return
+     * @return integer number of rows
      */
     public int getNumRows() {
         return myNumRows;
     }
 
     /**
+     * Gets number of columns in Grid. Determined by Grid type.
      *
-     * @return
+     * @return integer number of columns
      */
     public int getNumCols() {
         return myNumCols;
@@ -286,11 +240,48 @@ public abstract class Grid {
     }
 
     /**
+     * Deprecated method used for iterating through Grid. Now iteration through Grid should be done using getCellAt().
      *
-     * @return
+     * @return a 2-D array of Cell objects.
      */
     @Deprecated
     public Cell[][] getMyGrid() {
         return myGrid;
+    }
+
+    /**
+     * Sets whether grid should show outlines
+     *
+     * @param s boolean to set variable outlines
+     */
+    public void setShouldShowOutlines(boolean s) {
+        outlines = s;
+    }
+
+    /**
+     * Method used by visualization.SimulationScreen to determine whether this grid is outlined or not
+     *
+     * @return boolean outlines
+     */
+    public boolean shouldShowOutlines() {
+        return outlines;
+    }
+
+    /**
+     * Method to be used if cell size shouldn't be calculated automatically.
+     *
+     * @param manualSize
+     */
+    public void setManualCellSize(double manualSize) {
+        this.manualSize = manualSize;
+    }
+
+    /**
+     * Getter for manualSize. manualSize hardcoded by setManualCellSize.
+     *
+     * @return double size of Cell
+     */
+    public double getManualCellSize() {
+        return manualSize;
     }
 }

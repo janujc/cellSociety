@@ -174,7 +174,6 @@ public class ConfigParser {
                 return null;
             }
         } catch (Exception e) {
-            e.printStackTrace();
             throw (e);
         }
     }

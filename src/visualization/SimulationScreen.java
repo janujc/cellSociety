@@ -427,7 +427,6 @@ public class SimulationScreen extends visualization.Simulation {
             );
         } else if (simulation.getGrid() instanceof Triangular) {
             int numCells = simulation.getGrid().getMyGrid().length;
-            System.out.println(numCells);
             Group containerToPass;
             if (simulation.getGrid().getManualCellSize() == -1) {
                 currentCellSize = (400

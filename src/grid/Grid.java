@@ -203,7 +203,7 @@ public abstract class Grid {
         int toroidalX = x;
         int toroidalY = y;
         if (x < 0) toroidalX = myNumCols + x;
-        else if (x >= myNumCols) toroidalX = myNumCols - x;
+        else if (x >= myNumCols) toroidalX = Math.abs(myNumCols - x);
         if (y < 0) toroidalY = myNumRows + y;
         else if (y >= myNumRows) toroidalY = myNumRows - y;
         return new int[]{toroidalX, toroidalY};

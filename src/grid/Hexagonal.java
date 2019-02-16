@@ -45,12 +45,12 @@ public class Hexagonal extends Grid {
         int centerX = center.getCol();
         int centerY = center.getRow();
 
-        neighborCoords.add(new int[]{centerX, centerY - 1});        // North
         neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
-        neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest
-        neighborCoords.add(new int[]{centerX, centerY + 1});        // South
+        neighborCoords.add(new int[]{centerX + 2, centerY});        // East
         neighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast
         neighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest
+        neighborCoords.add(new int[]{centerX - 2, centerY});        // West
+        neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest
 
         return validateNeighbors(neighborCoords);
     }

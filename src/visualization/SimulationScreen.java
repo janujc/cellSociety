@@ -231,7 +231,7 @@ public class SimulationScreen extends visualization.Simulation {
     }
 
     /**
-     * Close all simulations being compared to
+     * Close all simulations being compared to.
      */
     public void destroyPossessions() {
         for (SimulationShell ss : possessedShells) {

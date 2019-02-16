@@ -2,6 +2,7 @@ package grid;
 
 import javafx.scene.paint.Color;
 import utils.Cell;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,7 +16,7 @@ import java.util.Random;
  * <p>
  * To update the state of each Cell, first Cell.nextState and Cell.nextColor should be set. Then the simulation class
  * should use the updateStates() method and all Cell objects will have their nextState become their currState.
- *
+ * <p>
  * NOTE: If one wants to access the individual cells, getCellAt() should be used, not getMyGrid().
  *
  * @author Januario Carreiro and Jonathan Yu
@@ -43,14 +44,14 @@ public abstract class Grid {
 
     /**
      * Constructor for Grid. Initializes instance variables.
-     *
+     * <p>
      * Note: Not all grids have the same length and width because the size of each cell changes depending on
      * whether the grid has Square, Triangular or Hexagonal cells. If rows = columns for the Triangular and Hexagonal
      * grid types, the visualization would look off.
      *
-     * @param size      the standard number of rows/columns
-     * @param toroidal  whether the Grid is toroidal or not. Necessary for correct getNeighbor() implementation
-     * @param factor    how much size is to multiplied by to get number of columns.
+     * @param size     the standard number of rows/columns
+     * @param toroidal whether the Grid is toroidal or not. Necessary for correct getNeighbor() implementation
+     * @param factor   how much size is to multiplied by to get number of columns.
      */
     public Grid(int size, boolean toroidal, double factor) {
         myNumCols = (int) (size * factor);
@@ -62,8 +63,8 @@ public abstract class Grid {
     /**
      * Method to populate the grid when passed a 2-D ARRAY OF STATES by config file.
      *
-     * @param colors    array of colors for each state
-     * @param cells     2-D array of which state the Cell at each location should be
+     * @param colors array of colors for each state
+     * @param cells  2-D array of which state the Cell at each location should be
      */
     public void populate(Color[] colors, Integer[][] cells) {
         for (int x = 0; x < myNumCols; x++) {
@@ -77,8 +78,8 @@ public abstract class Grid {
     /**
      * Method to populate the grid completely randomly.
      *
-     * @param states    array of states
-     * @param colors    array of colors corresponding to states
+     * @param states array of states
+     * @param colors array of colors corresponding to states
      */
     public void populate(Integer[] states, Color[] colors) {
         Random rand = new Random();
@@ -94,9 +95,9 @@ public abstract class Grid {
     /**
      * Method to populate semi-randomly when a SET NUMBER OF EACH STATE is specified.
      *
-     * @param states        array of states
-     * @param colors        array of colors corresponding to states
-     * @param numToOccupy   number of Cell object at each state
+     * @param states      array of states
+     * @param colors      array of colors corresponding to states
+     * @param numToOccupy number of Cell object at each state
      */
     public void populate(Integer[] states, Color[] colors, Integer[] numToOccupy) {
         Random rand = new Random();
@@ -117,9 +118,9 @@ public abstract class Grid {
     /**
      * Method to populate the grid to SPECIFIED POPULATION FREQUENCIES.
      *
-     * @param states            array of states
-     * @param colors            array of colors corresponding to states
-     * @param populationFreqs   relative frequencies (read: probability) of each state. Should sum to 1.
+     * @param states          array of states
+     * @param colors          array of colors corresponding to states
+     * @param populationFreqs relative frequencies (read: probability) of each state. Should sum to 1.
      */
     public void populate(Integer[] states, Color[] colors, Double[] populationFreqs) {
         Random rand = new Random();
@@ -154,19 +155,19 @@ public abstract class Grid {
     /**
      * Method to get neighbors of each Cell object. Each Grid subclass should override this method.
      *
-     * @param center        Cell whose neighbors are being calculated
-     * @param onlyCardinal  whether to calculate all neighbors or only "cardinal" neighbors
-     * @return              a list of Cells that are neighbors of center
+     * @param center       Cell whose neighbors are being calculated
+     * @param onlyCardinal whether to calculate all neighbors or only "cardinal" neighbors
+     * @return a list of Cells that are neighbors of center
      */
     public abstract List<Cell> getNeighbors(Cell center, boolean onlyCardinal);
 
     /**
      * Method to only get neighbors of each Cell object that are currently a certain state.
      *
-     * @param center        Cell whose neighbors are being calculated
-     * @param type          state that we are looking for
-     * @param onlyCardinal  whether to calculate all neighbors or only "cardinal" neighbors
-     * @return              a list of Cells that are neighbors of center and are of state "type"
+     * @param center       Cell whose neighbors are being calculated
+     * @param type         state that we are looking for
+     * @param onlyCardinal whether to calculate all neighbors or only "cardinal" neighbors
+     * @return a list of Cells that are neighbors of center and are of state "type"
      */
     public List<Cell> getNeighborsOfType(Cell center, int type, boolean onlyCardinal) {
         List<Cell> neighbors;
@@ -190,8 +191,7 @@ public abstract class Grid {
             int neighborY = neighbor[1];
             if (!(neighborX < 0 || neighborX >= myNumCols || neighborY < 0 || neighborY >= myNumRows)) {
                 neighbors.add(myGrid[neighborX][neighborY]);
-            }
-            else if (isToroidal) {
+            } else if (isToroidal) {
                 int[] toroidalNeighborCoords = getToroidalNeighbor(neighborX, neighborY);
                 neighbors.add(myGrid[toroidalNeighborCoords[0]][toroidalNeighborCoords[1]]);
             }
@@ -203,7 +203,7 @@ public abstract class Grid {
         int toroidalX = x;
         int toroidalY = y;
         if (x < 0) toroidalX = myNumCols + x;
-        else if (x >= myNumCols) toroidalX = myNumCols - x;
+        else if (x >= myNumCols) toroidalX = Math.abs(myNumCols - x);
         if (y < 0) toroidalY = myNumRows + y;
         else if (y >= myNumRows) toroidalY = myNumRows - y;
         return new int[]{toroidalX, toroidalY};
@@ -244,7 +244,6 @@ public abstract class Grid {
      *
      * @return a 2-D array of Cell objects.
      */
-    @Deprecated
     public Cell[][] getMyGrid() {
         return myGrid;
     }
@@ -268,20 +267,20 @@ public abstract class Grid {
     }
 
     /**
-     * Method to be used if cell size shouldn't be calculated automatically.
-     *
-     * @param manualSize
-     */
-    public void setManualCellSize(double manualSize) {
-        this.manualSize = manualSize;
-    }
-
-    /**
      * Getter for manualSize. manualSize hardcoded by setManualCellSize.
      *
      * @return double size of Cell
      */
     public double getManualCellSize() {
         return manualSize;
+    }
+
+    /**
+     * Method to be used if cell size shouldn't be calculated automatically.
+     *
+     * @param manualSize
+     */
+    public void setManualCellSize(double manualSize) {
+        this.manualSize = manualSize;
     }
 }

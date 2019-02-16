@@ -54,8 +54,8 @@ public class Triangular extends Grid {
     private List<int[]> getNeighborsForNorth(int centerX, int centerY, boolean onlyCardinal) {
         List<int[]> northNeighborCoords = new ArrayList<>();
 
-        northNeighborCoords.add(new int[]{centerX + 1, centerY});        // East
         northNeighborCoords.add(new int[]{centerX, centerY + 1});        // South
+        northNeighborCoords.add(new int[]{centerX + 1, centerY});        // East
         northNeighborCoords.add(new int[]{centerX - 1, centerY});        // West
 
         if (! onlyCardinal) {
@@ -88,8 +88,8 @@ public class Triangular extends Grid {
             southNeighborCoords.add(new int[]{centerX + 2, centerY});        // Far East
             southNeighborCoords.add(new int[]{centerX, centerY + 1});        // South
             southNeighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast
-            southNeighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest
             southNeighborCoords.add(new int[]{centerX - 2, centerY});        // Far West
+            southNeighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest
         }
 
         return southNeighborCoords;

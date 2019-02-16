@@ -54,7 +54,18 @@ to load all of them with generic code.
     * Extend `visualization.Simulation` or `simulation.Simulation` and make your new features! 
 
 ## Major design choice-justifications
-* TODO 
+* The Visualization part is separated from Simulation
+    * Only can create Simulation instances and access through limited getter methods
+    * Allows for proper OOP and encapsulation
+    * Visualization does not need to know that much about how the simulations work
+        * Just needs the result in order to display it
+* Configuration is only called/accessed by Visualization
+    * Visualization passes the appropriate data read from the config files to Simulation
+    * Allows for simpler instantiation of simulations
+        * Only need to create simulation objects once (in Visualization)
+* The Grid object is initialized separately from the Simulation instance and is instead passed to the Simulation object
+    * This simplified the constructor signatures for the Simulation class
+    * Additionally, this makes sense logically as the grid is generic and can be used by any simulation
 
 ## Assumptions:
 * All cells have the same shape

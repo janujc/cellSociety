@@ -45,12 +45,21 @@ public class Hexagonal extends Grid {
         int centerX = center.getCol();
         int centerY = center.getRow();
 
-        neighborCoords.add(new int[]{centerX, centerY - 1});        // North
-        neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
-        neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest
-        neighborCoords.add(new int[]{centerX, centerY + 1});        // South
-        neighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast
-        neighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest
+        neighborCoords.add(new int[]{centerX + 2, centerY});        // East
+        neighborCoords.add(new int[]{centerX - 2, centerY});        // West
+
+        if (centerX % 2 == 0) {
+            neighborCoords.add(new int[]{centerX + 1, centerY - 1});    // Northeast
+            neighborCoords.add(new int[]{centerX + 1, centerY});        // Southeast
+            neighborCoords.add(new int[]{centerX - 1, centerY});        // Southwest
+            neighborCoords.add(new int[]{centerX - 1, centerY - 1});    // Northwest
+        }
+        else {
+            neighborCoords.add(new int[]{centerX + 1, centerY});        // Northeast
+            neighborCoords.add(new int[]{centerX + 1, centerY + 1});    // Southeast
+            neighborCoords.add(new int[]{centerX - 1, centerY + 1});    // Southwest
+            neighborCoords.add(new int[]{centerX - 1, centerY});        // Northwest
+        }
 
         return validateNeighbors(neighborCoords);
     }

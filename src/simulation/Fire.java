@@ -31,7 +31,8 @@ public class Fire extends Simulation {
      * @param grid           the simulation grid
      * @param simStates      the possible states of the cells in the simulation grid
      * @param stateColors    the cell colors of each state in the simulation
-     * @param populatingType designates how the grid should be populated (with a list, randomly, with set numbers of each state, based on frequencies)
+     * @param populatingType designates how the grid should be populated (with a list, randomly, with set numbers of
+     *                       each state, based on frequencies)
      * @param populatingInfo the data needed to populate the grid based on populatingType
      * @param probCatch      the probability that a tree next to a burning tree catches on fire, read from the config
      *                       file (passed in a String, so need to parse)
@@ -61,6 +62,9 @@ public class Fire extends Simulation {
 
     /**
      * Calculates the next state for one cell in the grid
+     * <p>
+     * Simulation rules: Empty spaces stay empty. Burning trees burn down in one turn and become empty space. Trees that
+     * neighbor burning trees catch fire with a probability of PROB_CATCH.
      *
      * @param currCell the cell whose next state is being calculated
      * @return the next state of the cell
@@ -81,9 +85,6 @@ public class Fire extends Simulation {
     /**
      * Determines the next state of a cell containing a tree. If the tree neighbors a burning tree, it will catch fire
      * with a probability of PROB_CATCH. Otherwise, the tree is unaffected.
-     * <p>
-     * Also, if the simulation is set to end after the current step but a tree is calculated to catch fire, make it so
-     * the simulation will not end.
      *
      * @param tree the tree whose next state is being calculated
      * @return the next state of the cell containing the tree

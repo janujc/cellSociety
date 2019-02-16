@@ -10,24 +10,31 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Superclass for all simulations
+ * Superclass for all simulations, which provides methods to create a simulation grid and update it
  * <p>
- * This class provides methods to create a simulation grid and update it
+ * To create a new simulation, one must extend this class and override the abstract method calculateNextStates(). The
+ * overridden method is where the specific simulation rules are implemented. Additionally, one must implement subclass
+ * constructors that call the appropriate superclass constructor before initializing the simulation-specific variables.
+ * NOTE: All simulations must allow for -1 to be used as the value for the UNDETERMINED state and cannot use it for any
+ * other state.
  *
  * @author Jonathan Yu
  */
 public abstract class Simulation {
-
-    public static String RANDOM_TYPE = "random";
-    public static String FREQUENCIES = "freqs";
-    public static String NUM_OCCUPY  = "numToOccupy";
-    public static String LIST_BASED  = "list";
 
     /**
      * The value for a cell's next state that has not been set (after initialization and each step). All simulations
      * must not use this value for other states.
      */
     static final int UNDETERMINED = -1;
+
+    /**
+     * The string values to represent each method of populating the grid
+     */
+    public static String RANDOM_TYPE = "random";
+    public static String FREQUENCIES = "freqs";
+    public static String NUM_OCCUPY = "numToOccupy";
+    public static String LIST_BASED = "list";
 
     /**
      * The possible states of each cell in the simulation
@@ -38,7 +45,10 @@ public abstract class Simulation {
      * The simulation grid made up of cells each with their own state (represented by an int)
      */
     final Grid myGrid;
-    
+
+    /**
+     * The dimensions of the grid
+     */
     final int gridNumRows;
     final int gridNumCols;
 
@@ -63,10 +73,14 @@ public abstract class Simulation {
      */
     private String currentFileName;
 
+    /**
+     * The simulation-specific data (ex: probCatch in Fire)
+     */
     private String metadata;
 
     /**
-     * Initializes instance variables
+     * Initializes instance variables needed for all simulations regardless of type and populating method (the grid,
+     * list of states, list of state colors)
      *
      * @param grid        the simulation grid
      * @param simStates   the possible states of the cells in the simulation grid
@@ -81,12 +95,27 @@ public abstract class Simulation {
         rand = new Random();
     }
 
+    /**
+     * Initializes instance variables and populates the grid using the desired method
+     *
+     * @param grid           the simulation grid
+     * @param simStates      the possible states of the cells in the simulation grid
+     * @param stateColors    the cell colors of each state in the simulation
+     * @param populatingType the string representing the desired method of populating the grid
+     * @param populatingInfo the data for populating the grid using the method indicated by populatingType
+     */
     protected Simulation(Grid grid, Integer[] simStates, Color[] stateColors, String populatingType,
                          Object populatingInfo) {
         this(grid, simStates, stateColors);
         populateGrid(populatingType, populatingInfo);
     }
 
+    /**
+     * Populates the grid using the desired method
+     *
+     * @param populatingType the string representing the desired method of populating the grid
+     * @param populatingInfo the data for populating the grid using the method indicated by populatingType
+     */
     private void populateGrid(String populatingType, Object populatingInfo) {
         final String POPULATION_LIST = "list";
         final String POPULATION_SET_NUMBERS = "numToOccupy";
@@ -124,6 +153,14 @@ public abstract class Simulation {
      */
     protected abstract void calculateNextStates();
 
+    /**
+     * Rotates or increments the state of the cell at a certain location in the grid
+     * <p>
+     * Called by the visualizer to allow users to dynamically change the state of a cell by clicking on it
+     *
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     */
     public void rotateState(int x, int y) {
         Cell currCell = myGrid.getCellAt(x, y);
         int currState = currCell.getCurrState();
@@ -173,8 +210,22 @@ public abstract class Simulation {
         return chooseFrom.get(rand.nextInt(chooseFrom.size()));
     }
 
+    /**
+     * Gets the Grid object associated with the simulation for the visualizer to access
+     *
+     * @return the grid
+     */
     public Grid getGrid() {
         return myGrid;
+    }
+
+    /**
+     * Gets the state colors of the simulation for the visualizer to access
+     *
+     * @return the array of colors
+     */
+    public Color[] getColors() {
+        return colors;
     }
 
     /**
@@ -213,15 +264,21 @@ public abstract class Simulation {
         this.currentFileName = fileName;
     }
 
+    /**
+     * Gets the simulation-specific data/values for the visualizer to access
+     *
+     * @return the simulation data
+     */
     public String getMetadata() {
         return metadata;
     }
 
+    /**
+     * Stores the simulation-specific data, which the visualizer will need to access
+     *
+     * @param metadata the simulation data
+     */
     public void setMetadata(String metadata) {
         this.metadata = metadata;
-    }
-
-    public Color[] getColors() {
-        return colors;
     }
 }

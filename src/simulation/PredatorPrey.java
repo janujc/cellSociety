@@ -65,7 +65,8 @@ public class PredatorPrey extends Simulation {
      * @param grid           the simulation grid
      * @param simStates      the possible states of the cells in the simulation grid
      * @param stateColors    the cell colors of each state in the simulation
-     * @param populatingType designates how the grid should be populated (with a list, randomly, with set numbers of each state, based on frequencies)
+     * @param populatingType designates how the grid should be populated (with a list, randomly, with set numbers of
+     *                       each state, based on frequencies)
      * @param simData        the string containing the PredatorPrey-specific parameters (NUM_TURNS_TO_BREED_FISH,
      *                       NUM_TURNS_TO_STARVE, NUM_TURNS_TO_BREED_SHARK) each separated by a comma (",")
      */
@@ -112,6 +113,11 @@ public class PredatorPrey extends Simulation {
 
     /**
      * Calculates the next state for each cell in the grid based off this simulation's rules
+     * <p>
+     * Simulation rules: Fish move to a random, empty cardinal neighbor cell. Sharks eat a random cardinal neighbor fish.
+     * If no such fish exists, the shark will move like a fish. If animals have survived enough turns since breeding or
+     * being bred, they breed (reproduce) into the cell they just moved from. If sharks go a certain number of turns
+     * without eating a fish, they starve and die.
      */
     @Override
     protected void calculateNextStates() {
@@ -278,6 +284,13 @@ public class PredatorPrey extends Simulation {
         }
     }
 
+    /**
+     * Rotates the state of the cell at a certain location. If the cell is rotated to hold an animal, adds the animal to
+     * the trackers.
+     *
+     * @param x the x-coordinate of the cell
+     * @param y the y-coordinate of the cell
+     */
     @Override
     public void rotateState(int x, int y) {
         Cell currCell = myGrid.getCellAt(x, y);

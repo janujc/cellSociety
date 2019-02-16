@@ -14,7 +14,6 @@ import java.io.File;
  */
 public class CardGridGenerator {
     private static Card[][] cardGrid;
-
     private static void parseXML() {
         File inputFile = new File("data/sim_list.xml");
         Element rootNode = ParserTools.getRootNode(inputFile);

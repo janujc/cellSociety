@@ -6,8 +6,6 @@ import grid.Triangular;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 import javafx.stage.Stage;
 import simulation.Simulation;
 import uitools.HexagonalGridGenerator;
@@ -17,18 +15,23 @@ import utils.Cell;
 
 import java.util.ArrayList;
 
-public class SimulationShell {
+/**
+ * Author: Anshu Dwibhashi
+ * Class to display a shell of a simulation in a new window
+ */
+public class SimulationShell extends visualization.Simulation {
     private Group myContainer;
-    private Simulation simulation;
     private ArrayList<Cell[][]> history;
     private int historyPos = 0;
-    private Shape[][] gridViews;
     private Stage myStage;
     private double currentCellSize = 0.0;
 
-    // TODO: refactor render, getcelllox and initialise methods into new static class
-    // TODO: interface that simulationshell and screen both implement
-
+    /**
+     * Create a simulation shell object to compare simulation with
+     * @param myStage Stage being used to create this shell
+     * @param simulation Simulation to run in this shell
+     * @param title Title to display on the window
+     */
     public SimulationShell(Stage myStage, Simulation simulation, String title) {
         this.myStage = myStage;
         this.history = new ArrayList<>();
@@ -81,18 +84,6 @@ public class SimulationShell {
         myStage.show();
     }
 
-    private void renderGrid(Cell[][] grid) {
-        for (int i = 0; i < gridViews.length; i++) {
-            for (int j = 0; j < gridViews[0].length; j++) {
-                if (simulation.getGrid() instanceof Square) {
-                    gridViews[i][j].setFill(grid[j][i].getCurrColor());
-                } else {
-                    gridViews[i][j].setStroke(grid[j][i].getCurrColor());
-                }
-            }
-        }
-    }
-
 
     /**
      * Method to reset the grid to how it was one cycle ago
@@ -120,16 +111,6 @@ public class SimulationShell {
             Cell[][] newGrid = simulation.getGrid().getMyGrid(); // Get next grid
             renderGrid(newGrid);
         }
-    }
-
-    private Cell[][] makeDeepCopy(Cell[][] a) {
-        Cell[][] b = new Cell[a.length][a[0].length];
-        for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j < a[0].length; j++) {
-                b[i][j] = new Cell(a[i][j].getCurrState(), a[i][j].getCol(), a[i][j].getRow(), a[i][j].getCurrColor());
-            }
-        }
-        return b;
     }
 
     public void destroy() {

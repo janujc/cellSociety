@@ -28,6 +28,11 @@ public class HomeScreen {
     private Group myContainer;
     private Controller context;
 
+    /**
+     * Constructor to create the home screen
+     * @param myScene The scene within which to create this screen
+     * @param context The controller object creating this screen
+     */
     public HomeScreen(Scene myScene, Controller context) {
         this.context = context;
 

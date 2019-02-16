@@ -41,22 +41,19 @@ import static uitools.TextGenerator.makeTextRelative;
 import static visualization.Controller.*;
 
 
-// TODO: Graph populations for shells too
 /**
  * Author: Anshu Dwibhashi
  * Class defining the screen that displays a simulation
  */
-public class SimulationScreen {
+public class SimulationScreen extends visualization.Simulation {
     private Group myContainer;
     private Stage myStage;
-    private Simulation simulation;
     private int rate = 1; // Frequency in Hertz
     private Text rateText;
     private Control speedUpControl, speedDownControl, nextStateControl, prevStateControl, playPauseToggle, menuControl;
     private boolean isPaused = true; // Paused by default
     private double continueIn = 1000.0 / rate; // How many milliseconds we'll continue the animation in
     private double pausedFor = 0; // How many milliseconds we've been paused for before animating
-    private Shape[][] gridViews;
     private double currentCellSize;
     private Text titleText;
     private Map<Color, XYChart.Series<Number, Number>> populationStats; // Color -> {iteration: freq}
@@ -69,6 +66,15 @@ public class SimulationScreen {
 
     private ArrayList<SimulationShell> possessedShells;
 
+    /**
+     * Constructor to create simulation screen
+     * @param scene Scene for which to create this screen
+     * @param myStage Stage on which this scene will be placed
+     * @param simulation Simulation class that will be rendered
+     * @param label The title to display on this screen
+     * @param configFolder The folder where default.xml will be found for this simulation
+     * @param className Class used to instantiate this particular simulation
+     */
     SimulationScreen(Scene scene, Stage myStage, Simulation simulation, String label, String configFolder, String className) {
         this.myStage = myStage;
         this.history = new ArrayList<>();
@@ -142,6 +148,10 @@ public class SimulationScreen {
     }
 
     private Group menuGroup = null;
+
+    /**
+     * Display the options menu
+      */
     public void showMenu() {
         menuGroup = new Group();
         Rectangle dialogBox = new Rectangle(0, 0, 350, 240);
@@ -220,6 +230,9 @@ public class SimulationScreen {
         }
     }
 
+    /**
+     * Close all simulations being compared to
+     */
     public void destroyPossessions() {
         for (SimulationShell ss : possessedShells) {
             ss.destroy();
@@ -280,15 +293,15 @@ public class SimulationScreen {
             Simulation newSim;
             Integer[] states = new Integer[simulation.getColors().length];
             Arrays.setAll(states, i -> i);
-            boolean toroidal = false; // TODO: decided by config
+            boolean toroidal = false;
             if (random) {
                 Class<?> clazz = Class.forName(className);
                 Constructor<?> constructor = clazz.getConstructor(Grid.class, Integer[].class, Color[].class, String.class, Object.class, String.class);
-                Grid grid = new Square(gridSize, toroidal); // TODO: decided by config
+                Grid grid = new Square(gridSize, toroidal);
                 newSim = (Simulation) constructor.newInstance(grid, states, simulation.getColors(), Simulation.RANDOM_TYPE, null, simulation.getMetadata());
             } else {
                 Class<?> clazz = Class.forName(className);
-                Grid grid = new Square(gridSize, toroidal); // TODO: decided by config
+                Grid grid = new Square(gridSize, toroidal);
                 Constructor<?> constructor = clazz.getConstructor(Grid.class, Integer[].class, Color[].class, String.class, Object.class, String.class);
                 ArrayList<Double> popFreqsList = new ArrayList<>();
                 double popFreqsSum = 0;
@@ -364,6 +377,9 @@ public class SimulationScreen {
         closeMenu();
     }
 
+    /**
+     * Close the options menu
+     */
     public void closeMenu() {
         myContainer.getChildren().remove(menuGroup);
         menuGroup = null;
@@ -463,6 +479,11 @@ public class SimulationScreen {
 
         renderGrid(simulation.getGrid().getMyGrid());
     }
+
+    /**
+     * Get all simulations being compared with
+     * @return ArrayList of all simulations open right now that are being compared with
+     */
     public ArrayList<SimulationShell> getPossessedShells() {
         return possessedShells;
     }
@@ -510,18 +531,6 @@ public class SimulationScreen {
                 }
             } else {
                 pausedFor += elapsedTime * 1000; // We continue to pause the animation
-            }
-        }
-    }
-
-    private void renderGrid(Cell[][] grid) {
-        for (int i = 0; i < gridViews.length; i++) {
-            for (int j = 0; j < gridViews[0].length; j++) {
-                if (simulation.getGrid() instanceof Square) {
-                    gridViews[i][j].setFill(grid[j][i].getCurrColor());
-                } else {
-                    gridViews[i][j].setStroke(grid[j][i].getCurrColor());
-                }
             }
         }
     }
@@ -639,16 +648,6 @@ public class SimulationScreen {
                 }
             }
         }
-    }
-
-    private Cell[][] makeDeepCopy(Cell[][] a) {
-        Cell[][] b = new Cell[a.length][a[0].length];
-        for (int i = 0; i < a.length; i++) {
-            for (int j = 0; j < a[0].length; j++) {
-                b[i][j] = new Cell(a[i][j].getCurrState(), a[i][j].getCol(), a[i][j].getRow(), a[i][j].getCurrColor());
-            }
-        }
-        return b;
     }
 
     /**

@@ -6,7 +6,21 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
 import simulation.Simulation;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Class to generate a grid with square cells
+ */
 public class SquareGridGenerator  {
+    /**
+     * Create a grid with square cells with given specs
+     * @param rows Number of rows grid
+     * @param columns Number of columns in grid
+     * @param cellSize Size of each cell
+     * @param simulation Simulation class that's generating this grid
+     * @param myContainer Main view in the scene where this grid will be placed
+     * @param adjustMargin Whether or not we adjust the margin to centre the grid
+     * @return
+     */
     public static Rectangle[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer,
                                            double marginY, double marginX) {
         var gridViews = new Rectangle[rows][columns];

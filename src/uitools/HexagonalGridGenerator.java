@@ -10,7 +10,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import simulation.Simulation;
 
+/**
+ * Author: Anshu Dwibhashi
+ * Class to generate a grid with hexagonal cells
+ */
 public class HexagonalGridGenerator {
+    /**
+     * Create a grid with hexagonal cells with given specs
+     * @param rows Number of rows grid
+     * @param columns Number of columns in grid
+     * @param cellSize Size of each cell
+     * @param simulation Simulation class that's generating this grid
+     * @param myContainer Main view in the scene where this grid will be placed
+     * @param adjustMargin Whether or not we adjust the margin to centre the grid
+     * @return
+     */
     public static Polygon[][] createGrid(int rows, int columns, double cellSize, Simulation simulation, Group myContainer,
                                          boolean adjustMargin) {
         var myGrid = new Polygon[rows][columns];

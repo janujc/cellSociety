@@ -179,6 +179,11 @@ public class ConfigParser {
         }
     }
 
+    /**
+     * Add the currently displaying grid to an existing configuration file
+     * @param chosenFile File to add the grid to
+     * @param simulation Simulation whose current grid is to be saved
+     */
     public static void addGridToFile(File chosenFile, Simulation simulation) {
         try {
             File inputFile = new File(simulation.getCurrentFileName());

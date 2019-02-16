@@ -18,6 +18,13 @@ public class Card {
     private String label, configFolder;
 
 
+    /**
+     * Constructor to construct a Card object
+     * @param background Main image
+     * @param label String to display below the image
+     * @param className Simulation Class to invoke
+     * @param configFolder Folder where we'll find default.xml
+     */
     public Card(Image background, String label, String className, String configFolder) {
         this.className = className;
         this.label = label;
